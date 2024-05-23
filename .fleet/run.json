@@ -4,7 +4,7 @@
             "type": "command",
             "name": "Build (Windows)",
             "program": "scons",
-            "args": ["platform=windows"],
+            "args": ["platform=windows", "use_mingw=yes"],
         },
     ]
 }

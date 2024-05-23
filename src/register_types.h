@@ -5,7 +5,7 @@
 
 using namespace godot;
 
-void initialize_example_module(ModuleInitializationLevel p_level);
-void uninitialize_example_module(ModuleInitializationLevel p_level);
+void init_gameplay_effects_module(ModuleInitializationLevel p_level);
+void uninit_gameplay_effects_module(ModuleInitializationLevel p_level);
 
 #endif // GDEXAMPLE_REGISTER_TYPES_H
