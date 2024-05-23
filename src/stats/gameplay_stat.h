@@ -3,9 +3,7 @@
 
 #include <godot_cpp/classes/resource.hpp>
 
-//using namespace godot;
-
-namespace godot {
+using namespace godot;
 
 class GameplayStat : public Resource {
   GDCLASS(GameplayStat, Resource)
@@ -20,7 +18,5 @@ public:
 protected:
   static void _bind_methods();
 };
-
-}
 
 #endif

@@ -19,14 +19,14 @@ sources.extend(Glob("src/**/*.cpp"))
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
-        "godot/bin/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
+        "godot/bin/gameplayeffects.{}.{}.framework/gameplayeffects.{}.{}".format(
             env["platform"], env["target"], env["platform"], env["target"]
         ),
         source=sources,
     )
 else:
     library = env.SharedLibrary(
-        "godot/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        "godot/bin/gameplayeffects{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
 
