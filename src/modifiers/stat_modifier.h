@@ -4,17 +4,10 @@
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/classes/resource.hpp>
 
+#include "binding_macros.h"
 #include "stats/gameplay_stat.h"
 
 using namespace godot;
-
-#define GET_SET_PROPERTY(Type, Name) \
-private: \
-    Type Name; \
-public: \
-    Type get_##Name() const; \
-    void set_##Name(const Type p_##Name); \
-private:
 
 class StatModifier : public Resource {
     GDCLASS(StatModifier, Resource)
@@ -26,8 +19,8 @@ public:
         Override = 2,
     };
 
-GET_SET_PROPERTY(Operation, operation)
-GET_SET_PROPERTY(Ref<GameplayStat>, stat)
+    GET_SET_PROPERTY(Operation, operation)
+    GET_SET_PROPERTY(Ref<GameplayStat>, stat)
 
 protected:
     static void _bind_methods();
