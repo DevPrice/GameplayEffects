@@ -2,6 +2,7 @@
 
 #include "gameplay_actor.h"
 #include "stats/gameplay_stat.h"
+#include "modifiers/stat_modifier.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -16,6 +17,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
 
     ClassDB::register_class<GameplayActor>();
     ClassDB::register_class<GameplayStat>();
+    ClassDB::register_class<StatModifier>();
 }
 
 void uninit_gameplay_effects_module(ModuleInitializationLevel p_level) {

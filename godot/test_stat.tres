@@ -2,3 +2,4 @@
 
 [resource]
 base_value = 10.0
+resource_name = "Test"
