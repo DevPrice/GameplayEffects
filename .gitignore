@@ -35,6 +35,7 @@ bin
 *.files
 *.includes
 *.idb
+/build
 
 # Gprof output
 gmon.out
