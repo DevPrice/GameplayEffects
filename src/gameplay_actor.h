@@ -6,7 +6,6 @@
 #include "effects/gameplay_effect_context.h"
 #include "effects/gameplay_effect_spec.h"
 
-
 #include <godot_cpp/classes/node.hpp>
 
 using namespace godot;

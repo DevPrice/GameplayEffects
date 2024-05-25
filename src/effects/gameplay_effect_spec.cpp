@@ -6,7 +6,7 @@
 using namespace godot;
 
 void GameplayEffectSpec::_bind_methods() {
-    
+    BIND_GET_SET_RESOURCE(GameplayEffectSpec, effect, GameplayEffect)
 }
 
 GET_SET_PROPERTY_IMPL(GameplayEffectSpec, Ref<GameplayEffect>, effect)

@@ -8,6 +8,8 @@
 using namespace godot;
 
 void GameplayActor::_bind_methods() {
+    ADD_SIGNAL(MethodInfo("receiving_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
+    ADD_SIGNAL(MethodInfo("received_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, make_effect_spec, "effect");
@@ -46,13 +48,12 @@ void GameplayActor::apply_effect_to_target(Ref<GameplayEffect> effect, Node* tar
 void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     EffectExecutionContext execution_context = _make_execution_context(spec);
     // TODO: Application requirements
-    // TODO: receiving_effect signal
+    emit_signal("receiving_effect", spec);
     // TODO: Period
     ActiveEffect active_effect = ActiveEffect{spec, this, execution_context};
     // TODO: Execute effect
-    // TODO: received_effect signal
+    emit_signal("received_effect", spec);
     // TODO: Duration
-    UtilityFunctions::print("SPEC APPLIED!");
 }
 
 GameplayActor* GameplayActor::find_actor_for_node(Node* node) {

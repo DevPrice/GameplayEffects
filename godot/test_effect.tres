@@ -13,3 +13,4 @@ magnitude = SubResource("ConstantMagnitude_t6n3t")
 
 [resource]
 modifiers = Array[StatModifier]([ExtResource("1_7aita"), SubResource("StatModifier_ywmew")])
+resource_name = "Test effect"
