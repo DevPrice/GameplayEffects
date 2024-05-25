@@ -19,13 +19,13 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
         return;
     }
 
-    ClassDB::register_class<GameplayActor>();
-    ClassDB::register_class<GameplayStat>();
-    ClassDB::register_abstract_class<ModifierMagnitude>();
-    ClassDB::register_class<ConstantMagnitude>();
-    ClassDB::register_class<StatModifier>();
-    ClassDB::register_class<GameplayEffect>();
-    ClassDB::register_class<GameplayEffectSpec>();
+    GDREGISTER_VIRTUAL_CLASS(GameplayActor)
+    GDREGISTER_CLASS(GameplayStat)
+    GDREGISTER_ABSTRACT_CLASS(ModifierMagnitude)
+    GDREGISTER_CLASS(ConstantMagnitude)
+    GDREGISTER_CLASS(StatModifier)
+    GDREGISTER_CLASS(GameplayEffect)
+    GDREGISTER_CLASS(GameplayEffectSpec)
 }
 
 void uninit_gameplay_effects_module(ModuleInitializationLevel p_level) {

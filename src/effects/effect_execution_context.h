@@ -1,10 +1,13 @@
 #ifndef EFFECT_EXECUTION_CONTEXT_H
 #define EFFECT_EXECUTION_CONTEXT_H
 
-#include "gameplay_actor.h"
+#include "effects/gameplay_effect_spec.h"
+
+class GameplayActor;
 
 struct EffectExecutionContext {
-    GameplayActor* source_actor = nullptr;
+    Ref<GameplayEffectSpec> effect;
+    GameplayActor* target_actor = nullptr;
 };
 
 #endif

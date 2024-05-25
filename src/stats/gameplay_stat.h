@@ -12,6 +12,9 @@ class GameplayStat : public Resource {
 
     GET_SET_PROPERTY(double, base_value)
 
+public:
+    GameplayStat();
+
 protected:
     static void _bind_methods();
 };

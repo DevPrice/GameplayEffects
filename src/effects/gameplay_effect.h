@@ -3,6 +3,7 @@
 
 #include "binding_macros.h"
 #include "modifiers/stat_modifier.h"
+
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
 

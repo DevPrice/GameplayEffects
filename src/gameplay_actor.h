@@ -2,6 +2,10 @@
 #define GAMEPLAY_ACTOR_H
 
 #include "stats/gameplay_stat.h"
+#include "effects/effect_execution_context.h"
+#include "effects/gameplay_effect_context.h"
+#include "effects/gameplay_effect_spec.h"
+
 
 #include <godot_cpp/classes/node.hpp>
 
@@ -12,7 +16,13 @@ class GameplayActor : public Node {
 
     GET_SET_PROPERTY(TypedArray<GameplayStat>, stats)
 
+public:
+    virtual Ref<GameplayEffectSpec> make_effect_spec();
+
 protected:
+    virtual GameplayEffectContext _make_effect_context();
+    EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec> &spec);
+
     static void _bind_methods();
 };
 

@@ -2,9 +2,10 @@
 #define MODIFIER_MAGNITUDE_H
 
 #include "binding_macros.h"
-#include "effects/effect_execution_context.h"
 
 #include <godot_cpp/classes/resource.hpp>
+
+class EffectExecutionContext;
 
 using namespace godot;
 
