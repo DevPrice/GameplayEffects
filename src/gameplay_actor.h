@@ -17,7 +17,7 @@ class GameplayActor : public Node {
     GET_SET_PROPERTY(TypedArray<GameplayStat>, stats)
 
 public:
-    virtual Ref<GameplayEffectSpec> make_effect_spec();
+    virtual Ref<GameplayEffectSpec> make_effect_spec(Ref<GameplayEffect> effect);
 
     void apply_effect_to_self(Ref<GameplayEffect> effect);
     void apply_effect_to_target(Ref<GameplayEffect> effect, Node *target);
