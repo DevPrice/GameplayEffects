@@ -4,4 +4,4 @@ extends Node2D
 
 func _ready():
 	for effect in effects:
-		pass
+		%Source.apply_effect_to_target(effect, %Target)

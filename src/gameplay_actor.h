@@ -19,6 +19,12 @@ class GameplayActor : public Node {
 public:
     virtual Ref<GameplayEffectSpec> make_effect_spec();
 
+    void apply_effect_to_self(Ref<GameplayEffect> effect);
+    void apply_effect_to_target(Ref<GameplayEffect> effect, Node *target);
+    void apply_effect_spec(Ref<GameplayEffectSpec> spec);
+
+    static GameplayActor* find_actor_for_node(Node* node);
+
 protected:
     virtual GameplayEffectContext _make_effect_context();
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec> &spec);

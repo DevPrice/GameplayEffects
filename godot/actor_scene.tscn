@@ -29,4 +29,4 @@ process_priority = 0
 process_physics_priority = 0
 process_thread_group = 0
 editor_description = ""
-script = null
+script = ExtResource("4_3ndp2")
