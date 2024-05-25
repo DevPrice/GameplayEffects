@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bev47rqqjl73e"]
+
+[ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_2cm7l"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Source" type="GameplayActor" parent="."]
+stats = Array[GameplayStat]([ExtResource("1_2cm7l")])
+
+[node name="Target" type="GameplayActor" parent="."]
+stats = Array[GameplayStat]([ExtResource("1_2cm7l")])

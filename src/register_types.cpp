@@ -6,6 +6,7 @@
 #include "modifiers/constant_magnitude.h"
 #include "modifiers/stat_modifier.h"
 #include "effects/gameplay_effect.h"
+#include "effects/gameplay_effect_spec.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -24,6 +25,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     ClassDB::register_class<ConstantMagnitude>();
     ClassDB::register_class<StatModifier>();
     ClassDB::register_class<GameplayEffect>();
+    ClassDB::register_class<GameplayEffectSpec>();
 }
 
 void uninit_gameplay_effects_module(ModuleInitializationLevel p_level) {
