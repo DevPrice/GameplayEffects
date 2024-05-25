@@ -14,6 +14,8 @@ class ConstantMagnitude : public ModifierMagnitude {
     GET_SET_PROPERTY(float, constant_magnitude)
 
 public:
+    ConstantMagnitude();
+
     float get_magnitude(EffectExecutionContext& context) override;
 
 protected:

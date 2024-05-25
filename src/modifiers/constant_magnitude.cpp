@@ -8,6 +8,10 @@ void ConstantMagnitude::_bind_methods() {
     ClassDB::add_property("ConstantMagnitude", PropertyInfo(Variant::FLOAT, "magnitude"), "set_magnitude", "get_magnitude");
 }
 
+ConstantMagnitude::ConstantMagnitude() {
+    constant_magnitude = 0.f;
+}
+
 float ConstantMagnitude::get_magnitude(EffectExecutionContext& context) {
     return constant_magnitude;
 }

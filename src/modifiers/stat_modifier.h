@@ -20,6 +20,8 @@ public:
         Override = 2,
     };
 
+    StatModifier();
+
     GET_SET_PROPERTY(Operation, operation)
     GET_SET_PROPERTY(Ref<GameplayStat>, stat)
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, magnitude)
