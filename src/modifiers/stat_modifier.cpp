@@ -11,7 +11,9 @@ void StatModifier::_bind_methods() {
     BIND_ENUM_CONSTANT(Override)
     BIND_GET_SET_ENUM(StatModifier, operation, "Offset:0,Multiply:1,Override:2")
     BIND_GET_SET_RESOURCE(StatModifier, stat, GameplayStat)
+    BIND_GET_SET_RESOURCE(StatModifier, magnitude, ModifierMagnitude)
 }
 
-GET_SET_PROPERTY_IMPL(StatModifier, Ref<GameplayStat>, stat)
 GET_SET_PROPERTY_IMPL(StatModifier, StatModifier::Operation, operation)
+GET_SET_PROPERTY_IMPL(StatModifier, Ref<GameplayStat>, stat)
+GET_SET_PROPERTY_IMPL(StatModifier, Ref<ModifierMagnitude>, magnitude)

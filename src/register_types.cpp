@@ -2,6 +2,7 @@
 
 #include "gameplay_actor.h"
 #include "stats/gameplay_stat.h"
+#include "modifiers/modifier_magnitude.h"
 #include "modifiers/stat_modifier.h"
 #include "effects/gameplay_effect.h"
 
@@ -18,6 +19,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
 
     ClassDB::register_class<GameplayActor>();
     ClassDB::register_class<GameplayStat>();
+    ClassDB::register_abstract_class<ModifierMagnitude>();
     ClassDB::register_class<StatModifier>();
     ClassDB::register_class<GameplayEffect>();
 }
