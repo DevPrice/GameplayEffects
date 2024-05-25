@@ -34,6 +34,10 @@ protected:
     virtual GameplayEffectContext _make_effect_context();
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
 
+private:
+    void execute_effect(const ActiveEffect& active_effect);
+
+protected:
     static void _bind_methods();
 };
 

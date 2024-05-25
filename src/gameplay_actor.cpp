@@ -51,9 +51,17 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     emit_signal("receiving_effect", spec);
     // TODO: Period
     ActiveEffect active_effect = ActiveEffect{spec, this, execution_context};
-    // TODO: Execute effect
+    execute_effect(active_effect);
     emit_signal("received_effect", spec);
     // TODO: Duration
+}
+
+void GameplayActor::execute_effect(const ActiveEffect& active_effect) {
+    // TODO: Ongoing requirements
+    // TODO: Capture modifier snapshot
+    // TODO: Run executions
+    // TODO: Update base stats
+    // TODO: Recalculate stats
 }
 
 GameplayActor* GameplayActor::find_actor_for_node(Node* node) {
