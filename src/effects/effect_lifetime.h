@@ -5,7 +5,6 @@
 #include "modifiers/modifier_magnitude.h"
 
 #include <godot_cpp/classes/resource.hpp>
-#include <godot_cpp/variant/typed_array.hpp>
 
 using namespace godot;
 

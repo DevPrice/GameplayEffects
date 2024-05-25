@@ -8,6 +8,7 @@
 #include "effects/effect_lifetime.h"
 #include "effects/gameplay_effect.h"
 #include "effects/gameplay_effect_spec.h"
+#include "effects/gameplay_requirements.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -25,6 +26,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_ABSTRACT_CLASS(ModifierMagnitude)
     GDREGISTER_CLASS(ConstantMagnitude)
     GDREGISTER_CLASS(StatModifier)
+    GDREGISTER_ABSTRACT_CLASS(GameplayRequirements)
     GDREGISTER_CLASS(EffectLifetime)
     GDREGISTER_CLASS(GameplayEffect)
     GDREGISTER_CLASS(GameplayEffectSpec)
