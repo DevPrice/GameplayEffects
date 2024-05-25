@@ -1,11 +1,15 @@
-[gd_resource type="GameplayEffect" load_steps=4 format=3 uid="uid://hs23rdf8hvrm"]
+[gd_resource type="GameplayEffect" load_steps=5 format=3 uid="uid://hs23rdf8hvrm"]
 
 [ext_resource type="StatModifier" uid="uid://bf5pj2upspsrr" path="res://test_modifier.tres" id="1_7aita"]
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="2_wix2m"]
 
+[sub_resource type="ConstantMagnitude" id="ConstantMagnitude_t6n3t"]
+magnitude = 0.0
+
 [sub_resource type="StatModifier" id="StatModifier_ywmew"]
 operation = 2
 stat = ExtResource("2_wix2m")
+magnitude = SubResource("ConstantMagnitude_t6n3t")
 
 [resource]
 modifiers = Array[StatModifier]([ExtResource("1_7aita"), SubResource("StatModifier_ywmew")])
