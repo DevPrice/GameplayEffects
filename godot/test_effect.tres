@@ -4,7 +4,7 @@
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="2_wix2m"]
 
 [sub_resource type="ConstantMagnitude" id="ConstantMagnitude_t6n3t"]
-magnitude = 123.0
+magnitude = 5.0
 
 [sub_resource type="StatModifier" id="StatModifier_ywmew"]
 operation = 2

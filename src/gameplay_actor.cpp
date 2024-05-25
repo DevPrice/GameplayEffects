@@ -9,6 +9,7 @@ using namespace godot;
 
 void GameplayActor::_bind_methods() {
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
+    BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, make_effect_spec);
     BIND_METHOD(GameplayActor, apply_effect_to_self, "effect");
     BIND_METHOD(GameplayActor, apply_effect_to_target, "effect", "target");

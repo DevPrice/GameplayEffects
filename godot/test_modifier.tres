@@ -3,7 +3,6 @@
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_vj0ih"]
 
 [sub_resource type="ConstantMagnitude" id="ConstantMagnitude_jk642"]
-magnitude = 69.0
 
 [resource]
 stat = ExtResource("1_vj0ih")
