@@ -5,6 +5,7 @@
 #include "modifiers/modifier_magnitude.h"
 #include "modifiers/constant_magnitude.h"
 #include "modifiers/stat_modifier.h"
+#include "effects/effect_lifetime.h"
 #include "effects/gameplay_effect.h"
 #include "effects/gameplay_effect_spec.h"
 
@@ -24,6 +25,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_ABSTRACT_CLASS(ModifierMagnitude)
     GDREGISTER_CLASS(ConstantMagnitude)
     GDREGISTER_CLASS(StatModifier)
+    GDREGISTER_CLASS(EffectLifetime)
     GDREGISTER_CLASS(GameplayEffect)
     GDREGISTER_CLASS(GameplayEffectSpec)
 }
