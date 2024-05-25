@@ -4,7 +4,7 @@
 class GameplayActor;
 
 struct GameplayEffectContext {
-    GameplayActor* source_actor = nullptr;
+    const GameplayActor* source_actor = nullptr;
 };
 
 #endif

@@ -44,7 +44,14 @@ void GameplayActor::apply_effect_to_target(Ref<GameplayEffect> effect, Node* tar
 }
 
 void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
-    // TODO
+    EffectExecutionContext execution_context = _make_execution_context(spec);
+    // TODO: Application requirements
+    // TODO: receiving_effect signal
+    // TODO: Period
+    ActiveEffect active_effect = ActiveEffect{spec, this, execution_context};
+    // TODO: Execute effect
+    // TODO: received_effect signal
+    // TODO: Duration
     UtilityFunctions::print("SPEC APPLIED!");
 }
 

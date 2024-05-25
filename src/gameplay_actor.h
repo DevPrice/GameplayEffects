@@ -11,6 +11,12 @@
 
 using namespace godot;
 
+struct ActiveEffect {
+    const Ref<GameplayEffectSpec> spec = nullptr;
+    const GameplayActor *target = nullptr;
+    const EffectExecutionContext execution_context;
+};
+
 class GameplayActor : public Node {
     GDCLASS(GameplayActor, Node)
 
@@ -20,14 +26,14 @@ public:
     virtual Ref<GameplayEffectSpec> make_effect_spec(Ref<GameplayEffect> effect);
 
     void apply_effect_to_self(Ref<GameplayEffect> effect);
-    void apply_effect_to_target(Ref<GameplayEffect> effect, Node *target);
+    void apply_effect_to_target(Ref<GameplayEffect> effect, Node* target);
     void apply_effect_spec(Ref<GameplayEffectSpec> spec);
 
     static GameplayActor* find_actor_for_node(Node* node);
 
 protected:
     virtual GameplayEffectContext _make_effect_context();
-    EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec> &spec);
+    EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
 
     static void _bind_methods();
 };
