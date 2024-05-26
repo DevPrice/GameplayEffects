@@ -13,11 +13,30 @@ void GameplayActor::_bind_methods() {
     ADD_SIGNAL(MethodInfo("received_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
-    BIND_METHOD(GameplayActor, make_effect_spec, "effect");
-    BIND_METHOD(GameplayActor, apply_effect_to_self, "effect");
-    BIND_METHOD(GameplayActor, apply_effect_to_target, "effect", "target");
-    BIND_METHOD(GameplayActor, apply_effect_spec, "spec");
+    BIND_METHOD(GameplayActor, get_stat_base_value, "stat")
+    BIND_METHOD(GameplayActor, get_stat_current_value, "stat")
+    BIND_METHOD(GameplayActor, make_effect_spec, "effect")
+    BIND_METHOD(GameplayActor, apply_effect_to_self, "effect")
+    BIND_METHOD(GameplayActor, apply_effect_to_target, "effect", "target")
+    BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
     // TODO: Support override virtuals in gdscript
+}
+
+StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {
+    if (!stat_values.has(stat)) {
+        UtilityFunctions::push_warning("Attempted to get snapshot of missing stat: ", stat->get_name());
+        StatSnapshot snapshot;
+        return snapshot;
+    }
+    return stat_values.get(stat);
+}
+
+float GameplayActor::get_stat_base_value(Ref<GameplayStat> stat) const {
+    return get_stat_snapshot(stat).base_value;
+}
+
+float GameplayActor::get_stat_current_value(Ref<GameplayStat> stat) const {
+    return get_stat_snapshot(stat).current_value;
 }
 
 Ref<GameplayEffectSpec> GameplayActor::make_effect_spec(Ref<GameplayEffect> effect) {
@@ -90,4 +109,18 @@ GameplayActor* GameplayActor::find_actor_for_node(Node* node) {
     return nullptr;
 }
 
-GET_SET_PROPERTY_IMPL(GameplayActor, TypedArray<GameplayStat>, stats)
+TypedArray<GameplayStat> GameplayActor::get_stats() const {
+    return stats;
+}
+
+void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
+    stats = p_stats;
+    for (int i = 0; i < stats.size(); i++) {
+        const Ref<GameplayStat> stat = stats[i];
+        const StatSnapshot snapshot{stat->get_base_value(), stat->get_base_value()};
+        if (!stat_values.has(stat)) {
+            stat_values.insert(stat, snapshot);
+        }
+    }
+    // TODO: Remove missing stats
+}

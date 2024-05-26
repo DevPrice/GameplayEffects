@@ -10,7 +10,7 @@ using namespace godot;
 class GameplayStat : public Resource {
     GDCLASS(GameplayStat, Resource)
 
-    GET_SET_PROPERTY(double, base_value)
+    GET_SET_PROPERTY(float, base_value)
 
 public:
     GameplayStat();

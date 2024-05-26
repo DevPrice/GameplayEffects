@@ -13,4 +13,4 @@ GameplayStat::GameplayStat() {
     base_value = 0.f;
 }
 
-GET_SET_PROPERTY_IMPL(GameplayStat, double, base_value)
+GET_SET_PROPERTY_IMPL(GameplayStat, float, base_value)
