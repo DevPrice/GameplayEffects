@@ -49,6 +49,7 @@ void GameplayActor::apply_effect_to_target(Ref<GameplayEffect> effect, Node* tar
 void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     if (!spec.is_valid()) return;
 
+    const Ref<GameplayEffect> effect = spec->get_effect();
     const EffectExecutionContext execution_context = _make_execution_context(spec);
 
     const TypedArray<GameplayRequirements> application_requirements = spec->get_effect()->get_application_requirements();
@@ -62,7 +63,12 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     // TODO: Period
 
     const ActiveEffect active_effect = ActiveEffect{spec, this, execution_context};
-    execute_effect(active_effect);
+
+    if (effect->is_instant() || effect->get_lifetime()->get_execute_on_application()) {
+        execute_effect(active_effect);
+    } else {
+        // TODO: Handle non-instant effects
+    }
 
     emit_signal("received_effect", spec);
 
