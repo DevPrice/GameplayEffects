@@ -73,7 +73,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 
     const TypedArray<GameplayRequirements> application_requirements = spec->get_effect()->get_application_requirements();
     const bool requirements_met = array_all_of(application_requirements, [&execution_context](Ref<GameplayRequirements> requirements) {
-        return !requirements.is_valid() || !requirements->requirements_met(execution_context);
+        return !requirements.is_valid() || requirements->requirements_met(execution_context);
     });
     if (!requirements_met) return;
 
@@ -95,7 +95,17 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 }
 
 void GameplayActor::execute_effect(const ActiveEffect& active_effect) {
-    // TODO: Ongoing requirements
+    const EffectExecutionContext execution_context = active_effect.execution_context;
+
+    const Ref<EffectLifetime> lifetime = execution_context.effect->get_effect()->get_lifetime();
+    if (lifetime.is_valid()) {
+        const TypedArray<GameplayRequirements> ongoing_requirements = lifetime->get_ongoing_requirements();
+        const bool requirements_met = array_all_of(ongoing_requirements, [&execution_context](Ref<GameplayRequirements> requirements) {
+            return !requirements.is_valid() || requirements->requirements_met(execution_context);
+        });
+        if (!requirements_met) return;
+    }
+
     // TODO: Capture modifier snapshot
     // TODO: Run executions
     // TODO: Update base stats
