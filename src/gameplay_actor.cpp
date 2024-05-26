@@ -2,8 +2,10 @@
 #include "binding_macros.h"
 
 #include <godot_cpp/core/class_db.hpp>
-
+#include <godot_cpp/templates/vector.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+
+#include <algorithm>
 
 using namespace godot;
 
@@ -46,13 +48,30 @@ void GameplayActor::apply_effect_to_target(Ref<GameplayEffect> effect, Node* tar
 }
 
 void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
-    EffectExecutionContext execution_context = _make_execution_context(spec);
-    // TODO: Application requirements
+    if (!spec.is_valid()) return;
+
+    const EffectExecutionContext execution_context = _make_execution_context(spec);
+
+    TypedArray<GameplayRequirements> application_requirements = spec->get_effect()->get_application_requirements();
+    Vector<Ref<GameplayRequirements>> v_application_requirements;
+    for (int i = 0; i < application_requirements.size(); i++) {
+        v_application_requirements.append(application_requirements[i]);
+    }
+
+    bool requirements_met = std::all_of(v_application_requirements.begin(), v_application_requirements.end(), [&execution_context](Ref<GameplayRequirements> requirements) {
+        return !requirements.is_valid() || !requirements->requirements_met(execution_context);
+    });
+    if (!requirements_met) return;
+
     emit_signal("receiving_effect", spec);
+
     // TODO: Period
-    ActiveEffect active_effect = ActiveEffect{spec, this, execution_context};
+
+    const ActiveEffect active_effect = ActiveEffect{spec, this, execution_context};
     execute_effect(active_effect);
+
     emit_signal("received_effect", spec);
+
     // TODO: Duration
 }
 
