@@ -1,10 +1,13 @@
 #include "gameplay_actor.h"
 #include "binding_macros.h"
 #include "containers.h"
+#include "modifiers/modifier_aggregator.h"
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/templates/vector.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+
+#include <memory>
 
 using namespace godot;
 
@@ -96,14 +99,24 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 
 void GameplayActor::execute_effect(const ActiveEffect& active_effect) {
     const EffectExecutionContext execution_context = active_effect.execution_context;
+    const Ref<GameplayEffect> effect = active_effect.spec->get_effect();
 
-    const Ref<EffectLifetime> lifetime = execution_context.effect->get_effect()->get_lifetime();
+    const Ref<EffectLifetime> lifetime = execution_context.spec->get_effect()->get_lifetime();
     if (lifetime.is_valid()) {
         const TypedArray<GameplayRequirements> ongoing_requirements = lifetime->get_ongoing_requirements();
         const bool requirements_met = array_all_of(ongoing_requirements, [&execution_context](Ref<GameplayRequirements> requirements) {
             return !requirements.is_valid() || requirements->requirements_met(execution_context);
         });
         if (!requirements_met) return;
+    }
+
+    ModifierAggregator base_aggregator;
+    effect->get_modifiers();
+
+    if (effect->is_instant()) {
+
+    } else {
+        // TODO
     }
 
     // TODO: Capture modifier snapshot

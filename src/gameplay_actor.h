@@ -5,7 +5,6 @@
 #include "effects/effect_execution_context.h"
 #include "effects/gameplay_effect_context.h"
 #include "effects/gameplay_effect_spec.h"
-#include "modifiers/modifier_aggregator.h"
 
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/templates/hash_map.hpp>

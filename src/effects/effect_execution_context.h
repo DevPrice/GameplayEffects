@@ -6,7 +6,7 @@
 class GameplayActor;
 
 struct EffectExecutionContext {
-    const Ref<GameplayEffectSpec> effect = nullptr;
+    const Ref<GameplayEffectSpec> spec = nullptr;
     const GameplayActor* target_actor = nullptr;
 };
 

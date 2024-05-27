@@ -1,6 +1,7 @@
 #ifndef EVALUATED_MODIFIER_H
 #define EVALUATED_MODIFIER_H
 
+#include "effects/effect_execution_context.h"
 #include "modifiers/stat_modifier.h"
 
 struct IEvaluatedModifier {
@@ -21,6 +22,19 @@ public:
     StatModifier::Operation get_operation() const override { return operation; }
     float get_magnitude() const override { return magnitude; }
     bool requirements_met() const override { return true; }
+};
+
+class ModifierSnapshot : public IEvaluatedModifier {
+
+    Ref<StatModifier> modifier;
+    EffectExecutionContext execution_context;
+    float magnitude;
+
+public:
+    Ref<GameplayStat> get_stat() const override { return modifier->get_stat(); }
+    StatModifier::Operation get_operation() const override { return modifier->get_operation(); }
+    float get_magnitude() const override { return magnitude; }
+    bool requirements_met() const override;
 };
 
 #endif
