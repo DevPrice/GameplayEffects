@@ -15,11 +15,19 @@
 using namespace godot;
 
 struct ActiveEffect {
-    const Ref<GameplayEffectSpec> spec = nullptr;
-    const GameplayActor *target = nullptr;
     const EffectExecutionContext execution_context;
 
     std::vector<std::shared_ptr<IEvaluatedModifier>> capture_modifier_snapshot() const;
+
+    bool operator==(const ActiveEffect &other) const {
+        return execution_context == other.execution_context;
+    }
+};
+
+struct ActiveEffectHasher {
+    std::size_t operator()(const ActiveEffect& active_effect) const {
+        return (std::size_t)active_effect.execution_context.spec.ptr() ^ (std::size_t)active_effect.execution_context.target_actor;
+    }
 };
 
 struct StatSnapshot {

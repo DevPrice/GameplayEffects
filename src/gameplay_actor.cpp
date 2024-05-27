@@ -90,7 +90,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 
     // TODO: Period
 
-    const ActiveEffect active_effect = ActiveEffect{spec, this, execution_context};
+    const ActiveEffect active_effect = ActiveEffect{execution_context};
 
     if (effect->is_instant() || effect->get_lifetime()->get_execute_on_application()) {
         _execute_effect(active_effect);
@@ -106,7 +106,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 
 void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     const EffectExecutionContext execution_context = active_effect.execution_context;
-    const Ref<GameplayEffect> effect = active_effect.spec->get_effect();
+    const Ref<GameplayEffect> effect = execution_context.spec->get_effect();
 
     const Ref<EffectLifetime> lifetime = execution_context.spec->get_effect()->get_lifetime();
     if (lifetime.is_valid()) {
@@ -187,7 +187,7 @@ void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
 }
 
 std::vector<std::shared_ptr<IEvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {
-    TypedArray<StatModifier> modifiers = spec->get_effect()->get_modifiers();
+    const TypedArray<StatModifier> modifiers = execution_context.spec->get_effect()->get_modifiers();
     std::vector<std::shared_ptr<IEvaluatedModifier>> modifier_snapshot;
     for (size_t i = 0; i < modifiers.size(); i++) {
         const Ref<StatModifier> modifier = modifiers[i];
