@@ -47,14 +47,14 @@ public:
 
 protected:
     virtual Ref<GameplayEffectContext> _make_effect_context();
-    EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
 
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
     HashMap<ActiveEffect, std::vector<std::shared_ptr<IEvaluatedModifier>>> active_effects;
 
-    void execute_effect(const ActiveEffect& active_effect);
-    void recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);
+    EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
+    void _execute_effect(const ActiveEffect& active_effect);
+    void _recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);
 
 protected:
     static void _bind_methods();

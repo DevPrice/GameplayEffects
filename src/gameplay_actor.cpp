@@ -93,7 +93,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     const ActiveEffect active_effect = ActiveEffect{spec, this, execution_context};
 
     if (effect->is_instant() || effect->get_lifetime()->get_execute_on_application()) {
-        execute_effect(active_effect);
+        _execute_effect(active_effect);
     } else {
         // TODO
         // active_effects[active_effect] = active_effect.capture_modifier_snapshot();
@@ -104,7 +104,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     // TODO: Duration
 }
 
-void GameplayActor::execute_effect(const ActiveEffect& active_effect) {
+void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     const EffectExecutionContext execution_context = active_effect.execution_context;
     const Ref<GameplayEffect> effect = active_effect.spec->get_effect();
 
@@ -140,10 +140,10 @@ void GameplayActor::execute_effect(const ActiveEffect& active_effect) {
         }
     }
 
-    recalculate_stats(stat_snapshot);
+    _recalculate_stats(stat_snapshot);
 }
 
-void GameplayActor::recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot) {
+void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot) {
     std::vector<Ref<GameplayStat>> modified_stats;
     ModifierAggregator aggregator;
     for (auto effect_modifiers : active_effects) {
