@@ -3,6 +3,7 @@
 
 #include "binding_macros.h"
 #include "effects/gameplay_requirements.h"
+#include "effects/time_source.h"
 #include "modifiers/modifier_magnitude.h"
 
 #include <godot_cpp/classes/resource.hpp>
@@ -16,6 +17,7 @@ class EffectLifetime : public Resource {
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, duration)
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, period)
     GET_SET_PROPERTY(bool, execute_on_application)
+    GET_SET_PROPERTY(Ref<TimeSource>, time_source)
 
 public:
     EffectLifetime();

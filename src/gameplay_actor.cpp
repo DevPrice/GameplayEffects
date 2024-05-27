@@ -150,8 +150,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     for (auto stat : stat_values) {
         float initial_value = stat.value.current_value;
         float modified_value = aggregator.get_modified_value(stat.key, stat.value.base_value);
-        StatSnapshot updated_snapshot{stat.value.base_value, modified_value};
-        stat_values[stat.key] = updated_snapshot;
+        stat_values[stat.key] = StatSnapshot{stat.value.base_value, modified_value};
         if (abs(modified_value - initial_value) > 1e-5) {
             modified_stats.push_back(stat.key);
         }
