@@ -136,7 +136,27 @@ void GameplayActor::execute_effect(const ActiveEffect& active_effect) {
             stat_values.insert(stat_value.key, new_snapshot);
         }
     }
-    // TODO: Recalculate stats
+    recalculate_stats(stat_snapshot);
+}
+
+void GameplayActor::recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot) {
+    std::vector<Ref<GameplayStat>> modified_stats;
+    ModifierAggregator aggregator;
+    for (auto effect_modifiers : active_effects) {
+        aggregator.modifiers.insert(aggregator.modifiers.begin(), effect_modifiers.value.begin(), effect_modifiers.value.end());
+    }
+    for (auto stat : stat_values) {
+        float initial_value = stat.value.current_value;
+        float modified_value = aggregator.get_modified_value(stat.key, stat.value.base_value);
+        StatSnapshot updated_snapshot{stat.value.base_value, modified_value};
+        stat_values.insert(stat.key, updated_snapshot);
+        if (abs(modified_value - initial_value) > 1e-5) {
+            modified_stats.push_back(stat.key);
+        }
+    }
+    for (auto stat : modified_stats) {
+        // TODO: Notify
+    }
 }
 
 GameplayActor* GameplayActor::find_actor_for_node(Node* node) {

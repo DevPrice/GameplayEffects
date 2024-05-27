@@ -52,8 +52,9 @@ private:
     HashMap<ActiveEffect, std::vector<std::shared_ptr<IEvaluatedModifier>>> active_effects;
 
     void execute_effect(const ActiveEffect& active_effect);
+    void recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);
 
-protected:
+  protected:
     static void _bind_methods();
 };
 
