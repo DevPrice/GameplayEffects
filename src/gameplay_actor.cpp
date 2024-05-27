@@ -180,7 +180,11 @@ void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
             stat_values[stat] = snapshot;
         }
     }
-    // TODO: Remove missing stats
+    for (auto it = stat_values.begin(); it != stat_values.end(); ++it) {
+        if (!p_stats.has(it->key)) {
+            stat_values.remove(it);
+        }
+    }
 }
 
 std::vector<std::shared_ptr<IEvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {
