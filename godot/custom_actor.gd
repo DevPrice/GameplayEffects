@@ -9,6 +9,10 @@ func _ready():
 	received_effect.connect(
 		func (spec: GameplayEffectSpec): print("%s received effect '%s'." % [name, spec.effect.resource_name])
 	)
+	stat_changed.connect(
+		func (stat: GameplayStat, new_value: float, old_value: float):
+			print("[%s] %s: %s -> %s" % [name, stat.resource_name, old_value, new_value])
+	)
 	for effect in initial_effects:
 		apply_effect_to_self(effect)
 

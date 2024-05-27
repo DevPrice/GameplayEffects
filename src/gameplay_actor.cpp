@@ -12,6 +12,10 @@
 using namespace godot;
 
 void GameplayActor::_bind_methods() {
+    ADD_SIGNAL(MethodInfo("stat_changed",
+        PropertyInfo(Variant::OBJECT, "stat", PROPERTY_HINT_RESOURCE_TYPE, "GameplayStat"),
+        PropertyInfo(Variant::FLOAT, "new_value"),
+        PropertyInfo(Variant::FLOAT, "old_value")));
     ADD_SIGNAL(MethodInfo("receiving_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     ADD_SIGNAL(MethodInfo("received_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
@@ -154,8 +158,8 @@ void GameplayActor::recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnaps
             modified_stats.push_back(stat.key);
         }
     }
-    for (auto stat : modified_stats) {
-        // TODO: Notify
+    for (Ref<GameplayStat> stat : modified_stats) {
+        emit_signal("stat_changed", stat, stat_values.get(stat).current_value, stat_snapshot.get(stat).current_value);
     }
 }
 
