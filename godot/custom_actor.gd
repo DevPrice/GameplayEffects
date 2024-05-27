@@ -4,10 +4,12 @@ extends GameplayActor
 
 func _ready():
 	receiving_effect.connect(
-		func (spec: GameplayEffectSpec): print("%s receiving effect '%s'..." % [name, spec.effect.resource_name])
+		func (spec: GameplayEffectSpec):
+			print("%s receiving effect '%s'..." % [name, spec.effect.resource_name])
 	)
 	received_effect.connect(
-		func (spec: GameplayEffectSpec): print("%s received effect '%s'." % [name, spec.effect.resource_name])
+		func (spec: GameplayEffectSpec):
+			print("%s received effect '%s'." % [name, spec.effect.resource_name])
 	)
 	stat_changed.connect(
 		func (stat: GameplayStat, new_value: float, old_value: float):
@@ -17,5 +19,5 @@ func _ready():
 		apply_effect_to_self(effect)
 
 # TODO: Override virtual method
-func _make_effect_spec(effect: GameplayEffect):
-	return super.make_effect_spec(effect)
+#func _make_effect_context():
+#	return super._make_effect_context()

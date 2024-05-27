@@ -10,4 +10,4 @@ void GameplayEffectSpec::_bind_methods() {
 }
 
 GET_SET_PROPERTY_IMPL(GameplayEffectSpec, Ref<GameplayEffect>, effect)
-GET_SET_PROPERTY_IMPL(GameplayEffectSpec, GameplayEffectContext, context)
+GET_SET_PROPERTY_IMPL(GameplayEffectSpec, Ref<GameplayEffectContext>, context)

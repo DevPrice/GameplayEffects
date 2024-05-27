@@ -26,7 +26,7 @@ void GameplayActor::_bind_methods() {
     BIND_METHOD(GameplayActor, apply_effect_to_self, "effect")
     BIND_METHOD(GameplayActor, apply_effect_to_target, "effect", "target")
     BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
-    // TODO: Support override virtuals in gdscript
+    BIND_VIRTUAL_METHOD(GameplayActor, _make_effect_context)
 }
 
 StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {
@@ -53,8 +53,10 @@ Ref<GameplayEffectSpec> GameplayActor::make_effect_spec(Ref<GameplayEffect> effe
     return spec;
 }
 
-GameplayEffectContext GameplayActor::_make_effect_context() {
-    return GameplayEffectContext{this};
+Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {
+    Ref<GameplayEffectContext> effect_context = memnew(GameplayEffectContext);
+    effect_context->set_source_actor(this);
+    return effect_context;
 }
 
 EffectExecutionContext GameplayActor::_make_execution_context(Ref<GameplayEffectSpec>& spec) {

@@ -37,7 +37,7 @@ public:
     float get_stat_base_value(Ref<GameplayStat> stat) const;
     float get_stat_current_value(Ref<GameplayStat> stat) const;
 
-    virtual Ref<GameplayEffectSpec> make_effect_spec(Ref<GameplayEffect> effect);
+    Ref<GameplayEffectSpec> make_effect_spec(Ref<GameplayEffect> effect);
 
     void apply_effect_to_self(Ref<GameplayEffect> effect);
     void apply_effect_to_target(Ref<GameplayEffect> effect, Node* target);
@@ -46,7 +46,7 @@ public:
     static GameplayActor* find_actor_for_node(Node* node);
 
 protected:
-    virtual GameplayEffectContext _make_effect_context();
+    virtual Ref<GameplayEffectContext> _make_effect_context();
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
 
 private:

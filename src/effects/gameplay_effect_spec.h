@@ -14,7 +14,7 @@ class GameplayEffectSpec : public RefCounted {
     GDCLASS(GameplayEffectSpec, RefCounted)
 
     GET_SET_PROPERTY(Ref<GameplayEffect>, effect)
-    GET_SET_PROPERTY(GameplayEffectContext, context)
+    GET_SET_PROPERTY(Ref<GameplayEffectContext>, context)
 
 protected:
     static void _bind_methods();

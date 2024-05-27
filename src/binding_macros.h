@@ -6,14 +6,14 @@ private: \
     Type Name; \
 public: \
     Type get_##Name() const; \
-    void set_##Name(const Type p_##Name); \
+    void set_##Name(Type p_##Name); \
 private:
 
 #define GET_SET_PROPERTY_IMPL(ClassName, Type, Name) \
 Type ClassName::get_##Name() const { \
     return Name; \
 } \
-void ClassName::set_##Name(const Type p_##Name) { \
+void ClassName::set_##Name(Type p_##Name) { \
     ##Name = p_##Name; \
 }
 
@@ -21,7 +21,7 @@ void ClassName::set_##Name(const Type p_##Name) { \
     ClassDB::bind_method(D_METHOD(#Name, ## __VA_ARGS__), &##ClassName::##Name);
 
 #define BIND_STATIC_METHOD(ClassName, Name, ...) \
-    ClassDB::bind_static_method(#ClassName, D_METHOD(#Name, ##__VA_ARGS__), ##ClassName::##Name);
+    ClassDB::bind_static_method(#ClassName, D_METHOD(#Name, ##__VA_ARGS__), &##ClassName::##Name);
 
 #define BIND_GET_SET_METHOD(ClassName, Name) \
     ClassDB::bind_method(D_METHOD("get_" #Name), &##ClassName::get_##Name); \
@@ -34,6 +34,10 @@ void ClassName::set_##Name(const Type p_##Name) { \
 #define BIND_GET_SET_RESOURCE(ClassName, Name, Type) \
     BIND_GET_SET_METHOD(ClassName, Name) \
     ClassDB::add_property(#ClassName, PropertyInfo(Variant::OBJECT, #Name, PROPERTY_HINT_RESOURCE_TYPE, #Type), "set_" #Name, "get_" #Name);
+
+#define BIND_GET_SET_NODE(ClassName, Name, Type) \
+    BIND_GET_SET_METHOD(ClassName, Name) \
+    ClassDB::add_property(#ClassName, PropertyInfo(Variant::OBJECT, #Name, PROPERTY_HINT_NODE_TYPE, #Type), "set_" #Name, "get_" #Name);
 
 #define BIND_GET_SET_ENUM(ClassName, Name, Values) \
     BIND_GET_SET_METHOD(ClassName, Name) \
