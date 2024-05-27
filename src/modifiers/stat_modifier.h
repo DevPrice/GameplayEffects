@@ -5,6 +5,7 @@
 #include <godot_cpp/classes/resource.hpp>
 
 #include "binding_macros.h"
+#include "effects/gameplay_requirements.h"
 #include "modifiers/modifier_magnitude.h"
 #include "stats/gameplay_stat.h"
 
@@ -25,8 +26,9 @@ public:
     GET_SET_PROPERTY(Operation, operation)
     GET_SET_PROPERTY(Ref<GameplayStat>, stat)
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, magnitude)
+    GET_SET_PROPERTY(TypedArray<GameplayRequirements>, requirements)
 
-protected:
+  protected:
     static void _bind_methods();
 };
 

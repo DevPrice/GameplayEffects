@@ -22,3 +22,4 @@ StatModifier::StatModifier() {
 GET_SET_PROPERTY_IMPL(StatModifier, StatModifier::Operation, operation)
 GET_SET_PROPERTY_IMPL(StatModifier, Ref<GameplayStat>, stat)
 GET_SET_PROPERTY_IMPL(StatModifier, Ref<ModifierMagnitude>, magnitude)
+GET_SET_PROPERTY_IMPL(StatModifier, TypedArray<GameplayRequirements>, requirements)

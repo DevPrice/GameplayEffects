@@ -10,5 +10,8 @@ bool ModifierSnapshot::requirements_met() const {
         });
         if (!requirements_met) return false;
     }
-    return true;
+
+    return array_all_of(modifier->get_requirements(), [this](Ref<GameplayRequirements> requirements) {
+        return !requirements.is_valid() || requirements->requirements_met(execution_context);
+    });
 }
