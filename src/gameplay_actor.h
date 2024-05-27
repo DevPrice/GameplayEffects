@@ -18,6 +18,8 @@ struct ActiveEffect {
     const Ref<GameplayEffectSpec> spec = nullptr;
     const GameplayActor *target = nullptr;
     const EffectExecutionContext execution_context;
+
+    std::vector<std::shared_ptr<IEvaluatedModifier>> capture_modifier_snapshot() const;
 };
 
 struct StatSnapshot {
@@ -54,7 +56,7 @@ private:
     void execute_effect(const ActiveEffect& active_effect);
     void recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);
 
-  protected:
+protected:
     static void _bind_methods();
 };
 

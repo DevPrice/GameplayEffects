@@ -93,7 +93,8 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     if (effect->is_instant() || effect->get_lifetime()->get_execute_on_application()) {
         execute_effect(active_effect);
     } else {
-        // TODO: Handle non-instant effects
+        // TODO
+        // active_effects[active_effect] = active_effect.capture_modifier_snapshot();
     }
 
     emit_signal("received_effect", spec);
@@ -115,31 +116,28 @@ void GameplayActor::execute_effect(const ActiveEffect& active_effect) {
     }
 
     TypedArray<StatModifier> modifiers = effect->get_modifiers();
-    std::vector<std::shared_ptr<IEvaluatedModifier>> modifier_snapshot;
-    for (size_t i = 0; i < modifiers.size(); i++) {
-        Ref<StatModifier> modifier = modifiers[i];
-        float magnitude = modifier->get_magnitude()->get_magnitude(execution_context);
-        std::shared_ptr<IEvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, magnitude);
-        modifier_snapshot.push_back(evaluated_modifier);
-    }
+    std::vector<std::shared_ptr<IEvaluatedModifier>> modifier_snapshot = active_effect.capture_modifier_snapshot();
 
     ModifierAggregator base_aggregator;
     if (effect->is_instant()) {
         base_aggregator.modifiers.insert(base_aggregator.modifiers.end(), modifier_snapshot.begin(), modifier_snapshot.end());
     } else {
         // TODO
+        // active_effects[active_effect] = modifier_snapshot;
     }
 
-    // TODO: Capture modifier snapshot
-    // TODO: Run executions
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
+
+    // TODO: Run executions
+
     for (auto stat_value : stat_snapshot) {
         float modified_value = 0.f;
         if (base_aggregator.get_modified_value(stat_value.key, stat_value.value.base_value, modified_value)) {
             StatSnapshot new_snapshot{modified_value, stat_value.value.current_value};
-            stat_values.insert(stat_value.key, new_snapshot);
+            stat_values[stat_value.key] = new_snapshot;
         }
     }
+
     recalculate_stats(stat_snapshot);
 }
 
@@ -153,7 +151,7 @@ void GameplayActor::recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnaps
         float initial_value = stat.value.current_value;
         float modified_value = aggregator.get_modified_value(stat.key, stat.value.base_value);
         StatSnapshot updated_snapshot{stat.value.base_value, modified_value};
-        stat_values.insert(stat.key, updated_snapshot);
+        stat_values[stat.key] = updated_snapshot;
         if (abs(modified_value - initial_value) > 1e-5) {
             modified_stats.push_back(stat.key);
         }
@@ -180,8 +178,20 @@ void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
         const Ref<GameplayStat> stat = stats[i];
         const StatSnapshot snapshot{stat->get_base_value(), stat->get_base_value()};
         if (!stat_values.has(stat)) {
-            stat_values.insert(stat, snapshot);
+            stat_values[stat] = snapshot;
         }
     }
     // TODO: Remove missing stats
+}
+
+std::vector<std::shared_ptr<IEvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {
+    TypedArray<StatModifier> modifiers = spec->get_effect()->get_modifiers();
+    std::vector<std::shared_ptr<IEvaluatedModifier>> modifier_snapshot;
+    for (size_t i = 0; i < modifiers.size(); i++) {
+        const Ref<StatModifier> modifier = modifiers[i];
+        const float magnitude = modifier->get_magnitude()->get_magnitude(execution_context);
+        std::shared_ptr<IEvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, magnitude);
+        modifier_snapshot.push_back(evaluated_modifier);
+    }
+    return modifier_snapshot;
 }
