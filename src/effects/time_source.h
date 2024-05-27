@@ -9,7 +9,7 @@ class EffectExecutionContext;
 
 using namespace godot;
 
-struct IEffectTimer {
+struct EffectTimer {
     virtual void stop() = 0;
 };
 
@@ -17,8 +17,8 @@ class TimeSource : public Resource {
     GDCLASS(TimeSource, Resource)
 
 public:
-    virtual IEffectTimer create_timer(const EffectExecutionContext& execution_context) const = 0;
-    virtual IEffectTimer create_interval(const EffectExecutionContext& execution_context) const = 0;
+    virtual EffectTimer create_timer(const EffectExecutionContext& execution_context) const = 0;
+    virtual EffectTimer create_interval(const EffectExecutionContext& execution_context) const = 0;
 
 protected:
     static void _bind_methods();
