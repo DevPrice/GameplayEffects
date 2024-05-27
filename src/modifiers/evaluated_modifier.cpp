@@ -1,6 +1,9 @@
 #include "evaluated_modifier.h"
 #include "containers.h"
 
+ModifierSnapshot::ModifierSnapshot(Ref<StatModifier> p_modifier, EffectExecutionContext p_execution_context, float p_magnitude)
+    : modifier(p_modifier), execution_context(p_execution_context), magnitude(p_magnitude) { }
+
 bool ModifierSnapshot::requirements_met() const {
     Ref<EffectLifetime> lifetime = execution_context.spec->get_effect()->get_lifetime();
     if (lifetime.is_valid()) {

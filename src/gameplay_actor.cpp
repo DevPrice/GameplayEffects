@@ -110,18 +110,32 @@ void GameplayActor::execute_effect(const ActiveEffect& active_effect) {
         if (!requirements_met) return;
     }
 
+    TypedArray<StatModifier> modifiers = effect->get_modifiers();
+    std::vector<std::shared_ptr<IEvaluatedModifier>> modifier_snapshot;
+    for (size_t i = 0; i < modifiers.size(); i++) {
+        Ref<StatModifier> modifier = modifiers[i];
+        float magnitude = modifier->get_magnitude()->get_magnitude(execution_context);
+        std::shared_ptr<IEvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, magnitude);
+        modifier_snapshot.push_back(evaluated_modifier);
+    }
+
     ModifierAggregator base_aggregator;
-    effect->get_modifiers();
-
     if (effect->is_instant()) {
-
+        base_aggregator.modifiers.insert(base_aggregator.modifiers.end(), modifier_snapshot.begin(), modifier_snapshot.end());
     } else {
         // TODO
     }
 
     // TODO: Capture modifier snapshot
     // TODO: Run executions
-    // TODO: Update base stats
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
+    for (auto stat_value : stat_snapshot) {
+        float modified_value = 0.f;
+        if (base_aggregator.get_modified_value(stat_value.key, stat_value.value.base_value, modified_value)) {
+            StatSnapshot new_snapshot{modified_value, stat_value.value.current_value};
+            stat_values.insert(stat_value.key, new_snapshot);
+        }
+    }
     // TODO: Recalculate stats
 }
 

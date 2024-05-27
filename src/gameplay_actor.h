@@ -1,13 +1,16 @@
 #ifndef GAMEPLAY_ACTOR_H
 #define GAMEPLAY_ACTOR_H
 
-#include "stats/gameplay_stat.h"
 #include "effects/effect_execution_context.h"
 #include "effects/gameplay_effect_context.h"
 #include "effects/gameplay_effect_spec.h"
+#include "modifiers/evaluated_modifier.h"
+#include "stats/gameplay_stat.h"
 
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/templates/hash_map.hpp>
+#include <memory>
+#include <vector>
 
 using namespace godot;
 
@@ -46,6 +49,7 @@ protected:
 
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
+    HashMap<ActiveEffect, std::vector<std::shared_ptr<IEvaluatedModifier>>> active_effects;
 
     void execute_effect(const ActiveEffect& active_effect);
 

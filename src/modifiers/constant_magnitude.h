@@ -16,9 +16,9 @@ class ConstantMagnitude : public ModifierMagnitude {
 public:
     ConstantMagnitude();
 
-    float get_magnitude(EffectExecutionContext& context) override;
+    float get_magnitude(const EffectExecutionContext& context) override;
 
-protected:
+  protected:
     static void _bind_methods();
 };
 

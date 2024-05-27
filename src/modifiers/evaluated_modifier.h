@@ -31,6 +31,8 @@ class ModifierSnapshot : public IEvaluatedModifier {
     float magnitude;
 
 public:
+    ModifierSnapshot(Ref<StatModifier> p_modifier, EffectExecutionContext p_execution_context, float p_magnitude);
+
     Ref<GameplayStat> get_stat() const override { return modifier->get_stat(); }
     StatModifier::Operation get_operation() const override { return modifier->get_operation(); }
     float get_magnitude() const override { return magnitude; }

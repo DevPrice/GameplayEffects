@@ -13,7 +13,7 @@ class ModifierMagnitude : public Resource {
     GDCLASS(ModifierMagnitude, Resource)
 
 public:
-    virtual float get_magnitude(EffectExecutionContext& context) = 0;
+    virtual float get_magnitude(const EffectExecutionContext& context) = 0;
 
 protected:
     static void _bind_methods();
