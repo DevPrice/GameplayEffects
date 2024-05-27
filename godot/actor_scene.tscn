@@ -1,13 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://bev47rqqjl73e"]
+[gd_scene load_steps=6 format=3 uid="uid://bev47rqqjl73e"]
 
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_2cm7l"]
 [ext_resource type="Script" path="res://actor_scene.gd" id="1_ns5m8"]
-[ext_resource type="GameplayEffect" uid="uid://hs23rdf8hvrm" path="res://test_effect.tres" id="2_s0rhe"]
+[ext_resource type="GameplayEffect" uid="uid://hs23rdf8hvrm" path="res://instant_effect.tres" id="2_s0rhe"]
+[ext_resource type="GameplayEffect" uid="uid://dd0xfv1yodd3l" path="res://infinite_effect.tres" id="3_xcw1x"]
 [ext_resource type="Script" path="res://custom_actor.gd" id="4_3ndp2"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_ns5m8")
-effects = Array[GameplayEffect]([ExtResource("2_s0rhe")])
+effects = Array[GameplayEffect]([ExtResource("3_xcw1x"), ExtResource("2_s0rhe")])
 
 [node name="Source" type="GameplayActor" parent="."]
 stats = Array[GameplayStat]([ExtResource("1_2cm7l")])

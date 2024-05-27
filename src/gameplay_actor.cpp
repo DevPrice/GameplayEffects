@@ -95,8 +95,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     if (effect->is_instant() || effect->get_lifetime()->get_execute_on_application()) {
         _execute_effect(active_effect);
     } else {
-        // TODO
-        // active_effects[active_effect] = active_effect.capture_modifier_snapshot();
+        active_effects[active_effect] = active_effect.capture_modifier_snapshot();
     }
 
     emit_signal("received_effect", spec);
@@ -124,8 +123,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     if (effect->is_instant()) {
         base_aggregator.modifiers.insert(base_aggregator.modifiers.end(), modifier_snapshot.begin(), modifier_snapshot.end());
     } else {
-        // TODO
-        // active_effects[active_effect] = modifier_snapshot;
+        active_effects[active_effect] = modifier_snapshot;
     }
 
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
@@ -147,7 +145,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     std::vector<Ref<GameplayStat>> modified_stats;
     ModifierAggregator aggregator;
     for (auto effect_modifiers : active_effects) {
-        aggregator.modifiers.insert(aggregator.modifiers.begin(), effect_modifiers.value.begin(), effect_modifiers.value.end());
+        aggregator.modifiers.insert(aggregator.modifiers.begin(), effect_modifiers.second.begin(), effect_modifiers.second.end());
     }
     for (auto stat : stat_values) {
         float initial_value = stat.value.current_value;

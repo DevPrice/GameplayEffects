@@ -1,0 +1,7 @@
+[gd_resource type="GameplayEffect" load_steps=2 format=3 uid="uid://hs23rdf8hvrm"]
+
+[ext_resource type="StatModifier" uid="uid://bf5pj2upspsrr" path="res://test_modifier.tres" id="1_cg3q0"]
+
+[resource]
+modifiers = Array[StatModifier]([ExtResource("1_cg3q0")])
+resource_name = "Instant effect"

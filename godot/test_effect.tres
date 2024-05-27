@@ -1,7 +1,0 @@
-[gd_resource type="GameplayEffect" load_steps=2 format=3 uid="uid://hs23rdf8hvrm"]
-
-[ext_resource type="StatModifier" uid="uid://bf5pj2upspsrr" path="res://test_modifier.tres" id="1_7aita"]
-
-[resource]
-modifiers = Array[StatModifier]([ExtResource("1_7aita")])
-resource_name = "Test effect"

@@ -12,6 +12,10 @@ void EffectLifetime::_bind_methods() {
     BIND_GET_SET(EffectLifetime, execute_on_application, Variant::BOOL)
 }
 
+EffectLifetime::EffectLifetime() {
+    execute_on_application = true;
+}
+
 GET_SET_PROPERTY_IMPL(EffectLifetime, TypedArray<GameplayRequirements>, ongoing_requirements)
 GET_SET_PROPERTY_IMPL(EffectLifetime, Ref<ModifierMagnitude>, duration)
 GET_SET_PROPERTY_IMPL(EffectLifetime, Ref<ModifierMagnitude>, period)

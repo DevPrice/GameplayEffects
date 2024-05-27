@@ -1,11 +1,11 @@
 [gd_resource type="StatModifier" load_steps=3 format=3 uid="uid://bf5pj2upspsrr"]
 
-[ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_vj0ih"]
+[ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_sfn36"]
 
 [sub_resource type="ConstantMagnitude" id="ConstantMagnitude_jk642"]
 magnitude = 1337.0
 
 [resource]
 operation = 2
-stat = ExtResource("1_vj0ih")
+stat = ExtResource("1_sfn36")
 magnitude = SubResource("ConstantMagnitude_jk642")

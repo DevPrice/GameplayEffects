@@ -10,6 +10,7 @@
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/templates/hash_map.hpp>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 using namespace godot;
@@ -58,7 +59,7 @@ protected:
 
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
-    HashMap<ActiveEffect, std::vector<std::shared_ptr<IEvaluatedModifier>>> active_effects;
+    std::unordered_map<ActiveEffect, std::vector<std::shared_ptr<IEvaluatedModifier>>, ActiveEffectHasher> active_effects;
 
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);

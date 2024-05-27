@@ -17,6 +17,9 @@ class EffectLifetime : public Resource {
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, period)
     GET_SET_PROPERTY(bool, execute_on_application)
 
+public:
+    EffectLifetime();
+
 protected:
     static void _bind_methods();
 };
