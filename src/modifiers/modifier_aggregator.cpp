@@ -31,7 +31,7 @@ bool ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, float
     std::copy_if(relevant_modifiers.begin(), relevant_modifiers.end(), std::back_inserter(multiply_modifiers), [](const std::shared_ptr<IEvaluatedModifier> modifier) {
         return modifier && modifier->get_operation() == StatModifier::Operation::Multiply;
     });
-    float aggregate_multiply = 1.f + std::reduce(offset_modifiers.begin(), offset_modifiers.end(), 0.f, [](const float acc, const std::shared_ptr<IEvaluatedModifier> modifier) {
+    float aggregate_multiply = 1.f + std::reduce(multiply_modifiers.begin(), multiply_modifiers.end(), 0.f, [](const float acc, const std::shared_ptr<IEvaluatedModifier> modifier) {
         return acc + modifier->get_magnitude() - 1.f;
     });
 
