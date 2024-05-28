@@ -11,6 +11,7 @@
 #include "effects/gameplay_effect_spec.h"
 #include "effects/gameplay_requirements.h"
 #include "effects/time_source.h"
+#include "effects/scene_time_source.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -29,7 +30,10 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(ConstantMagnitude)
     GDREGISTER_CLASS(StatModifier)
     GDREGISTER_ABSTRACT_CLASS(GameplayRequirements)
+    GDREGISTER_ABSTRACT_CLASS(EffectTimer)
     GDREGISTER_ABSTRACT_CLASS(TimeSource)
+    GDREGISTER_CLASS(SceneEffectTimer)
+    GDREGISTER_CLASS(SceneTimeSource)
     GDREGISTER_CLASS(EffectLifetime)
     GDREGISTER_CLASS(GameplayEffect)
     GDREGISTER_VIRTUAL_CLASS(GameplayEffectContext)

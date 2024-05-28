@@ -7,7 +7,7 @@ class GameplayActor;
 
 struct EffectExecutionContext {
     const Ref<GameplayEffectSpec> spec = nullptr;
-    const GameplayActor* target_actor = nullptr;
+    GameplayActor* const target_actor = nullptr;
 
     bool operator==(const EffectExecutionContext& other) const {
         return spec == other.spec && target_actor == other.target_actor;

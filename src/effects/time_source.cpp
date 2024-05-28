@@ -2,10 +2,17 @@
 #include "binding_macros.h"
 
 #include <godot_cpp/core/class_db.hpp>
-#include "time_source.h"
 
 using namespace godot;
 
 void TimeSource::_bind_methods() {
    
+}
+
+void EffectTimer::_bind_methods() {
+   
+}
+
+void EffectTimer::set_callback(std::function<void()> p_callback) {
+    callback = p_callback;
 }
