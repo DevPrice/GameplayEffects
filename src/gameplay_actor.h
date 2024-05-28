@@ -52,6 +52,8 @@ public:
     void apply_effect_to_target(Ref<GameplayEffect> effect, Node* target);
     void apply_effect_spec(Ref<GameplayEffectSpec> spec);
 
+    void remove_effect(const ActiveEffect& active_effect);
+
     static GameplayActor* find_actor_for_node(Node* node);
 
 protected:

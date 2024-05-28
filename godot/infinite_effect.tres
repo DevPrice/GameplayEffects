@@ -5,7 +5,7 @@
 [sub_resource type="EffectLifetime" id="EffectLifetime_pefeh"]
 
 [sub_resource type="ConstantMagnitude" id="ConstantMagnitude_kw580"]
-magnitude = 4.0
+magnitude = 2.0
 
 [sub_resource type="StatModifier" id="StatModifier_vh8y5"]
 operation = 1

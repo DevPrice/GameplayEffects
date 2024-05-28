@@ -19,7 +19,7 @@ public:
 private:
     Timer* timer;
 
-    void on_timeout();
+    void _on_timeout();
 
 protected:
     static void _bind_methods();

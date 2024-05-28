@@ -1,0 +1,24 @@
+[gd_resource type="GameplayEffect" load_steps=7 format=3 uid="uid://dwxuhjjnxdmaj"]
+
+[ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_enb7y"]
+
+[sub_resource type="ConstantMagnitude" id="ConstantMagnitude_b3ogk"]
+magnitude = 3.0
+
+[sub_resource type="SceneTimeSource" id="SceneTimeSource_xyyst"]
+
+[sub_resource type="EffectLifetime" id="EffectLifetime_ypsu0"]
+duration = SubResource("ConstantMagnitude_b3ogk")
+time_source = SubResource("SceneTimeSource_xyyst")
+
+[sub_resource type="ConstantMagnitude" id="ConstantMagnitude_kmyvd"]
+magnitude = 69.0
+
+[sub_resource type="StatModifier" id="StatModifier_2kfw7"]
+stat = ExtResource("1_enb7y")
+magnitude = SubResource("ConstantMagnitude_kmyvd")
+
+[resource]
+modifiers = Array[StatModifier]([SubResource("StatModifier_2kfw7")])
+lifetime = SubResource("EffectLifetime_ypsu0")
+resource_name = "Duration  effect"

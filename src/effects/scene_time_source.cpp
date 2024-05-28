@@ -12,7 +12,7 @@ void SceneTimeSource::_bind_methods() {
 }
 
 void SceneEffectTimer::_bind_methods() {
-   
+   ClassDB::bind_method(D_METHOD("_on_timeout"), &SceneEffectTimer::_on_timeout);
 }
 
 Ref<EffectTimer> SceneTimeSource::create_timer(const EffectExecutionContext& execution_context, float duration) const {
@@ -29,6 +29,7 @@ Ref<EffectTimer> SceneTimeSource::_create_timer(const EffectExecutionContext& ex
     timer->set_one_shot(one_shot);
     timer->set_wait_time(duration);
     Ref<SceneEffectTimer> effect_timer = memnew(SceneEffectTimer);
+    effect_timer->set_timer(timer);
     execution_context.target_actor->add_child(timer);
     return effect_timer;
 }
@@ -36,11 +37,11 @@ Ref<EffectTimer> SceneTimeSource::_create_timer(const EffectExecutionContext& ex
 void SceneEffectTimer::set_timer(Timer* p_timer) {
     timer = p_timer;
     if (timer) {
-        timer->connect("timeout", callable_mp(this, &SceneEffectTimer::on_timeout));
+        timer->connect("timeout", callable_mp(this, &SceneEffectTimer::_on_timeout));
     }
 }
 
-void SceneEffectTimer::on_timeout() {
+void SceneEffectTimer::_on_timeout() {
     if (callback) {
         callback();
     }
@@ -48,6 +49,7 @@ void SceneEffectTimer::on_timeout() {
 
 void SceneEffectTimer::stop() {
     if (timer) {
+        callback = nullptr;
         timer->stop();
         timer->queue_free();
     }

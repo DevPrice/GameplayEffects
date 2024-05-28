@@ -1,6 +1,7 @@
 #include "gameplay_actor.h"
 #include "binding_macros.h"
 #include "containers.h"
+#include "effects/time_source.h"
 #include "modifiers/modifier_aggregator.h"
 
 #include <godot_cpp/core/class_db.hpp>
@@ -79,6 +80,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 
     const Ref<GameplayEffect> effect = spec->get_effect();
     const EffectExecutionContext execution_context = _make_execution_context(spec);
+    const Ref<EffectLifetime> lifetime = effect->get_lifetime();
 
     const TypedArray<GameplayRequirements> application_requirements = spec->get_effect()->get_application_requirements();
     const bool requirements_met = array_all_of(application_requirements, [&execution_context](Ref<GameplayRequirements> requirements) {
@@ -92,7 +94,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 
     const ActiveEffect active_effect = ActiveEffect{execution_context};
 
-    if (effect->is_instant() || effect->get_lifetime()->get_execute_on_application()) {
+    if (lifetime.is_null() || lifetime->get_execute_on_application()) {
         _execute_effect(active_effect);
     } else {
         active_effects[active_effect] = active_effect.capture_modifier_snapshot();
@@ -100,7 +102,20 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 
     emit_signal("received_effect", spec);
 
-    // TODO: Duration
+    if (lifetime.is_valid()) {
+        Ref<ModifierMagnitude> duration = lifetime->get_duration();
+        if (duration.is_valid()) {
+            float duration_magnitude = duration->get_magnitude(execution_context);
+            if (duration_magnitude > 0) {
+                Ref<EffectTimer> timer = lifetime->get_time_source()->create_timer(execution_context, duration_magnitude);
+                timer->set_callback([this, &active_effect]() {
+                    remove_effect(active_effect);
+                });
+            } else {
+                remove_effect(active_effect);
+            }
+        }
+    }
 }
 
 void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
@@ -158,6 +173,11 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     for (Ref<GameplayStat> stat : modified_stats) {
         emit_signal("stat_changed", stat, stat_values.get(stat).current_value, stat_snapshot.get(stat).current_value);
     }
+}
+
+void GameplayActor::remove_effect(const ActiveEffect& active_effect) {
+    active_effects.erase(active_effect);
+    _recalculate_stats(stat_values);
 }
 
 GameplayActor* GameplayActor::find_actor_for_node(Node* node) {
