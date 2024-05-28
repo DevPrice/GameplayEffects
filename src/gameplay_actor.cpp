@@ -161,6 +161,9 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
         }
     }
 
+    std::vector<std::shared_ptr<IEvaluatedModifier>> execution_modifiers = execution_output->get_modifiers();
+    base_aggregator.modifiers.insert(base_aggregator.modifiers.end(), execution_modifiers.begin(), execution_modifiers.end());
+
     for (auto& stat_value : stat_snapshot) {
         float modified_value = 0.f;
         if (base_aggregator.get_modified_value(stat_value.key, stat_value.value.base_value, modified_value)) {

@@ -11,19 +11,6 @@ struct IEvaluatedModifier {
     virtual bool requirements_met() const = 0;
 };
 
-class EvaluatedModifier : public IEvaluatedModifier {
-
-    Ref<GameplayStat> stat;
-    StatModifier::Operation operation;
-    float magnitude;
-
-public:
-    Ref<GameplayStat> get_stat() const override { return stat; }
-    StatModifier::Operation get_operation() const override { return operation; }
-    float get_magnitude() const override { return magnitude; }
-    bool requirements_met() const override { return true; }
-};
-
 class ModifierSnapshot : public IEvaluatedModifier {
 
     Ref<StatModifier> modifier;
