@@ -5,6 +5,7 @@
 #include "modifiers/modifier_magnitude.h"
 #include "modifiers/constant_magnitude.h"
 #include "modifiers/stat_modifier.h"
+#include "effects/effect_execution.h"
 #include "effects/effect_lifetime.h"
 #include "effects/gameplay_effect.h"
 #include "effects/gameplay_effect_context.h"
@@ -34,6 +35,8 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_ABSTRACT_CLASS(TimeSource)
     GDREGISTER_CLASS(SceneEffectTimer)
     GDREGISTER_CLASS(SceneTimeSource)
+    GDREGISTER_CLASS(EffectExecutionOutput)
+    GDREGISTER_ABSTRACT_CLASS(EffectExecution)
     GDREGISTER_CLASS(EffectLifetime)
     GDREGISTER_CLASS(GameplayEffect)
     GDREGISTER_VIRTUAL_CLASS(GameplayEffectContext)

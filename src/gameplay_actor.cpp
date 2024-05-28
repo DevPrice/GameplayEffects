@@ -1,6 +1,7 @@
 #include "gameplay_actor.h"
 #include "binding_macros.h"
 #include "containers.h"
+#include "effects/effect_execution.h"
 #include "effects/time_source.h"
 #include "modifiers/modifier_aggregator.h"
 
@@ -151,7 +152,14 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
 
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
 
-    // TODO: Run executions
+    TypedArray<EffectExecution> executions = effect->get_executions();
+    Ref<EffectExecutionOutput> execution_output = memnew(EffectExecutionOutput);
+    for (int i = 0; i < executions.size(); i++) {
+        const Ref<EffectExecution> execution = executions[i];
+        if (execution.is_valid()) {
+            execution->execute(execution_context, execution_output);
+        }
+    }
 
     for (auto& stat_value : stat_snapshot) {
         float modified_value = 0.f;

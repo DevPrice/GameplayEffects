@@ -2,6 +2,7 @@
 #define GAMEPLAY_EFFECT_H
 
 #include "binding_macros.h"
+#include "effects/effect_execution.h"
 #include "effects/effect_lifetime.h"
 #include "effects/gameplay_requirements.h"
 #include "modifiers/stat_modifier.h"
@@ -14,8 +15,9 @@ using namespace godot;
 class GameplayEffect : public Resource {
     GDCLASS(GameplayEffect, Resource)
 
-    GET_SET_PROPERTY(TypedArray<StatModifier>, modifiers)
     GET_SET_PROPERTY(TypedArray<GameplayRequirements>, application_requirements)
+    GET_SET_PROPERTY(TypedArray<StatModifier>, modifiers)
+    GET_SET_PROPERTY(TypedArray<EffectExecution>, executions)
     GET_SET_PROPERTY(Ref<EffectLifetime>, lifetime)
 
 public:
