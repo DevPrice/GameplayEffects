@@ -14,18 +14,18 @@ Type ClassName::get_##Name() const { \
     return Name; \
 } \
 void ClassName::set_##Name(Type p_##Name) { \
-    ##Name = p_##Name; \
+    Name = p_##Name; \
 }
 
 #define BIND_METHOD(ClassName, Name, ...) \
-    ClassDB::bind_method(D_METHOD(#Name, ## __VA_ARGS__), &##ClassName::##Name);
+    ClassDB::bind_method(D_METHOD(#Name, ## __VA_ARGS__), &ClassName::Name);
 
 #define BIND_STATIC_METHOD(ClassName, Name, ...) \
-    ClassDB::bind_static_method(#ClassName, D_METHOD(#Name, ##__VA_ARGS__), &##ClassName::##Name);
+    ClassDB::bind_static_method(#ClassName, D_METHOD(#Name, ##__VA_ARGS__), &ClassName::Name);
 
 #define BIND_GET_SET_METHOD(ClassName, Name) \
-    ClassDB::bind_method(D_METHOD("get_" #Name), &##ClassName::get_##Name); \
-    ClassDB::bind_method(D_METHOD("set_" #Name, "p_" #Name), &##ClassName::set_##Name);
+    ClassDB::bind_method(D_METHOD("get_" #Name), &ClassName::get_##Name); \
+    ClassDB::bind_method(D_METHOD("set_" #Name, "p_" #Name), &ClassName::set_##Name);
 
 #define BIND_GET_SET(ClassName, Name, VariantType) \
     BIND_GET_SET_METHOD(ClassName, Name) \
