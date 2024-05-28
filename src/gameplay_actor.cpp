@@ -130,7 +130,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
 
     // TODO: Run executions
 
-    for (auto stat_value : stat_snapshot) {
+    for (auto& stat_value : stat_snapshot) {
         float modified_value = 0.f;
         if (base_aggregator.get_modified_value(stat_value.key, stat_value.value.base_value, modified_value)) {
             StatSnapshot new_snapshot{modified_value, stat_value.value.current_value};
@@ -144,10 +144,10 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
 void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot) {
     std::vector<Ref<GameplayStat>> modified_stats;
     ModifierAggregator aggregator;
-    for (auto effect_modifiers : active_effects) {
+    for (auto& effect_modifiers : active_effects) {
         aggregator.modifiers.insert(aggregator.modifiers.begin(), effect_modifiers.second.begin(), effect_modifiers.second.end());
     }
-    for (auto stat : stat_values) {
+    for (auto& stat : stat_values) {
         float initial_value = stat.value.current_value;
         float modified_value = aggregator.get_modified_value(stat.key, stat.value.base_value);
         stat_values[stat.key] = StatSnapshot{stat.value.base_value, modified_value};
