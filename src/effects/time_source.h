@@ -7,21 +7,20 @@
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/resource.hpp>
 
-class EffectExecutionContext;
-
 using namespace godot;
+
+class EffectExecutionContext;
 
 class EffectTimer : public RefCounted {
     GDCLASS(EffectTimer, RefCounted)
-
-protected:
-    std::function<void()> callback;
 
 public:
     void set_callback(std::function<void()> p_callback);
     virtual void stop() = 0;
 
 protected:
+    std::function<void()> callback;
+
     static void _bind_methods();
 };
 

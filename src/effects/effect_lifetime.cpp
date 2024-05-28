@@ -14,9 +14,8 @@ void EffectLifetime::_bind_methods() {
     BIND_GET_SET_RESOURCE(EffectLifetime, time_source, TimeSource)
 }
 
-EffectLifetime::EffectLifetime() {
-    execute_on_application = true;
-}
+EffectLifetime::EffectLifetime()
+    : execute_on_application(true) /*, time_source(memnew(SceneTimeSource))*/ { }
 
 GET_SET_PROPERTY_IMPL(EffectLifetime, TypedArray<GameplayRequirements>, ongoing_requirements)
 GET_SET_PROPERTY_IMPL(EffectLifetime, Ref<ModifierMagnitude>, duration)

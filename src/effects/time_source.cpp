@@ -6,7 +6,7 @@
 using namespace godot;
 
 void TimeSource::_bind_methods() {
-   
+
 }
 
 void EffectTimer::_bind_methods() {
