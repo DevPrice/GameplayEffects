@@ -90,19 +90,27 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 
     emit_signal("receiving_effect", spec);
 
-    // TODO: Period
-
     const ActiveEffect active_effect = ActiveEffect{execution_context};
 
     if (lifetime.is_null() || lifetime->get_execute_on_application()) {
         _execute_effect(active_effect);
     } else {
         active_effects[active_effect] = active_effect.capture_modifier_snapshot();
+        _recalculate_stats(stat_values);
     }
 
     emit_signal("received_effect", spec);
 
     if (lifetime.is_valid()) {
+        Ref<ModifierMagnitude> period = lifetime->get_period();
+        if (period.is_valid()) {
+            float period_magnitude = period->get_magnitude(execution_context);
+            Ref<EffectTimer> period_timer = lifetime->get_time_source()->create_interval(execution_context, period_magnitude);
+            period_timer->set_callback([this, &active_effect]() {
+                _execute_effect(active_effect);
+            });
+            active_periods[active_effect] = period_timer;
+        }
         Ref<ModifierMagnitude> duration = lifetime->get_duration();
         if (duration.is_valid()) {
             float duration_magnitude = duration->get_magnitude(execution_context);
@@ -176,6 +184,10 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
 }
 
 void GameplayActor::remove_effect(const ActiveEffect& active_effect) {
+    if (active_periods.count(active_effect)) {
+        active_periods[active_effect]->stop();
+        active_periods.erase(active_effect);
+    }
     active_effects.erase(active_effect);
     _recalculate_stats(stat_values);
 }

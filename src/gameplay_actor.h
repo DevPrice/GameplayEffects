@@ -62,6 +62,7 @@ protected:
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
     std::unordered_map<ActiveEffect, std::vector<std::shared_ptr<IEvaluatedModifier>>, ActiveEffectHasher> active_effects;
+    std::unordered_map<ActiveEffect, Ref<EffectTimer>, ActiveEffectHasher> active_periods;
 
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);
