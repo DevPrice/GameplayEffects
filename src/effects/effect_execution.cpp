@@ -1,8 +1,11 @@
-#include "binding_macros.h"
 #include "effects/effect_execution.h"
+#include "binding_macros.h"
 #include "modifiers/evaluated_modifier.h"
+#include "modifiers/stat_modifier.h"
+#include "stats/gameplay_stat.h"
 
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/classes/ref.hpp>
 
 using namespace godot;
 
@@ -14,12 +17,12 @@ void EffectExecution::_bind_methods() {
 
 }
 
-struct EvaluatedModifier : public IEvaluatedModifier {
+struct ExecutionEvaluatedModifier : public EvaluatedModifier {
     const Ref<GameplayStat> stat;
     const StatModifier::Operation operation = StatModifier::Operation::Offset;
     const float magnitude = 0.f;
 
-    EvaluatedModifier(Ref<GameplayStat> p_stat, StatModifier::Operation p_operation, float p_magnitude)
+    ExecutionEvaluatedModifier(Ref<GameplayStat> p_stat, StatModifier::Operation p_operation, float p_magnitude)
         : stat(p_stat), operation(p_operation), magnitude(p_magnitude) { }
 
     Ref<GameplayStat> get_stat() const override { return stat; }
@@ -28,11 +31,11 @@ struct EvaluatedModifier : public IEvaluatedModifier {
     bool requirements_met() const override { return true; }
 };
 
-std::vector<std::shared_ptr<IEvaluatedModifier>> EffectExecutionOutput::get_modifiers() const {
+std::vector<std::shared_ptr<EvaluatedModifier>> EffectExecutionOutput::get_modifiers() const {
     return modifiers;
 }
 
-void EffectExecutionOutput::add_modifier(Ref<GameplayStat> stat, StatModifier::Operation operation, float magnitude) {
-    modifiers.push_back(std::make_shared<EvaluatedModifier>(stat, operation, magnitude));
+void EffectExecutionOutput::add_modifier(const Ref<GameplayStat>& stat, StatModifier::Operation operation, float magnitude) {
+    modifiers.push_back(std::make_shared<ExecutionEvaluatedModifier>(stat, operation, magnitude));
 }
 

@@ -20,7 +20,7 @@ using namespace godot;
 struct ActiveEffect {
     const EffectExecutionContext execution_context;
 
-    std::vector<std::shared_ptr<IEvaluatedModifier>> capture_modifier_snapshot() const;
+    std::vector<std::shared_ptr<EvaluatedModifier>> capture_modifier_snapshot() const;
 
     ActiveEffect(const EffectExecutionContext& p_execution_context) : execution_context(p_execution_context) { }
 
@@ -50,7 +50,7 @@ protected:
 };
 
 struct ActiveEffectState {
-    std::vector<std::shared_ptr<IEvaluatedModifier>> modifiers;
+    std::vector<std::shared_ptr<EvaluatedModifier>> modifiers;
     Ref<EffectTimer> period;
     Ref<EffectTimer> duration;
 };

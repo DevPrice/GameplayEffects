@@ -7,12 +7,12 @@
 #include <memory>
 #include <godot_cpp/classes/ref.hpp>
 
-class IEvaluatedModifier;
+class EvaluatedModifier;
 
 using namespace godot;
 
 struct ModifierAggregator {
-    std::vector<std::shared_ptr<IEvaluatedModifier>> modifiers;
+    std::vector<std::shared_ptr<EvaluatedModifier>> modifiers;
 
     bool get_modified_value(const Ref<GameplayStat>& stat, float baseValue, float& modifiedValue) const;
     float get_modified_value(const Ref<GameplayStat>& stat, float baseValue) const;

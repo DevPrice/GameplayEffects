@@ -4,6 +4,7 @@
 #include "effects/effect_execution.h"
 #include "effects/time_source.h"
 #include "modifiers/modifier_aggregator.h"
+#include "modifiers/modifier_snapshot.h"
 #include "stats/captured_stat_evaluator.h"
 #include "stats/stat_evaluator.h"
 
@@ -67,7 +68,7 @@ float GameplayActor::get_stat_current_value(Ref<GameplayStat> stat) const {
 
 ActorSnapshot GameplayActor::capture_snapshot() const {
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
-    std::vector<std::shared_ptr<IEvaluatedModifier>> modifier_snapshot;
+    std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot;
 
     for (auto& [_, effect_state] : active_effects) {
         modifier_snapshot.insert(modifier_snapshot.end(), effect_state.modifiers.begin(), effect_state.modifiers.end());
@@ -178,7 +179,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     }
 
     TypedArray<StatModifier> modifiers = effect->get_modifiers();
-    std::vector<std::shared_ptr<IEvaluatedModifier>> modifier_snapshot = active_effect.capture_modifier_snapshot();
+    std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot = active_effect.capture_modifier_snapshot();
 
     ModifierAggregator base_aggregator;
     if (effect->is_instant()) {
@@ -204,7 +205,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
 
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
 
-    std::vector<std::shared_ptr<IEvaluatedModifier>> execution_modifiers = execution_output->get_modifiers();
+    std::vector<std::shared_ptr<EvaluatedModifier>> execution_modifiers = execution_output->get_modifiers();
     base_aggregator.modifiers.insert(base_aggregator.modifiers.end(), execution_modifiers.begin(), execution_modifiers.end());
 
     for (auto& stat_value : stat_snapshot) {
@@ -227,7 +228,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     std::vector<Ref<GameplayStat>> modified_stats;
     ModifierAggregator aggregator;
     for (auto& effect_state : active_effects) {
-        const std::vector<std::shared_ptr<IEvaluatedModifier>>& effect_modifiers = effect_state.second.modifiers;
+        const std::vector<std::shared_ptr<EvaluatedModifier>>& effect_modifiers = effect_state.second.modifiers;
         aggregator.modifiers.insert(aggregator.modifiers.begin(), effect_modifiers.begin(), effect_modifiers.end());
     }
     for (auto& stat : stat_values) {
@@ -285,13 +286,13 @@ void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
     }
 }
 
-std::vector<std::shared_ptr<IEvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {
+std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {
     const TypedArray<StatModifier> modifiers = execution_context.spec->get_effect()->get_modifiers();
-    std::vector<std::shared_ptr<IEvaluatedModifier>> modifier_snapshot;
+    std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot;
     for (size_t i = 0; i < modifiers.size(); i++) {
         const Ref<StatModifier> modifier = modifiers[i];
         const float magnitude = modifier->get_magnitude()->get_magnitude(execution_context);
-        std::shared_ptr<IEvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, magnitude);
+        std::shared_ptr<EvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, magnitude);
         modifier_snapshot.push_back(evaluated_modifier);
     }
     return modifier_snapshot;

@@ -2,13 +2,12 @@
 #define ACTOR_SNAPSHOT_H
 
 #include "stats/gameplay_stat.h"
+#include "modifiers/evaluated_modifier.h"
 
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/templates/hash_map.hpp>
 #include <memory>
 #include <vector>
-
-class IEvaluatedModifier;
 
 struct StatSnapshot {
     float base_value = 0.f;
@@ -17,7 +16,7 @@ struct StatSnapshot {
 
 struct ActorSnapshot {
     const HashMap<Ref<GameplayStat>, StatSnapshot> base_value_snapshot;
-    const std::vector<std::shared_ptr<IEvaluatedModifier>> modifier_snapshot;
+    const std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot;
 
     bool operator==(const ActorSnapshot &other) const {
         // TODO: base_value_snapshot
