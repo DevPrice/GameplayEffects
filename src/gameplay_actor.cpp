@@ -104,7 +104,8 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
 
     if (lifetime.is_valid()) {
         Ref<ModifierMagnitude> period = lifetime->get_period();
-        if (period.is_valid()) {
+        Ref<TimeSource> time_source = lifetime->get_time_source();
+        if (period.is_valid() && time_source.is_valid()) {
             float period_magnitude = period->get_magnitude(execution_context);
             Ref<EffectTimer> period_timer = lifetime->get_time_source()->create_interval(execution_context, period_magnitude);
             period_timer->set_callback([this, &active_effect]() {
@@ -115,7 +116,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
         Ref<ModifierMagnitude> duration = lifetime->get_duration();
         if (duration.is_valid()) {
             float duration_magnitude = duration->get_magnitude(execution_context);
-            if (duration_magnitude > 0) {
+            if (duration_magnitude > 0 && time_source.is_valid()) {
                 Ref<EffectTimer> timer = lifetime->get_time_source()->create_timer(execution_context, duration_magnitude);
                 timer->set_callback([this, &active_effect]() {
                     remove_effect(active_effect);
@@ -131,7 +132,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     const EffectExecutionContext execution_context = active_effect.execution_context;
     const Ref<GameplayEffect> effect = execution_context.spec->get_effect();
 
-    const Ref<EffectLifetime> lifetime = execution_context.spec->get_effect()->get_lifetime();
+    const Ref<EffectLifetime> lifetime = effect->get_lifetime();
     if (lifetime.is_valid()) {
         const TypedArray<GameplayRequirements> ongoing_requirements = lifetime->get_ongoing_requirements();
         const bool requirements_met = array_all_of(ongoing_requirements, [&execution_context](Ref<GameplayRequirements> requirements) {
