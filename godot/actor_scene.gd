@@ -1,6 +1,7 @@
 extends Node2D
 
 var test_stat: GameplayStat = preload("res://test_stat.tres")
+var c: CapturedStat
 
 @export var effects: Array[GameplayEffect] = []
 

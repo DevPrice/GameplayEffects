@@ -2,12 +2,12 @@
 #include "binding_macros.h"
 
 #include <godot_cpp/core/class_db.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
 
 using namespace godot;
 
 void GameplayStat::_bind_methods(){
-    BIND_GET_SET(GameplayStat, base_value, Variant::FLOAT)}
+    BIND_GET_SET(GameplayStat, base_value, Variant::FLOAT)
+}
 
 GameplayStat::GameplayStat() {
     base_value = 0.f;
