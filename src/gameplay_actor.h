@@ -26,12 +26,12 @@ struct ActiveEffect {
     bool operator==(const ActiveEffect &other) const {
         return execution_context == other.execution_context;
     }
-};
 
-struct ActiveEffectHasher {
-    std::size_t operator()(const ActiveEffect& active_effect) const {
-        return (std::size_t)active_effect.execution_context.spec.ptr() ^ (std::size_t)active_effect.execution_context.target_actor;
-    }
+    struct Hasher {
+        std::size_t operator()(const ActiveEffect& active_effect) const {
+            return (std::size_t)active_effect.execution_context.spec.ptr() ^ (std::size_t)active_effect.execution_context.target_actor;
+        }
+    };
 };
 
 class ActiveEffectHandle : public RefCounted {
@@ -46,6 +46,12 @@ public:
 
 protected:
     static void _bind_methods();
+};
+
+struct ActiveEffectState {
+    std::vector<std::shared_ptr<IEvaluatedModifier>> modifiers;
+    Ref<EffectTimer> period;
+    Ref<EffectTimer> duration;
 };
 
 struct StatSnapshot {
@@ -77,8 +83,7 @@ protected:
 
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
-    std::unordered_map<ActiveEffect, std::vector<std::shared_ptr<IEvaluatedModifier>>, ActiveEffectHasher> active_effects;
-    std::unordered_map<ActiveEffect, Ref<EffectTimer>, ActiveEffectHasher> active_periods;
+    std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
 
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);

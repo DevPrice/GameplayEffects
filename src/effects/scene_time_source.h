@@ -13,6 +13,7 @@ class SceneEffectTimer : public EffectTimer {
     GDCLASS(SceneEffectTimer, EffectTimer)
 
 public:
+    ~SceneEffectTimer();
     void set_timer(Timer* p_timer);
     void stop() override;
 

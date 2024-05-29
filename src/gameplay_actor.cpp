@@ -110,7 +110,7 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec>
     if (lifetime.is_null() || lifetime->get_execute_on_application()) {
         _execute_effect(active_effect);
     } else {
-        active_effects[active_effect] = active_effect.capture_modifier_snapshot();
+        active_effects[active_effect].modifiers = active_effect.capture_modifier_snapshot();
         _recalculate_stats();
     }
 
@@ -125,19 +125,20 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec>
         if (period.is_valid() && time_source.is_valid()) {
             float period_magnitude = period->get_magnitude(execution_context);
             Ref<EffectTimer> period_timer = lifetime->get_time_source()->create_interval(execution_context, period_magnitude);
-            period_timer->set_callback([this, &active_effect]() {
+            period_timer->set_callback([this, active_effect]() {
                 _execute_effect(active_effect);
             });
-            active_periods[active_effect] = period_timer;
+            active_effects[active_effect].period = period_timer;
         }
         Ref<ModifierMagnitude> duration = lifetime->get_duration();
         if (duration.is_valid()) {
             float duration_magnitude = duration->get_magnitude(execution_context);
             if (duration_magnitude > 0 && time_source.is_valid()) {
-                Ref<EffectTimer> timer = lifetime->get_time_source()->create_timer(execution_context, duration_magnitude);
-                timer->set_callback([this, &active_effect]() {
+                Ref<EffectTimer> duration_timer = lifetime->get_time_source()->create_timer(execution_context, duration_magnitude);
+                duration_timer->set_callback([this, active_effect]() {
                     _remove_effect(active_effect);
                 });
+                active_effects[active_effect].period = duration_timer;
             } else {
                 _remove_effect(active_effect);
             }
@@ -167,7 +168,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     if (effect->is_instant()) {
         base_aggregator.modifiers.insert(base_aggregator.modifiers.end(), modifier_snapshot.begin(), modifier_snapshot.end());
     } else {
-        active_effects[active_effect] = modifier_snapshot;
+        active_effects[active_effect].modifiers = modifier_snapshot;
     }
 
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
@@ -203,8 +204,9 @@ void GameplayActor::_recalculate_stats() {
 void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot) {
     std::vector<Ref<GameplayStat>> modified_stats;
     ModifierAggregator aggregator;
-    for (auto& effect_modifiers : active_effects) {
-        aggregator.modifiers.insert(aggregator.modifiers.begin(), effect_modifiers.second.begin(), effect_modifiers.second.end());
+    for (auto& effect_state : active_effects) {
+        const std::vector<std::shared_ptr<IEvaluatedModifier>>& effect_modifiers = effect_state.second.modifiers;
+        aggregator.modifiers.insert(aggregator.modifiers.begin(), effect_modifiers.begin(), effect_modifiers.end());
     }
     for (auto& stat : stat_values) {
         float initial_value = stat.value.current_value;
@@ -229,11 +231,7 @@ bool GameplayActor::remove_effect(Ref<ActiveEffectHandle> handle) {
 }
 
 bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
-    if (active_periods.count(active_effect)) {
-        active_periods[active_effect]->stop();
-        active_periods.erase(active_effect);
-    }
-    bool removed = active_effects.erase(active_effect);
+    const bool removed = active_effects.erase(active_effect);
     _recalculate_stats();
     return removed;
 }

@@ -5,6 +5,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/callable_method_pointer.hpp>
+#include "scene_time_source.h"
 
 using namespace godot;
 
@@ -33,6 +34,10 @@ Ref<EffectTimer> SceneTimeSource::_create_timer(const EffectExecutionContext& ex
     effect_timer->set_timer(timer);
     execution_context.target_actor->add_child(timer);
     return effect_timer;
+}
+
+SceneEffectTimer::~SceneEffectTimer() {
+    stop();
 }
 
 void SceneEffectTimer::set_timer(Timer* p_timer) {
