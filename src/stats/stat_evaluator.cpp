@@ -8,7 +8,9 @@
 using namespace godot;
 
 void StatEvaluator::_bind_methods() {
-    
+    BIND_METHOD(StatEvaluator, get_base_value, "stat")
+    BIND_METHOD(StatEvaluator, get_current_value, "stat")
+    BIND_METHOD(StatEvaluator, get_modified_value, "stat", "base_value")
 }
 
 void StatEvaluator::set_evaluator(const CapturedStatEvaluator *evaluator) {
