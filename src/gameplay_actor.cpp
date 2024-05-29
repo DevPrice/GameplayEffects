@@ -46,7 +46,7 @@ void GameplayActor::_bind_methods() {
     BIND_METHOD(GameplayActor, apply_effect_to_target, "effect", "target")
     BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
     BIND_METHOD(GameplayActor, remove_effect, "handle")
-    BIND_VIRTUAL_METHOD(GameplayActor, _make_effect_context)
+    BIND_METHOD(GameplayActor, _make_effect_context)
 }
 
 StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {
@@ -201,6 +201,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
                 execution->execute(execution_context, stat_evaluator, execution_output);
             }
         }
+        stat_evaluator->set_evaluator(nullptr);
     }
 
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
