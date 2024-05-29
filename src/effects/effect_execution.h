@@ -3,6 +3,7 @@
 
 #include "binding_macros.h"
 #include "modifiers/stat_modifier.h"
+#include "stats/stat_evaluator.h"
 
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/resource.hpp>
@@ -33,7 +34,7 @@ class EffectExecution : public Resource {
     GDCLASS(EffectExecution, Resource)
 
 public:
-    virtual void execute(const EffectExecutionContext& execution_context, Ref<EffectExecutionOutput> output) = 0;
+    virtual void execute(const EffectExecutionContext& execution_context, Ref<StatEvaluator> stat_evaluator, Ref<EffectExecutionOutput> output) = 0;
 
 protected:
     static void _bind_methods();

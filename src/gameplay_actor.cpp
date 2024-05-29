@@ -4,6 +4,8 @@
 #include "effects/effect_execution.h"
 #include "effects/time_source.h"
 #include "modifiers/modifier_aggregator.h"
+#include "stats/captured_stat_evaluator.h"
+#include "stats/stat_evaluator.h"
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/templates/vector.hpp>
@@ -185,16 +187,22 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
         active_effects[active_effect].modifiers = modifier_snapshot;
     }
 
-    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
-
     TypedArray<EffectExecution> executions = effect->get_executions();
     Ref<EffectExecutionOutput> execution_output = memnew(EffectExecutionOutput);
-    for (int i = 0; i < executions.size(); i++) {
-        const Ref<EffectExecution> execution = executions[i];
-        if (execution.is_valid()) {
-            execution->execute(execution_context, execution_output);
+
+    if (executions.size() > 0) {
+        auto captured_stat_evaluator = std::make_unique<CapturedStatEvaluator>(execution_context);
+        Ref<StatEvaluator> stat_evaluator = memnew(StatEvaluator);
+        stat_evaluator->set_evaluator(captured_stat_evaluator.get());
+        for (int i = 0; i < executions.size(); i++) {
+            const Ref<EffectExecution> execution = executions[i];
+            if (execution.is_valid()) {
+                execution->execute(execution_context, stat_evaluator, execution_output);
+            }
         }
     }
+
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
 
     std::vector<std::shared_ptr<IEvaluatedModifier>> execution_modifiers = execution_output->get_modifiers();
     base_aggregator.modifiers.insert(base_aggregator.modifiers.end(), execution_modifiers.begin(), execution_modifiers.end());
