@@ -82,6 +82,7 @@ private:
 
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);
+    void _recalculate_stats();
     void _recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);
     bool _remove_effect(const ActiveEffect &active_effect);
 

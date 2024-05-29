@@ -41,6 +41,7 @@ void GameplayActor::_bind_methods() {
     BIND_METHOD(GameplayActor, apply_effect_to_self, "effect")
     BIND_METHOD(GameplayActor, apply_effect_to_target, "effect", "target")
     BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
+    BIND_METHOD(GameplayActor, remove_effect, "handle")
     BIND_VIRTUAL_METHOD(GameplayActor, _make_effect_context)
 }
 
@@ -110,7 +111,7 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec>
         _execute_effect(active_effect);
     } else {
         active_effects[active_effect] = active_effect.capture_modifier_snapshot();
-        _recalculate_stats(stat_values);
+        _recalculate_stats();
     }
 
     emit_signal("received_effect", spec);
@@ -194,6 +195,11 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     _recalculate_stats(stat_snapshot);
 }
 
+void GameplayActor::_recalculate_stats() {
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
+    _recalculate_stats(stat_snapshot);
+}
+
 void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot) {
     std::vector<Ref<GameplayStat>> modified_stats;
     ModifierAggregator aggregator;
@@ -228,7 +234,7 @@ bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
         active_periods.erase(active_effect);
     }
     bool removed = active_effects.erase(active_effect);
-    _recalculate_stats(stat_values);
+    _recalculate_stats();
     return removed;
 }
 
