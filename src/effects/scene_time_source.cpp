@@ -4,6 +4,7 @@
 #include "binding_macros.h"
 
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/variant/callable_method_pointer.hpp>
 
 using namespace godot;
 
@@ -12,7 +13,7 @@ void SceneTimeSource::_bind_methods() {
 }
 
 void SceneEffectTimer::_bind_methods() {
-   ClassDB::bind_method(D_METHOD("_on_timeout"), &SceneEffectTimer::_on_timeout);
+   BIND_METHOD(SceneEffectTimer, _on_timeout)
 }
 
 Ref<EffectTimer> SceneTimeSource::create_timer(const EffectExecutionContext& execution_context, float duration) const {
@@ -35,6 +36,10 @@ Ref<EffectTimer> SceneTimeSource::_create_timer(const EffectExecutionContext& ex
 }
 
 void SceneEffectTimer::set_timer(Timer* p_timer) {
+    if (timer == p_timer) return;
+    if (timer) {
+        timer->disconnect("timeout", callable_mp(this, &SceneEffectTimer::_on_timeout));
+    }
     timer = p_timer;
     if (timer) {
         timer->connect("timeout", callable_mp(this, &SceneEffectTimer::_on_timeout));
@@ -52,5 +57,6 @@ void SceneEffectTimer::stop() {
         callback = nullptr;
         timer->stop();
         timer->queue_free();
+        timer = nullptr;
     }
 }
