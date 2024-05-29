@@ -1,6 +1,7 @@
 #ifndef GAMEPLAY_ACTOR_H
 #define GAMEPLAY_ACTOR_H
 
+#include "actor_snapshot.h"
 #include "effects/effect_execution_context.h"
 #include "effects/gameplay_effect_context.h"
 #include "effects/gameplay_effect_spec.h"
@@ -54,11 +55,6 @@ struct ActiveEffectState {
     Ref<EffectTimer> duration;
 };
 
-struct StatSnapshot {
-    float base_value = 0.f;
-    float current_value = 0.f;
-};
-
 class GameplayActor : public Node {
     GDCLASS(GameplayActor, Node)
 
@@ -85,13 +81,15 @@ private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
 
+    ActorSnapshot capture_snapshot() const;
+
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);
     void _recalculate_stats();
     void _recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);
     bool _remove_effect(const ActiveEffect &active_effect);
 
-protected:
+  protected:
     static void _bind_methods();
 };
 
