@@ -3,6 +3,7 @@
 #include "gameplay_actor.h"
 #include "stats/gameplay_stat.h"
 #include "stats/captured_stat.h"
+#include "stats/stat_evaluator.h"
 #include "modifiers/modifier_magnitude.h"
 #include "modifiers/constant_magnitude.h"
 #include "modifiers/stat_modifier.h"
@@ -33,6 +34,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(ConstantMagnitude)
     GDREGISTER_CLASS(StatModifier)
     GDREGISTER_CLASS(CapturedStat)
+    GDREGISTER_CLASS(StatEvaluator)
     GDREGISTER_ABSTRACT_CLASS(GameplayRequirements)
     GDREGISTER_ABSTRACT_CLASS(EffectTimer)
     GDREGISTER_ABSTRACT_CLASS(TimeSource)

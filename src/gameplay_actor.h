@@ -65,6 +65,8 @@ public:
     float get_stat_base_value(Ref<GameplayStat> stat) const;
     float get_stat_current_value(Ref<GameplayStat> stat) const;
 
+    ActorSnapshot capture_snapshot() const;
+
     Ref<GameplayEffectSpec> make_effect_spec(Ref<GameplayEffect> effect);
 
     Ref<ActiveEffectHandle> apply_effect_to_self(Ref<GameplayEffect> effect);
@@ -77,8 +79,6 @@ public:
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
-
-    ActorSnapshot capture_snapshot() const;
 
     Ref<GameplayEffectContext> _make_effect_context();
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
