@@ -29,7 +29,12 @@ protected:
 class SceneTimeSource : public TimeSource {
     GDCLASS(SceneTimeSource, TimeSource)
 
+    GET_SET_PROPERTY(bool, process_always)
+    GET_SET_PROPERTY(bool, process_in_physics)
+
 public:
+    SceneTimeSource() : process_always(false), process_in_physics(false) { }
+
     Ref<EffectTimer> create_timer(const EffectExecutionContext& execution_context, float duration) const override;
     Ref<EffectTimer> create_interval(const EffectExecutionContext& execution_context, float duration) const override;
 

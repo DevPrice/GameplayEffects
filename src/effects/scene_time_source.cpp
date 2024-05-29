@@ -10,12 +10,16 @@
 using namespace godot;
 
 void SceneTimeSource::_bind_methods() {
-   
+    BIND_GET_SET(SceneTimeSource, process_always, Variant::BOOL)
+    BIND_GET_SET(SceneTimeSource, process_in_physics, Variant::BOOL)
 }
 
 void SceneEffectTimer::_bind_methods() {
    BIND_METHOD(SceneEffectTimer, _on_timeout)
 }
+
+GET_SET_PROPERTY_IMPL(SceneTimeSource, bool, process_always)
+GET_SET_PROPERTY_IMPL(SceneTimeSource, bool, process_in_physics)
 
 Ref<EffectTimer> SceneTimeSource::create_timer(const EffectExecutionContext& execution_context, float duration) const {
     return _create_timer(execution_context, duration, true);
