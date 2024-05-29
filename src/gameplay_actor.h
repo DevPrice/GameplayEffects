@@ -74,15 +74,13 @@ public:
 
     static GameplayActor* find_actor_for_node(Node* node);
 
-protected:
-    virtual Ref<GameplayEffectContext> _make_effect_context();
-
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
 
     ActorSnapshot capture_snapshot() const;
 
+    Ref<GameplayEffectContext> _make_effect_context();
     EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);
     void _recalculate_stats();

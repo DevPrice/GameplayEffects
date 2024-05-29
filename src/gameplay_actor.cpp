@@ -22,6 +22,7 @@ std::unique_ptr<ActiveEffect> ActiveEffectHandle::get_active_effect() const {
     }
     return nullptr;
 }
+
 void ActiveEffectHandle::set_active_effect(const ActiveEffect& p_active_effect) {
     active_effect = std::make_unique<ActiveEffect>(p_active_effect);
 }
@@ -83,6 +84,7 @@ Ref<GameplayEffectSpec> GameplayActor::make_effect_spec(Ref<GameplayEffect> effe
 Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {
     Ref<GameplayEffectContext> effect_context = memnew(GameplayEffectContext);
     effect_context->set_source_actor(this);
+    effect_context->set_source_snapshot(capture_snapshot());
     return effect_context;
 }
 
