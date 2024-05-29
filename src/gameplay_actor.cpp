@@ -13,6 +13,19 @@
 
 using namespace godot;
 
+void ActiveEffectHandle::_bind_methods() {
+}
+
+std::unique_ptr<ActiveEffect> ActiveEffectHandle::get_active_effect() const {
+    if (active_effect) {
+        return std::make_unique<ActiveEffect>(*active_effect);
+    }
+    return nullptr;
+}
+void ActiveEffectHandle::set_active_effect(const ActiveEffect& p_active_effect) {
+    active_effect = std::make_unique<ActiveEffect>(p_active_effect);
+}
+
 void GameplayActor::_bind_methods() {
     ADD_SIGNAL(MethodInfo("stat_changed",
         PropertyInfo(Variant::OBJECT, "stat", PROPERTY_HINT_RESOURCE_TYPE, "GameplayStat"),
@@ -65,19 +78,19 @@ EffectExecutionContext GameplayActor::_make_execution_context(Ref<GameplayEffect
     return EffectExecutionContext{spec, this};
 }
 
-void GameplayActor::apply_effect_to_self(Ref<GameplayEffect> effect) {
-    apply_effect_to_target(effect, this);
+Ref<ActiveEffectHandle> GameplayActor::apply_effect_to_self(Ref<GameplayEffect> effect) {
+    return apply_effect_to_target(effect, this);
 }
 
-void GameplayActor::apply_effect_to_target(Ref<GameplayEffect> effect, Node* target) {
-    GameplayActor* target_actor = find_actor_for_node(target);
-    if (target_actor) {
-        target_actor->apply_effect_spec(make_effect_spec(effect));
+Ref<ActiveEffectHandle> GameplayActor::apply_effect_to_target(Ref<GameplayEffect> effect, Node* target) {
+    if (GameplayActor* target_actor = find_actor_for_node(target)) {
+        return target_actor->apply_effect_spec(make_effect_spec(effect));
     }
+    return nullptr;
 }
 
-void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
-    if (!spec.is_valid()) return;
+Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
+    if (!spec.is_valid()) return nullptr;
 
     const Ref<GameplayEffect> effect = spec->get_effect();
     const EffectExecutionContext execution_context = _make_execution_context(spec);
@@ -87,7 +100,7 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     const bool requirements_met = array_all_of(application_requirements, [&execution_context](Ref<GameplayRequirements> requirements) {
         return !requirements.is_valid() || requirements->requirements_met(execution_context);
     });
-    if (!requirements_met) return;
+    if (!requirements_met) return nullptr;
 
     emit_signal("receiving_effect", spec);
 
@@ -101,6 +114,9 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
     }
 
     emit_signal("received_effect", spec);
+
+    Ref<ActiveEffectHandle> handle = memnew(ActiveEffectHandle);
+    handle->set_active_effect(active_effect);
 
     if (lifetime.is_valid()) {
         Ref<ModifierMagnitude> period = lifetime->get_period();
@@ -119,13 +135,15 @@ void GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
             if (duration_magnitude > 0 && time_source.is_valid()) {
                 Ref<EffectTimer> timer = lifetime->get_time_source()->create_timer(execution_context, duration_magnitude);
                 timer->set_callback([this, &active_effect]() {
-                    remove_effect(active_effect);
+                    _remove_effect(active_effect);
                 });
             } else {
-                remove_effect(active_effect);
+                _remove_effect(active_effect);
             }
         }
     }
+
+    return handle;
 }
 
 void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
@@ -195,13 +213,23 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     }
 }
 
-void GameplayActor::remove_effect(const ActiveEffect& active_effect) {
+bool GameplayActor::remove_effect(Ref<ActiveEffectHandle> handle) {
+    if (handle.is_valid()) {
+        if (std::unique_ptr<ActiveEffect> effect_ref = handle->get_active_effect()) {
+            return _remove_effect(*effect_ref);
+        }
+    }
+    return false;
+}
+
+bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
     if (active_periods.count(active_effect)) {
         active_periods[active_effect]->stop();
         active_periods.erase(active_effect);
     }
-    active_effects.erase(active_effect);
+    bool removed = active_effects.erase(active_effect);
     _recalculate_stats(stat_values);
+    return removed;
 }
 
 GameplayActor* GameplayActor::find_actor_for_node(Node* node) {
