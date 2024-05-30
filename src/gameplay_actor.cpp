@@ -263,11 +263,41 @@ bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
     return removed;
 }
 
+String& GameplayActor::get_actor_meta_name() {
+    static String actor_meta_name = "instigator_gameplay_actor";
+    return actor_meta_name;
+}
+
 GameplayActor* GameplayActor::find_actor_for_node(Node* node) {
     GameplayActor* as_actor = Object::cast_to<GameplayActor>(node);
     if (as_actor) return as_actor;
-    // TODO: Handle avatar
+
+    String& actor_meta_name = get_actor_meta_name();
+    if (node) {
+        if (node->has_meta(actor_meta_name)) {
+            if (GameplayActor* instigating_actor = Object::cast_to<GameplayActor>(node->get_meta(actor_meta_name))) {
+                return instigating_actor;
+            }
+        }
+        String get_gameplay_actor_method = "get_gameplay_actor";
+        if (node->has_method(get_gameplay_actor_method)) {
+            if (GameplayActor* actor = Object::cast_to<GameplayActor>(node->call(get_gameplay_actor_method))) {
+                return actor;
+            }
+        }
+    }
+
     return nullptr;
+}
+
+void GameplayActor::set_owning_actor(Node* node, GameplayActor* actor) {
+    if (node == nullptr) return;
+
+    if (actor) {
+        node->set_meta(get_actor_meta_name(), actor);
+    } else {
+        node->remove_meta(get_actor_meta_name());
+    }
 }
 
 TypedArray<GameplayStat> GameplayActor::get_stats() const {

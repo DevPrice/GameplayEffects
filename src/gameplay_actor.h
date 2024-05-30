@@ -12,6 +12,7 @@
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/templates/hash_map.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
+#include <godot_cpp/variant/string.hpp>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -76,6 +77,7 @@ public:
     bool remove_effect(const Ref<ActiveEffectHandle>& handle);
 
     static GameplayActor* find_actor_for_node(Node* node);
+    static void set_owning_actor(Node* node, GameplayActor* actor);
 
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
@@ -87,6 +89,8 @@ private:
     void _recalculate_stats();
     void _recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);
     bool _remove_effect(const ActiveEffect& active_effect);
+
+    static String& get_actor_meta_name();
 
   protected:
     static void _bind_methods();
