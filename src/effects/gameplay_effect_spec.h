@@ -27,8 +27,9 @@ public:
     bool get_tag_magnitude(const GameplayTag& tag, float& out_magnitude) const;
     void set_tag_magnitude(const GameplayTag& tag, float magnitude);
     void set_tag_magnitudes(const std::unordered_map<GameplayTag, float, GameplayTag::Hasher>& p_tag_magnitudes);
+    void add_tag_magnitudes(const Dictionary& p_tag_magnitudes);
 
-private:
+  private:
     std::unordered_map<GameplayTag, float, GameplayTag::Hasher> tag_magnitudes;
 
 protected:

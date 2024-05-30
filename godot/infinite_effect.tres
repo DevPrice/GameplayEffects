@@ -5,10 +5,9 @@
 [sub_resource type="EffectLifetime" id="EffectLifetime_pefeh"]
 
 [sub_resource type="ConstantMagnitude" id="ConstantMagnitude_kw580"]
-magnitude = 2.0
+magnitude = 8.0
 
 [sub_resource type="StatModifier" id="StatModifier_vh8y5"]
-operation = 1
 stat = ExtResource("1_2notk")
 magnitude = SubResource("ConstantMagnitude_kw580")
 

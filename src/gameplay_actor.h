@@ -11,6 +11,7 @@
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/templates/hash_map.hpp>
+#include <godot_cpp/variant/dictionary.hpp>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -62,17 +63,17 @@ class GameplayActor : public Node {
 
 public:
     StatSnapshot get_stat_snapshot(const Ref<GameplayStat>& stat) const;
-    float get_stat_base_value(Ref<GameplayStat> stat) const;
-    float get_stat_current_value(Ref<GameplayStat> stat) const;
+    float get_stat_base_value(const Ref<GameplayStat>& stat) const;
+    float get_stat_current_value(const Ref<GameplayStat>& stat) const;
 
     ActorSnapshot capture_snapshot() const;
 
-    Ref<GameplayEffectSpec> make_effect_spec(Ref<GameplayEffect> effect);
+    Ref<GameplayEffectSpec> make_effect_spec(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes = Dictionary());
 
-    Ref<ActiveEffectHandle> apply_effect_to_self(Ref<GameplayEffect> effect);
-    Ref<ActiveEffectHandle> apply_effect_to_target(Ref<GameplayEffect> effect, Node* target);
-    Ref<ActiveEffectHandle> apply_effect_spec(Ref<GameplayEffectSpec> spec);
-    bool remove_effect(Ref<ActiveEffectHandle> handle);
+    Ref<ActiveEffectHandle> apply_effect_to_self(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes = Dictionary());
+    Ref<ActiveEffectHandle> apply_effect_to_target(const Ref<GameplayEffect>& effect, Node* target, const Dictionary& tag_magnitudes = Dictionary());
+    Ref<ActiveEffectHandle> apply_effect_spec(const Ref<GameplayEffectSpec>& spec);
+    bool remove_effect(const Ref<ActiveEffectHandle>& handle);
 
     static GameplayActor* find_actor_for_node(Node* node);
 
@@ -81,7 +82,7 @@ private:
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
 
     Ref<GameplayEffectContext> _make_effect_context();
-    EffectExecutionContext _make_execution_context(Ref<GameplayEffectSpec>& spec);
+    EffectExecutionContext _make_execution_context(const Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);
     void _recalculate_stats();
     void _recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);

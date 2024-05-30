@@ -41,12 +41,14 @@ void GameplayActor::_bind_methods() {
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, get_stat_base_value, "stat")
     BIND_METHOD(GameplayActor, get_stat_current_value, "stat")
-    BIND_METHOD(GameplayActor, make_effect_spec, "effect")
-    BIND_METHOD(GameplayActor, apply_effect_to_self, "effect")
-    BIND_METHOD(GameplayActor, apply_effect_to_target, "effect", "target")
     BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
     BIND_METHOD(GameplayActor, remove_effect, "handle")
     BIND_METHOD(GameplayActor, _make_effect_context)
+
+    Dictionary default_tag_magnitudes;
+    ClassDB::bind_method(D_METHOD("make_effect_spec", "effect", "tag_magnitudes"), &GameplayActor::make_effect_spec, DEFVAL(default_tag_magnitudes));
+    ClassDB::bind_method(D_METHOD("apply_effect_to_self", "effect", "tag_magnitudes"), &GameplayActor::apply_effect_to_self, DEFVAL(default_tag_magnitudes));
+    ClassDB::bind_method(D_METHOD("apply_effect_to_target", "effect", "target", "tag_magnitudes"), &GameplayActor::apply_effect_to_target, DEFVAL(default_tag_magnitudes));
 }
 
 StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {
@@ -58,11 +60,11 @@ StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) con
     return stat_values.get(stat);
 }
 
-float GameplayActor::get_stat_base_value(Ref<GameplayStat> stat) const {
+float GameplayActor::get_stat_base_value(const Ref<GameplayStat>& stat) const {
     return get_stat_snapshot(stat).base_value;
 }
 
-float GameplayActor::get_stat_current_value(Ref<GameplayStat> stat) const {
+float GameplayActor::get_stat_current_value(const Ref<GameplayStat>& stat) const {
     return get_stat_snapshot(stat).current_value;
 }
 
@@ -77,10 +79,11 @@ ActorSnapshot GameplayActor::capture_snapshot() const {
     return ActorSnapshot{stat_snapshot,modifier_snapshot};
 }
 
-Ref<GameplayEffectSpec> GameplayActor::make_effect_spec(Ref<GameplayEffect> effect) {
+Ref<GameplayEffectSpec> GameplayActor::make_effect_spec(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes) {
     Ref<GameplayEffectSpec> spec = memnew(GameplayEffectSpec);
     spec->set_effect(effect);
     spec->set_context(_make_effect_context());
+    spec->add_tag_magnitudes(tag_magnitudes);
     return spec;
 }
 
@@ -91,23 +94,23 @@ Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {
     return effect_context;
 }
 
-EffectExecutionContext GameplayActor::_make_execution_context(Ref<GameplayEffectSpec>& spec) {
+EffectExecutionContext GameplayActor::_make_execution_context(const Ref<GameplayEffectSpec>& spec) {
     ActorSnapshot actor_snapshot = capture_snapshot();
     return EffectExecutionContext{spec, this, actor_snapshot};
 }
 
-Ref<ActiveEffectHandle> GameplayActor::apply_effect_to_self(Ref<GameplayEffect> effect) {
-    return apply_effect_to_target(effect, this);
+Ref<ActiveEffectHandle> GameplayActor::apply_effect_to_self(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes) {
+    return apply_effect_to_target(effect, this, tag_magnitudes);
 }
 
-Ref<ActiveEffectHandle> GameplayActor::apply_effect_to_target(Ref<GameplayEffect> effect, Node* target) {
+Ref<ActiveEffectHandle> GameplayActor::apply_effect_to_target(const Ref<GameplayEffect>& effect, Node* target, const Dictionary& tag_magnitudes) {
     if (GameplayActor* target_actor = find_actor_for_node(target)) {
-        return target_actor->apply_effect_spec(make_effect_spec(effect));
+        return target_actor->apply_effect_spec(make_effect_spec(effect, tag_magnitudes));
     }
     return nullptr;
 }
 
-Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(Ref<GameplayEffectSpec> spec) {
+Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffectSpec>& spec) {
     if (!spec.is_valid()) return nullptr;
 
     const Ref<GameplayEffect> effect = spec->get_effect();
@@ -245,7 +248,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     }
 }
 
-bool GameplayActor::remove_effect(Ref<ActiveEffectHandle> handle) {
+bool GameplayActor::remove_effect(const Ref<ActiveEffectHandle>& handle) {
     if (handle.is_valid()) {
         if (std::unique_ptr<ActiveEffect> effect_ref = handle->get_active_effect()) {
             return _remove_effect(*effect_ref);

@@ -26,14 +26,7 @@ Ref<GameplayEffectSpec> GameplayEffectSpec::with_tag_magnitudes(const Dictionary
     new_spec->set_effect(effect);
     new_spec->set_context(context);
     new_spec->set_tag_magnitudes(tag_magnitudes);
-
-    Array tags = p_tag_magnitudes.keys();
-    for (int i = 0; i < tags.size(); ++i) {
-        Variant& key = tags[i];
-        const GameplayTag tag(key.stringify());
-        const float magnitude = p_tag_magnitudes.get(key, 0.f);
-        new_spec->set_tag_magnitude(tag, magnitude);
-    }
+    new_spec->add_tag_magnitudes(p_tag_magnitudes);
 
     return new_spec;
 }
@@ -52,6 +45,16 @@ void GameplayEffectSpec::set_tag_magnitude(const GameplayTag& tag, float magnitu
 
 void GameplayEffectSpec::set_tag_magnitudes(const std::unordered_map<GameplayTag, float, GameplayTag::Hasher>& p_tag_magnitudes) {
     tag_magnitudes = p_tag_magnitudes;
+}
+
+void GameplayEffectSpec::add_tag_magnitudes(const Dictionary & p_tag_magnitudes) {
+    Array tags = p_tag_magnitudes.keys();
+    for (int i = 0; i < tags.size(); ++i) {
+        Variant& key = tags[i];
+        const GameplayTag tag(key.stringify());
+        const float magnitude = p_tag_magnitudes.get(key, 0.f);
+        set_tag_magnitude(tag, magnitude);
+    }
 }
 
 GET_SET_PROPERTY_IMPL(GameplayEffectSpec, Ref<GameplayEffect>, effect)
