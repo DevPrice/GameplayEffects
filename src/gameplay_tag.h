@@ -5,15 +5,23 @@
 
 using namespace godot;
 
-struct GameplayTag {
+class GameplayTag {
 
-    const String value;
+private:
+    String value;
 
+public:
     GameplayTag(const String& p_value);
+    GameplayTag(const GameplayTag& other);
 
+    String to_string() const;
     bool matches(const GameplayTag& other) const;
 
     bool operator==(const GameplayTag& other) const;
+
+    struct Hasher {
+        std::size_t operator()(const GameplayTag& tag) const;
+    };
 };
 
 #endif
