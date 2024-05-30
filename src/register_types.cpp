@@ -6,6 +6,7 @@
 #include "stats/stat_evaluator.h"
 #include "modifiers/modifier_magnitude.h"
 #include "modifiers/constant_magnitude.h"
+#include "modifiers/scaled_magnitude.h"
 #include "modifiers/stat_based_magnitude.h"
 #include "modifiers/stat_modifier.h"
 #include "effects/effect_execution.h"
@@ -33,6 +34,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(GameplayStat)
     GDREGISTER_ABSTRACT_CLASS(ModifierMagnitude)
     GDREGISTER_CLASS(ConstantMagnitude)
+    GDREGISTER_CLASS(ScaledMagnitude)
     GDREGISTER_CLASS(StatBasedMagnitude)
     GDREGISTER_CLASS(StatModifier)
     GDREGISTER_CLASS(CapturedStat)
