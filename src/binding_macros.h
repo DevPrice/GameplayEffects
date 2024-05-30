@@ -22,15 +22,31 @@ private: \
     ObjectID Name; \
 public: \
     Type* get_##Name() const; \
-    void set_##Name(const Type* p_##Name); \
+    void set_##Name(Type* p_##Name); \
 private:
 
 #define GET_SET_OBJECT_PTR_IMPL(ClassName, Type, Name) \
 Type* ClassName::get_##Name() const { \
     return Object::cast_to<Type>(ObjectDB::get_instance(Name)); \
 } \
-void ClassName::set_##Name(const Type* p_##Name) { \
+void ClassName::set_##Name(Type* p_##Name) { \
     Name = p_##Name ? p_##Name->get_instance_id() : ObjectID(); \
+}
+
+#define GET_SET_NODE_PATH(Type, Name) \
+private: \
+    NodePath Name##_path; \
+public: \
+    Type* get_##Name() const; \
+    void set_##Name(Type* p_##Name); \
+private:
+
+#define GET_SET_RELATIVE_NODE_PATH_IMPL(ClassName, Type, Name) \
+Type* ClassName::get_##Name() const { \
+    return get_node_or_null(Name##_path); \
+} \
+void ClassName::set_##Name(Type* p_##Name) { \
+    Name##_path = p_##Name ? get_path_to(p_##Name) : NodePath(); \
 }
 
 #define BIND_METHOD(ClassName, Name, ...) \

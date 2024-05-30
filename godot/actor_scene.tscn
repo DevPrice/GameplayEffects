@@ -46,7 +46,6 @@ process_physics_priority = 0
 process_thread_group = 0
 editor_description = ""
 script = ExtResource("4_3ndp2")
-initial_effects = null
 
 [node name="Target" type="GameplayActor" parent="."]
 stats = Array[GameplayStat]([ExtResource("1_2cm7l")])
@@ -58,4 +57,3 @@ process_physics_priority = 0
 process_thread_group = 0
 editor_description = ""
 script = ExtResource("4_3ndp2")
-initial_effects = null

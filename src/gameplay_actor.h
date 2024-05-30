@@ -61,6 +61,7 @@ class GameplayActor : public Node {
     GDCLASS(GameplayActor, Node)
 
     GET_SET_PROPERTY(TypedArray<GameplayStat>, stats)
+    GET_SET_OBJECT_PTR(Node, avatar)
 
 public:
     StatSnapshot get_stat_snapshot(const Ref<GameplayStat>& stat) const;
@@ -92,7 +93,7 @@ private:
 
     static String& get_actor_meta_name();
 
-  protected:
+protected:
     static void _bind_methods();
 };
 

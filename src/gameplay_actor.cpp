@@ -9,9 +9,9 @@
 #include "stats/stat_evaluator.h"
 
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/templates/vector.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
-
 #include <memory>
 
 using namespace godot;
@@ -19,25 +19,16 @@ using namespace godot;
 void ActiveEffectHandle::_bind_methods() {
 }
 
-std::unique_ptr<ActiveEffect> ActiveEffectHandle::get_active_effect() const {
-    if (active_effect) {
-        return std::make_unique<ActiveEffect>(*active_effect);
-    }
-    return nullptr;
-}
-
-void ActiveEffectHandle::set_active_effect(const ActiveEffect& p_active_effect) {
-    active_effect = std::make_unique<ActiveEffect>(p_active_effect);
-}
-
 void GameplayActor::_bind_methods() {
     ADD_SIGNAL(MethodInfo("stat_changed",
         PropertyInfo(Variant::OBJECT, "stat", PROPERTY_HINT_RESOURCE_TYPE, "GameplayStat"),
         PropertyInfo(Variant::FLOAT, "new_value"),
         PropertyInfo(Variant::FLOAT, "old_value")));
+    ADD_SIGNAL(MethodInfo("avatar_changed", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_NODE_TYPE, "Node")));
     ADD_SIGNAL(MethodInfo("receiving_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     ADD_SIGNAL(MethodInfo("received_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
+    BIND_GET_SET_NODE(GameplayActor, avatar, Node)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, get_stat_base_value, "stat")
     BIND_METHOD(GameplayActor, get_stat_current_value, "stat")
@@ -49,6 +40,17 @@ void GameplayActor::_bind_methods() {
     ClassDB::bind_method(D_METHOD("make_effect_spec", "effect", "tag_magnitudes"), &GameplayActor::make_effect_spec, DEFVAL(default_tag_magnitudes));
     ClassDB::bind_method(D_METHOD("apply_effect_to_self", "effect", "tag_magnitudes"), &GameplayActor::apply_effect_to_self, DEFVAL(default_tag_magnitudes));
     ClassDB::bind_method(D_METHOD("apply_effect_to_target", "effect", "target", "tag_magnitudes"), &GameplayActor::apply_effect_to_target, DEFVAL(default_tag_magnitudes));
+}
+
+std::unique_ptr<ActiveEffect> ActiveEffectHandle::get_active_effect() const {
+    if (active_effect) {
+        return std::make_unique<ActiveEffect>(*active_effect);
+    }
+    return nullptr;
+}
+
+void ActiveEffectHandle::set_active_effect(const ActiveEffect& p_active_effect) {
+    active_effect = std::make_unique<ActiveEffect>(p_active_effect);
 }
 
 StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {
@@ -318,6 +320,28 @@ void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
             stat_values.remove(it);
         }
     }
+}
+
+Node* GameplayActor::get_avatar() const {
+    return Object::cast_to<Node>(ObjectDB::get_instance(avatar));
+}
+
+void GameplayActor::set_avatar(Node* p_avatar) {
+    Node* previous_avatar = get_avatar();
+    if (previous_avatar == p_avatar) return;
+    UtilityFunctions::print("set :)");
+
+    avatar = p_avatar ? p_avatar->get_instance_id() : ObjectID();
+
+    if (Engine::get_singleton()->is_editor_hint()) return;
+
+    if (previous_avatar) {
+        set_owning_actor(previous_avatar, nullptr);
+    }
+    if (p_avatar) {
+        set_owning_actor(p_avatar, this);
+    }
+    emit_signal("avatar_changed", p_avatar);
 }
 
 std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {
