@@ -14,8 +14,8 @@ ActorSnapshot CapturedStatEvaluator::get_snapshot(const Ref<CapturedStat>& stat)
             if (stat->get_snapshot()) {
                 return execution_context.target_snapshot;
             }
-            if (execution_context.target_actor) {
-                return execution_context.target_actor->capture_snapshot();
+            if (const GameplayActor* target_actor = execution_context.get_target_actor()) {
+                return target_actor->capture_snapshot();
             }
         } else {
             Ref<GameplayEffectContext> effect_context = execution_context.spec->get_context();

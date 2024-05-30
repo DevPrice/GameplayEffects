@@ -6,6 +6,7 @@
 
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/object.hpp>
 #include <memory>
 
 class GameplayActor;
@@ -15,7 +16,7 @@ using namespace godot;
 class GameplayEffectContext : public RefCounted {
     GDCLASS(GameplayEffectContext, RefCounted)
 
-    GET_SET_PROPERTY(GameplayActor*, source_actor)
+    GET_SET_OBJECT_PTR(GameplayActor, source_actor)
 
 private:
     std::unique_ptr<ActorSnapshot> source_snapshot;

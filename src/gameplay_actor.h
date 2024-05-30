@@ -31,7 +31,7 @@ struct ActiveEffect {
 
     struct Hasher {
         std::size_t operator()(const ActiveEffect& active_effect) const {
-            return (std::size_t)active_effect.execution_context.spec.ptr() ^ (std::size_t)active_effect.execution_context.target_actor;
+            return (std::size_t)active_effect.execution_context.spec.ptr() ^ (std::size_t)active_effect.execution_context.target_actor_id;
         }
     };
 };

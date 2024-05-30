@@ -36,7 +36,9 @@ Ref<EffectTimer> SceneTimeSource::_create_timer(const EffectExecutionContext& ex
     timer->set_wait_time(duration);
     Ref<SceneEffectTimer> effect_timer = memnew(SceneEffectTimer);
     effect_timer->set_timer(timer);
-    execution_context.target_actor->add_child(timer);
+    if (GameplayActor* target_actor = execution_context.get_target_actor()) {
+        target_actor->add_child(timer);
+    }
     return effect_timer;
 }
 

@@ -4,16 +4,22 @@
 #include "effects/gameplay_effect_spec.h"
 #include "actor_snapshot.h"
 
+#include <godot_cpp/core/object.hpp>
+
+using namespace godot;
+
 class GameplayActor;
 
 struct EffectExecutionContext {
     const Ref<GameplayEffectSpec> spec = nullptr;
-    GameplayActor* const target_actor = nullptr;
+    const ObjectID target_actor_id;
     const ActorSnapshot target_snapshot;
+
+    GameplayActor* get_target_actor() const;
 
     bool operator==(const EffectExecutionContext& other) const {
         return spec == other.spec
-            && target_actor == other.target_actor
+            && target_actor_id == other.target_actor_id
             && target_snapshot == other.target_snapshot;
     }
 };

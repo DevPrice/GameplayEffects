@@ -17,6 +17,22 @@ void ClassName::set_##Name(Type p_##Name) { \
     Name = p_##Name; \
 }
 
+#define GET_SET_OBJECT_PTR(Type, Name) \
+private: \
+    ObjectID Name; \
+public: \
+    Type* get_##Name() const; \
+    void set_##Name(const Type* p_##Name); \
+private:
+
+#define GET_SET_OBJECT_PTR_IMPL(ClassName, Type, Name) \
+Type* ClassName::get_##Name() const { \
+    return Object::cast_to<Type>(ObjectDB::get_instance(Name)); \
+} \
+void ClassName::set_##Name(const Type* p_##Name) { \
+    Name = p_##Name ? p_##Name->get_instance_id() : ObjectID(); \
+}
+
 #define BIND_METHOD(ClassName, Name, ...) \
     ClassDB::bind_method(D_METHOD(#Name, ## __VA_ARGS__), &ClassName::Name);
 

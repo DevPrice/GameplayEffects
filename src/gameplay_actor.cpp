@@ -96,7 +96,7 @@ Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {
 
 EffectExecutionContext GameplayActor::_make_execution_context(const Ref<GameplayEffectSpec>& spec) {
     ActorSnapshot actor_snapshot = capture_snapshot();
-    return EffectExecutionContext{spec, this, actor_snapshot};
+    return EffectExecutionContext{spec, ObjectID(get_instance_id()), actor_snapshot};
 }
 
 Ref<ActiveEffectHandle> GameplayActor::apply_effect_to_self(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes) {
