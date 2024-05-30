@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bev47rqqjl73e"]
+[gd_scene load_steps=14 format=3 uid="uid://bev47rqqjl73e"]
 
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_2cm7l"]
 [ext_resource type="Script" path="res://actor_scene.gd" id="1_ns5m8"]
@@ -21,9 +21,20 @@ magnitude = SubResource("StatBasedMagnitude_nefp5")
 modifiers = Array[StatModifier]([SubResource("StatModifier_gsx0d")])
 resource_name = "Stat based effect"
 
+[sub_resource type="TagBasedMagnitude" id="TagBasedMagnitude_8s7wr"]
+tag = "test.tag"
+
+[sub_resource type="StatModifier" id="StatModifier_pcmm1"]
+stat = ExtResource("1_2cm7l")
+magnitude = SubResource("TagBasedMagnitude_8s7wr")
+
+[sub_resource type="GameplayEffect" id="GameplayEffect_8kpcb"]
+modifiers = Array[StatModifier]([SubResource("StatModifier_pcmm1")])
+resource_name = "Tag based effect"
+
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_ns5m8")
-effects = Array[GameplayEffect]([ExtResource("3_xcw1x"), ExtResource("2_s0rhe"), ExtResource("4_1fotw"), SubResource("GameplayEffect_0hl5l")])
+effects = Array[GameplayEffect]([ExtResource("3_xcw1x"), ExtResource("2_s0rhe"), ExtResource("4_1fotw"), SubResource("GameplayEffect_0hl5l"), SubResource("GameplayEffect_8kpcb")])
 
 [node name="Source" type="GameplayActor" parent="."]
 stats = Array[GameplayStat]([ExtResource("1_2cm7l")])

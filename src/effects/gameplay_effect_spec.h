@@ -20,6 +20,7 @@ class GameplayEffectSpec : public RefCounted {
     GET_SET_PROPERTY(Ref<GameplayEffect>, effect)
     GET_SET_PROPERTY(Ref<GameplayEffectContext>, context)
 
+public:
     Ref<GameplayEffectSpec> with_tag_magnitude(const String& tag, float magnitude) const;
     Ref<GameplayEffectSpec> with_tag_magnitudes(const Dictionary& p_tag_magnitudes) const;
 
