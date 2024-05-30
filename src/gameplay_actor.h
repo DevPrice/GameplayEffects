@@ -86,7 +86,7 @@ private:
     void _execute_effect(const ActiveEffect& active_effect);
     void _recalculate_stats();
     void _recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);
-    bool _remove_effect(const ActiveEffect &active_effect);
+    bool _remove_effect(const ActiveEffect& active_effect);
 
   protected:
     static void _bind_methods();
