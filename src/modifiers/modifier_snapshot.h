@@ -7,12 +7,12 @@
 
 class ModifierSnapshot : public EvaluatedModifier {
 
-    Ref<StatModifier> modifier;
-    EffectExecutionContext execution_context;
-    float magnitude;
+    const Ref<StatModifier> modifier;
+    const Ref<EffectExecutionContext> execution_context;
+    const float magnitude;
 
 public:
-    ModifierSnapshot(Ref<StatModifier> p_modifier, EffectExecutionContext p_execution_context, float p_magnitude);
+    ModifierSnapshot(const Ref<StatModifier>& p_modifier, const Ref<EffectExecutionContext>& p_execution_context, float p_magnitude);
 
     Ref<GameplayStat> get_stat() const override { return modifier->get_stat(); }
     StatModifier::Operation get_operation() const override { return modifier->get_operation(); }

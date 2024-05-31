@@ -8,12 +8,12 @@ using namespace godot;
 
 class CapturedStatEvaluator {
 private:
-    const EffectExecutionContext execution_context;
+    const Ref<EffectExecutionContext> execution_context;
 
     ActorSnapshot get_snapshot(const Ref<CapturedStat>& stat) const;
 
 public:
-    CapturedStatEvaluator(EffectExecutionContext effect_execution_context);
+    CapturedStatEvaluator(const Ref<EffectExecutionContext>& effect_execution_context);
 
     float get_base_value(const Ref<CapturedStat>& stat) const;
     float get_current_value(const Ref<CapturedStat>& stat) const;

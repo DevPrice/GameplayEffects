@@ -21,7 +21,7 @@ public:
 
     StatBasedMagnitude();
 
-    float get_magnitude(const EffectExecutionContext &context) override;
+    float get_magnitude(const Ref<EffectExecutionContext>& context) override;
 
     GET_SET_PROPERTY(Ref<CapturedStat>, captured_stat)
     GET_SET_PROPERTY(StatValueType, value_type)

@@ -28,8 +28,8 @@ class TimeSource : public Resource {
     GDCLASS(TimeSource, Resource)
 
 public:
-    virtual Ref<EffectTimer> create_timer(const EffectExecutionContext& execution_context, float duration) const = 0;
-    virtual Ref<EffectTimer> create_interval(const EffectExecutionContext& execution_context, float duration) const = 0;
+    virtual Ref<EffectTimer> create_timer(const Ref<EffectExecutionContext>& execution_context, float duration) const = 0;
+    virtual Ref<EffectTimer> create_interval(const Ref<EffectExecutionContext>& execution_context, float duration) const = 0;
 
 protected:
     static void _bind_methods();

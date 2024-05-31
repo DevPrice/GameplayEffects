@@ -13,7 +13,7 @@ class GameplayRequirements : public Resource {
     GDCLASS(GameplayRequirements, Resource)
 
 public:
-    virtual bool requirements_met(const EffectExecutionContext& execution_context) const = 0;
+    virtual bool requirements_met(const Ref<EffectExecutionContext>& execution_context) const = 0;
 
 protected:
     static void _bind_methods();

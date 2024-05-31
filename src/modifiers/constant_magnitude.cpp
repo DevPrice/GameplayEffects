@@ -12,7 +12,7 @@ ConstantMagnitude::ConstantMagnitude() {
     constant_magnitude = 0.f;
 }
 
-float ConstantMagnitude::get_magnitude(const EffectExecutionContext& context) {
+float ConstantMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
     return constant_magnitude;
 }
 

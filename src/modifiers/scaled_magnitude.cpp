@@ -9,7 +9,7 @@ void ScaledMagnitude::_bind_methods(){
 
 ScaledMagnitude::ScaledMagnitude() { }
 
-float ScaledMagnitude::get_magnitude(const EffectExecutionContext &context) {
+float ScaledMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
     float base_magnitude = base.is_valid() ? base->get_magnitude(context) : 0.f;
     float premultiply_offset_magnitude = premultiply_offset.is_valid() ? premultiply_offset->get_magnitude(context) : 0.f;
     float postmultiply_offset_magnitude = postmultiply_offset.is_valid() ? postmultiply_offset->get_magnitude(context) : 0.f;

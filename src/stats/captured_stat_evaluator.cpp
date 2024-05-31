@@ -5,28 +5,31 @@
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
-CapturedStatEvaluator::CapturedStatEvaluator(EffectExecutionContext effect_execution_context)
-    : execution_context(effect_execution_context) {}
+CapturedStatEvaluator::CapturedStatEvaluator(const Ref<EffectExecutionContext>& effect_execution_context)
+    : execution_context(effect_execution_context) { }
 
 ActorSnapshot CapturedStatEvaluator::get_snapshot(const Ref<CapturedStat>& stat) const {
-    if (stat.is_valid()) {
+    if (stat.is_valid() && execution_context.is_valid()) {
         if (stat->get_capture_from() == CapturedStat::CaptureSource::Target) {
             if (stat->get_snapshot()) {
-                return execution_context.target_snapshot;
+                return execution_context->get_target_snapshot();
             }
-            if (const GameplayActor* target_actor = execution_context.get_target_actor()) {
+            if (const GameplayActor* target_actor = execution_context->get_target_actor()) {
                 return target_actor->capture_snapshot();
             }
         } else {
-            Ref<GameplayEffectContext> effect_context = execution_context.spec->get_context();
-            if (effect_context.is_valid()) {
-                if (stat->get_snapshot()) {
-                    if (std::unique_ptr<ActorSnapshot> actor_snapshot = effect_context->get_source_snapshot()) {
-                        return *actor_snapshot;
+            Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+            if (spec.is_valid()) {
+                Ref<GameplayEffectContext> effect_context = spec->get_context();
+                if (effect_context.is_valid()) {
+                    if (stat->get_snapshot()) {
+                        if (std::unique_ptr<ActorSnapshot> actor_snapshot = effect_context->get_source_snapshot()) {
+                            return *actor_snapshot;
+                        }
                     }
-                }
-                if (const GameplayActor* source_actor = effect_context->get_source_actor()) {
-                    return source_actor->capture_snapshot();
+                    if (const GameplayActor* source_actor = effect_context->get_source_actor()) {
+                        return source_actor->capture_snapshot();
+                    }
                 }
             }
         }

@@ -20,19 +20,19 @@
 using namespace godot;
 
 struct ActiveEffect {
-    const EffectExecutionContext execution_context;
+    const Ref<EffectExecutionContext> execution_context;
 
     std::vector<std::shared_ptr<EvaluatedModifier>> capture_modifier_snapshot() const;
 
-    ActiveEffect(const EffectExecutionContext& p_execution_context) : execution_context(p_execution_context) { }
+    ActiveEffect(const Ref<EffectExecutionContext>& p_execution_context) : execution_context(p_execution_context) { }
 
     bool operator==(const ActiveEffect &other) const {
-        return execution_context == other.execution_context;
+        return *execution_context == *other.execution_context;
     }
 
     struct Hasher {
         std::size_t operator()(const ActiveEffect& active_effect) const {
-            return (std::size_t)active_effect.execution_context.spec.ptr() ^ (std::size_t)active_effect.execution_context.target_actor_id;
+            return (std::size_t)active_effect.execution_context->get_spec().ptr() ^ (std::size_t)active_effect.execution_context->get_target_actor();
         }
     };
 };
@@ -85,7 +85,7 @@ private:
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
 
     Ref<GameplayEffectContext> _make_effect_context();
-    EffectExecutionContext _make_execution_context(const Ref<GameplayEffectSpec>& spec);
+    Ref<EffectExecutionContext> _make_execution_context(const Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);
     void _recalculate_stats();
     void _recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);

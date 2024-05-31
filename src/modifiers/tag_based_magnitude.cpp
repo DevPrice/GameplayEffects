@@ -9,9 +9,9 @@ void TagBasedMagnitude::_bind_methods() {
 
 TagBasedMagnitude::TagBasedMagnitude() : tag(GameplayTag("")) { }
 
-float TagBasedMagnitude::get_magnitude(const EffectExecutionContext& context) {
+float TagBasedMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
     float magnitude = 0.f;
-    if (context.spec.is_valid() && context.spec->get_tag_magnitude(tag, magnitude)) {
+    if (context->get_spec().is_valid() && context->get_spec().is_valid() && context->get_spec()->get_tag_magnitude(tag, magnitude)) {
         return magnitude;
     }
     return 0.0f;

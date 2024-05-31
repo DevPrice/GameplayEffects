@@ -33,7 +33,7 @@ class EffectExecution : public Resource {
     GDCLASS(EffectExecution, Resource)
 
 public:
-    virtual void execute(const EffectExecutionContext& execution_context, const Ref<StatEvaluator>& stat_evaluator, const Ref<EffectExecutionOutput>& output) = 0;
+    virtual void execute(const Ref<EffectExecutionContext>& execution_context, const Ref<StatEvaluator>& stat_evaluator, const Ref<EffectExecutionOutput>& output) = 0;
 
 protected:
     static void _bind_methods();

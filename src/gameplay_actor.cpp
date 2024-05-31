@@ -96,9 +96,12 @@ Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {
     return effect_context;
 }
 
-EffectExecutionContext GameplayActor::_make_execution_context(const Ref<GameplayEffectSpec>& spec) {
-    ActorSnapshot actor_snapshot = capture_snapshot();
-    return EffectExecutionContext{spec, ObjectID(get_instance_id()), actor_snapshot};
+Ref<EffectExecutionContext> GameplayActor::_make_execution_context(const Ref<GameplayEffectSpec>& spec) {
+    Ref<EffectExecutionContext> execution_context = memnew(EffectExecutionContext);
+    execution_context->set_spec(spec);
+    execution_context->set_target_actor(this);
+    execution_context->set_target_snapshot(capture_snapshot());
+    return execution_context;
 }
 
 Ref<ActiveEffectHandle> GameplayActor::apply_effect_to_self(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes) {
@@ -116,7 +119,7 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
     if (!spec.is_valid()) return nullptr;
 
     const Ref<GameplayEffect> effect = spec->get_effect();
-    const EffectExecutionContext execution_context = _make_execution_context(spec);
+    const Ref<EffectExecutionContext> execution_context = _make_execution_context(spec);
     const Ref<EffectLifetime> lifetime = effect->get_lifetime();
 
     const TypedArray<GameplayRequirements> application_requirements = spec->get_effect()->get_application_requirements();
@@ -171,8 +174,12 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
 }
 
 void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
-    const EffectExecutionContext execution_context = active_effect.execution_context;
-    const Ref<GameplayEffect> effect = execution_context.spec->get_effect();
+    const Ref<EffectExecutionContext> execution_context = active_effect.execution_context;
+    if (execution_context.is_null()) {
+        UtilityFunctions::push_error("Attempted to execute effect with no execution context!");
+        return;
+    }
+    const Ref<GameplayEffect> effect = execution_context->get_spec()->get_effect();
 
     const Ref<EffectLifetime> lifetime = effect->get_lifetime();
     if (lifetime.is_valid()) {
@@ -323,7 +330,7 @@ void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
 }
 
 Node* GameplayActor::get_avatar() const {
-    return Object::cast_to<Node>(ObjectDB::get_instance(avatar));
+    return Object::cast_to<Node>(ObjectDB::get_instance(avatar_id));
 }
 
 void GameplayActor::set_avatar(Node* p_avatar) {
@@ -331,7 +338,7 @@ void GameplayActor::set_avatar(Node* p_avatar) {
     if (previous_avatar == p_avatar) return;
     UtilityFunctions::print("set :)");
 
-    avatar = p_avatar ? p_avatar->get_instance_id() : ObjectID();
+    avatar_id = p_avatar ? p_avatar->get_instance_id() : ObjectID();
 
     if (Engine::get_singleton()->is_editor_hint()) return;
 
@@ -345,7 +352,7 @@ void GameplayActor::set_avatar(Node* p_avatar) {
 }
 
 std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {
-    const TypedArray<StatModifier> modifiers = execution_context.spec->get_effect()->get_modifiers();
+    const TypedArray<StatModifier> modifiers = execution_context->get_spec()->get_effect()->get_modifiers();
     std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot;
     for (size_t i = 0; i < modifiers.size(); i++) {
         const Ref<StatModifier> modifier = modifiers[i];
