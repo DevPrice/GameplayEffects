@@ -15,7 +15,7 @@ class CapturedStat : public Resource {
 public:
     enum CaptureSource {
         Source = 0,
-        Target = 2
+        Target = 1
     };
 
     GET_SET_PROPERTY(Ref<GameplayStat>, stat)
