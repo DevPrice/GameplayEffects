@@ -12,23 +12,23 @@ env = SConscript("godot-cpp/SConstruct")
 # - CPPDEFINES are for pre-processor defines
 # - LINKFLAGS are for linking flags
 
-# tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 sources.extend(Glob("src/**/*.cpp"))
 
+addon_path = "demo/addons/gameplay_effects"
+debug_suffix = "" if env["target"] == "template_release" else ".{}".format(env["target"].replace("template_", ""))
+arch_suffix = "" if env["platform"] == "windows" and env["arch"] == "x86_64" else ".{}".format(env["arch"])
+
 if env["platform"] == "macos":
-    library = env.SharedLibrary(
-        "godot/bin/gameplayeffects.{}.{}.framework/gameplayeffects.{}.{}".format(
-            env["platform"], env["target"], env["platform"], env["target"]
-        ),
-        source=sources,
-    )
+    library_name = "gameplayeffects{0}.framework/gameplayeffects{0}".format(debug_suffix),
 else:
-    library = env.SharedLibrary(
-        "godot/bin/gameplayeffects{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-        source=sources,
-    )
+    library_name = "gameplayeffects{}{}{}".format(debug_suffix, arch_suffix, env["SHLIBSUFFIX"])
+
+library = env.SharedLibrary(
+    "/".join([addon_path, "bin", env["platform"], library_name]),
+    source=sources,
+)
 
 Default(library)
 
