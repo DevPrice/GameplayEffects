@@ -1,4 +1,5 @@
 #include "effects/effect_execution.h"
+#include "effects/effect_execution_context.h"
 #include "binding_macros.h"
 #include "modifiers/evaluated_modifier.h"
 #include "modifiers/stat_modifier.h"
@@ -14,7 +15,7 @@ void EffectExecutionOutput::_bind_methods() {
 }
 
 void EffectExecution::_bind_methods() {
-
+    BIND_METHOD(EffectExecution, execute, "execution_context", "stat_evaluator", "output");
 }
 
 struct ExecutionEvaluatedModifier : public EvaluatedModifier {

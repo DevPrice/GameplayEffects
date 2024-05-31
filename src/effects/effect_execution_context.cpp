@@ -1,5 +1,4 @@
 #include "effects/effect_execution_context.h"
-#include "effect_execution_context.h"
 #include "gameplay_actor.h"
 
 void EffectExecutionContext::_bind_methods() {
