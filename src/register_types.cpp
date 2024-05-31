@@ -1,16 +1,6 @@
 #include "register_types.h"
 
-#include "gameplay_actor.h"
-#include "stats/gameplay_stat.h"
-#include "stats/captured_stat.h"
-#include "stats/stat_evaluator.h"
-#include "modifiers/modifier_magnitude.h"
-#include "modifiers/constant_magnitude.h"
-#include "modifiers/clamped_magnitude.h"
-#include "modifiers/scaled_magnitude.h"
-#include "modifiers/stat_based_magnitude.h"
-#include "modifiers/tag_based_magnitude.h"
-#include "modifiers/stat_modifier.h"
+#include "gameplay_actor.h" // why does this need to be included before SceneTimeSource?
 #include "effects/effect_execution.h"
 #include "effects/effect_lifetime.h"
 #include "effects/gameplay_effect.h"
@@ -19,6 +9,17 @@
 #include "effects/gameplay_requirements.h"
 #include "effects/time_source.h"
 #include "effects/scene_time_source.h"
+#include "modifiers/clamped_magnitude.h"
+#include "modifiers/constant_magnitude.h"
+#include "modifiers/curve_sample_magnitude.h"
+#include "modifiers/modifier_magnitude.h"
+#include "modifiers/scaled_magnitude.h"
+#include "modifiers/stat_based_magnitude.h"
+#include "modifiers/stat_modifier.h"
+#include "modifiers/tag_based_magnitude.h"
+#include "stats/captured_stat.h"
+#include "stats/gameplay_stat.h"
+#include "stats/stat_evaluator.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -40,6 +41,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(ScaledMagnitude)
     GDREGISTER_CLASS(StatBasedMagnitude)
     GDREGISTER_CLASS(TagBasedMagnitude)
+    GDREGISTER_CLASS(CurveSampleMagnitude)
     GDREGISTER_CLASS(StatModifier)
     GDREGISTER_CLASS(CapturedStat)
     GDREGISTER_CLASS(StatEvaluator)

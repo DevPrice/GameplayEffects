@@ -1,6 +1,5 @@
 #include "effects/effect_lifetime.h"
 #include "binding_macros.h"
-#include "effects/scene_time_source.h"
 
 #include <godot_cpp/core/class_db.hpp>
 
