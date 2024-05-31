@@ -342,7 +342,6 @@ Node* GameplayActor::get_avatar() const {
 void GameplayActor::set_avatar(Node* p_avatar) {
     Node* previous_avatar = get_avatar();
     if (previous_avatar == p_avatar) return;
-    UtilityFunctions::print("set :)");
 
     avatar_id = p_avatar ? p_avatar->get_instance_id() : ObjectID();
 
