@@ -67,6 +67,7 @@ public:
     StatSnapshot get_stat_snapshot(const Ref<GameplayStat>& stat) const;
     float get_stat_base_value(const Ref<GameplayStat>& stat) const;
     float get_stat_current_value(const Ref<GameplayStat>& stat) const;
+    void set_stat_base_value(const Ref<GameplayStat>& stat, float base_value);
 
     ActorSnapshot capture_snapshot() const;
 

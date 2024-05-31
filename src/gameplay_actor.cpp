@@ -70,6 +70,12 @@ float GameplayActor::get_stat_current_value(const Ref<GameplayStat>& stat) const
     return get_stat_snapshot(stat).current_value;
 }
 
+void GameplayActor::set_stat_base_value(const Ref<GameplayStat>& stat, float base_value) {
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
+    stat_values[stat].base_value = base_value;
+    _recalculate_stats(stat_snapshot);
+}
+
 ActorSnapshot GameplayActor::capture_snapshot() const {
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
     std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot;
@@ -78,7 +84,7 @@ ActorSnapshot GameplayActor::capture_snapshot() const {
         modifier_snapshot.insert(modifier_snapshot.end(), effect_state.modifiers.begin(), effect_state.modifiers.end());
     }
 
-    return ActorSnapshot{stat_snapshot,modifier_snapshot};
+    return ActorSnapshot{stat_snapshot, modifier_snapshot};
 }
 
 Ref<GameplayEffectSpec> GameplayActor::make_effect_spec(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes) {
