@@ -1,11 +1,15 @@
-[gd_resource type="StatModifier" load_steps=3 format=3 uid="uid://bf5pj2upspsrr"]
+[gd_resource type="StatModifier" load_steps=4 format=3 uid="uid://bf5pj2upspsrr"]
 
+[ext_resource type="Script" path="res://custom_magnitude.gd" id="1_k10bp"]
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_sfn36"]
 
-[sub_resource type="ConstantMagnitude" id="ConstantMagnitude_jk642"]
-magnitude = 1337.0
+[sub_resource type="CustomMagnitudeCalculation" id="CustomMagnitudeCalculation_g1y48"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_k10bp")
+source = 0
 
 [resource]
 operation = 2
 stat = ExtResource("1_sfn36")
-magnitude = SubResource("ConstantMagnitude_jk642")
+magnitude = SubResource("CustomMagnitudeCalculation_g1y48")
