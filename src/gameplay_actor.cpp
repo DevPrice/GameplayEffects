@@ -228,7 +228,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     Ref<EffectExecutionOutput> execution_output = memnew(EffectExecutionOutput);
 
     if (executions.size() > 0) {
-        auto captured_stat_evaluator = std::make_unique<CapturedStatEvaluator>(execution_context);
+        std::unique_ptr<CapturedStatEvaluator> captured_stat_evaluator = std::make_unique<CapturedStatEvaluator>(execution_context);
         Ref<StatEvaluator> stat_evaluator = memnew(StatEvaluator);
         stat_evaluator->set_evaluator(captured_stat_evaluator.get());
         for (int i = 0; i < executions.size(); i++) {

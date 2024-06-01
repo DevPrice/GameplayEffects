@@ -7,6 +7,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/ref.hpp>
+#include "effect_execution.h"
 
 using namespace godot;
 
@@ -15,7 +16,11 @@ void EffectExecutionOutput::_bind_methods() {
 }
 
 void EffectExecution::_bind_methods() {
-    BIND_METHOD(EffectExecution, execute, "execution_context", "stat_evaluator", "output");
+    GDVIRTUAL_BIND(_execute, "context", "stat_evaluator", "output")
+}
+
+void EffectExecution::execute(const Ref<EffectExecutionContext>& execution_context, const Ref<StatEvaluator>& stat_evaluator, const Ref<EffectExecutionOutput>& output) {
+    GDVIRTUAL_REQUIRED_CALL(_execute, execution_context, stat_evaluator, output);
 }
 
 struct ExecutionEvaluatedModifier : public EvaluatedModifier {
@@ -39,4 +44,19 @@ std::vector<std::shared_ptr<EvaluatedModifier>> EffectExecutionOutput::get_modif
 void EffectExecutionOutput::add_modifier(const Ref<GameplayStat>& stat, StatModifier::Operation operation, float magnitude) {
     modifiers.push_back(std::make_shared<ExecutionEvaluatedModifier>(stat, operation, magnitude));
 }
+
+// inlined from GDVIRTUAL macro
+MethodInfo EffectExecution::_gdvirtual__execute_get_method_info() {
+    MethodInfo method_info;
+    method_info.name = "_execute";
+    method_info.flags = METHOD_FLAG_VIRTUAL;
+    method_info.arguments.push_back(GetTypeInfo<Ref<EffectExecutionContext>>::get_class_info());
+    method_info.arguments_metadata.push_back(GetTypeInfo<Ref<EffectExecutionContext>>::METADATA);
+    method_info.arguments.push_back(GetTypeInfo<Ref<StatEvaluator>>::get_class_info());
+    method_info.arguments_metadata.push_back(GetTypeInfo<Ref<StatEvaluator>>::METADATA);
+    method_info.arguments.push_back(GetTypeInfo<Ref<EffectExecutionOutput>>::get_class_info());
+    method_info.arguments_metadata.push_back(GetTypeInfo<Ref<EffectExecutionOutput>>::METADATA);
+    return method_info;
+}
+// end of inlined macro
 

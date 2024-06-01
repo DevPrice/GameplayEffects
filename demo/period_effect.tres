@@ -1,0 +1,28 @@
+[gd_resource type="GameplayEffect" load_steps=7 format=3 uid="uid://bdcuk074ketf0"]
+
+[ext_resource type="Script" path="res://test_execution.gd" id="1_oeqri"]
+
+[sub_resource type="EffectExecution" id="EffectExecution_abl5j"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_oeqri")
+operation = 0
+magnitude = -1.0
+
+[sub_resource type="ConstantMagnitude" id="ConstantMagnitude_3t0un"]
+magnitude = 5.0
+
+[sub_resource type="ConstantMagnitude" id="ConstantMagnitude_w001x"]
+magnitude = 1.0
+
+[sub_resource type="SceneTimeSource" id="SceneTimeSource_ys7fd"]
+
+[sub_resource type="EffectLifetime" id="EffectLifetime_g6ahb"]
+duration = SubResource("ConstantMagnitude_3t0un")
+period = SubResource("ConstantMagnitude_w001x")
+time_source = SubResource("SceneTimeSource_ys7fd")
+
+[resource]
+executions = Array[EffectExecution]([SubResource("EffectExecution_abl5j")])
+lifetime = SubResource("EffectLifetime_g6ahb")
+resource_name = "Period effect"

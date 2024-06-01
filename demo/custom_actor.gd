@@ -1,4 +1,6 @@
-extends GameplayActor
+class_name CustomActor extends GameplayActor
+
+static var test_stat: GameplayStat = preload("res://test_stat.tres")
 
 @export var initial_effects: Array[GameplayEffect] = []
 

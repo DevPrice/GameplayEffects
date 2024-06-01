@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bev47rqqjl73e"]
+[gd_scene load_steps=15 format=3 uid="uid://bev47rqqjl73e"]
 
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_2cm7l"]
 [ext_resource type="Script" path="res://actor_scene.gd" id="1_ns5m8"]
@@ -6,6 +6,7 @@
 [ext_resource type="GameplayEffect" uid="uid://dd0xfv1yodd3l" path="res://infinite_effect.tres" id="3_xcw1x"]
 [ext_resource type="GameplayEffect" uid="uid://dwxuhjjnxdmaj" path="res://duration_effect.tres" id="4_1fotw"]
 [ext_resource type="Script" path="res://custom_actor.gd" id="4_3ndp2"]
+[ext_resource type="GameplayEffect" uid="uid://bdcuk074ketf0" path="res://period_effect.tres" id="6_wcjt3"]
 
 [sub_resource type="CapturedStat" id="CapturedStat_n51nr"]
 stat = ExtResource("1_2cm7l")
@@ -34,7 +35,7 @@ resource_name = "Tag based effect"
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_ns5m8")
-effects = Array[GameplayEffect]([ExtResource("3_xcw1x"), ExtResource("2_s0rhe"), ExtResource("4_1fotw"), SubResource("GameplayEffect_0hl5l"), SubResource("GameplayEffect_8kpcb")])
+effects = Array[GameplayEffect]([ExtResource("3_xcw1x"), ExtResource("2_s0rhe"), ExtResource("4_1fotw"), SubResource("GameplayEffect_0hl5l"), SubResource("GameplayEffect_8kpcb"), ExtResource("6_wcjt3")])
 
 [node name="Source" type="GameplayActor" parent="."]
 stats = Array[GameplayStat]([ExtResource("1_2cm7l")])

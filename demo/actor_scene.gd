@@ -1,7 +1,5 @@
 extends Node2D
 
-var test_stat: GameplayStat = preload("res://test_stat.tres")
-
 @export var effects: Array[GameplayEffect] = []
 
 func _ready():
