@@ -361,9 +361,11 @@ std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_s
     std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot;
     for (size_t i = 0; i < modifiers.size(); i++) {
         const Ref<StatModifier> modifier = modifiers[i];
-        const float magnitude = modifier->get_magnitude()->get_magnitude(execution_context);
-        std::shared_ptr<EvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, magnitude);
-        modifier_snapshot.push_back(evaluated_modifier);
+        if (modifier.is_valid()) {
+            const float magnitude = modifier->get_magnitude()->get_magnitude(execution_context);
+            std::shared_ptr<EvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, magnitude);
+            modifier_snapshot.push_back(evaluated_modifier);
+        }
     }
     return modifier_snapshot;
 }
