@@ -8,11 +8,13 @@
 #include "modifiers/evaluated_modifier.h"
 #include "stats/gameplay_stat.h"
 
+#include <godot_cpp/core/gdvirtual.gen.inc>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/templates/hash_map.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/variant/variant.hpp>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -46,6 +48,8 @@ private:
 public:
     std::unique_ptr<ActiveEffect> get_active_effect() const;
     void set_active_effect(const ActiveEffect& active_effect);
+
+    Ref<GameplayEffectSpec> get_spec() const;
 
 protected:
     static void _bind_methods();
@@ -96,6 +100,8 @@ private:
 
 protected:
     static void _bind_methods();
+
+    GDVIRTUAL0RC(Variant, _get_custom_context_data)
 };
 
 #endif

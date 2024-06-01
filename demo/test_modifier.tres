@@ -7,7 +7,6 @@
 resource_local_to_scene = false
 resource_name = ""
 script = ExtResource("1_k10bp")
-source = 0
 
 [resource]
 operation = 2

@@ -17,6 +17,7 @@
 using namespace godot;
 
 void ActiveEffectHandle::_bind_methods() {
+    BIND_METHOD(ActiveEffectHandle, get_spec)
 }
 
 void GameplayActor::_bind_methods() {
@@ -35,6 +36,7 @@ void GameplayActor::_bind_methods() {
     BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
     BIND_METHOD(GameplayActor, remove_effect, "handle")
     BIND_METHOD(GameplayActor, _make_effect_context)
+    GDVIRTUAL_BIND(_get_custom_context_data)
 
     Dictionary default_tag_magnitudes;
     ClassDB::bind_method(D_METHOD("make_effect_spec", "effect", "tag_magnitudes"), &GameplayActor::make_effect_spec, DEFVAL(default_tag_magnitudes));
@@ -51,6 +53,16 @@ std::unique_ptr<ActiveEffect> ActiveEffectHandle::get_active_effect() const {
 
 void ActiveEffectHandle::set_active_effect(const ActiveEffect& p_active_effect) {
     active_effect = std::make_unique<ActiveEffect>(p_active_effect);
+}
+
+Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
+    if (active_effect) {
+        const Ref<EffectExecutionContext> execution_context = active_effect->execution_context;
+        if (execution_context.is_valid()) {
+            return execution_context->get_spec();
+        }
+    }
+    return nullptr;
 }
 
 StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {
@@ -99,6 +111,12 @@ Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {
     Ref<GameplayEffectContext> effect_context = memnew(GameplayEffectContext);
     effect_context->set_source_actor(this);
     effect_context->set_source_snapshot(capture_snapshot());
+
+    Variant custom_data;
+    if (GDVIRTUAL_CALL(_get_custom_context_data, custom_data)) {
+        effect_context->set_custom_data(custom_data);
+    }
+
     return effect_context;
 }
 

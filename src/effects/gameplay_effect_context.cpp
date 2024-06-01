@@ -5,6 +5,7 @@
 
 void GameplayEffectContext::_bind_methods() {
     BIND_METHOD(GameplayEffectContext, get_source_actor)
+    BIND_METHOD(GameplayEffectContext, get_custom_data)
 }
 
 std::unique_ptr<ActorSnapshot> GameplayEffectContext::get_source_snapshot() const {
@@ -19,3 +20,4 @@ void GameplayEffectContext::set_source_snapshot(const ActorSnapshot& actor_snaps
 }
 
 GET_SET_OBJECT_PTR_IMPL(GameplayEffectContext, GameplayActor, source_actor)
+GET_SET_PROPERTY_IMPL(GameplayEffectContext, Variant, custom_data)

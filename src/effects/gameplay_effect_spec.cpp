@@ -7,7 +7,8 @@
 using namespace godot;
 
 void GameplayEffectSpec::_bind_methods() {
-    BIND_GET_SET_RESOURCE(GameplayEffectSpec, effect, GameplayEffect)
+    BIND_METHOD(GameplayEffectSpec, get_effect)
+    BIND_METHOD(GameplayEffectSpec, get_context)
     BIND_METHOD(GameplayEffectSpec, with_tag_magnitude, "tag", "magnitude")
     BIND_METHOD(GameplayEffectSpec, with_tag_magnitudes, "tag_magnitudes")
 }

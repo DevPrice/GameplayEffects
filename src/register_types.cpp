@@ -57,7 +57,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_ABSTRACT_CLASS(EffectExecution)
     GDREGISTER_CLASS(EffectLifetime)
     GDREGISTER_CLASS(GameplayEffect)
-    GDREGISTER_VIRTUAL_CLASS(GameplayEffectContext)
+    GDREGISTER_CLASS(GameplayEffectContext)
     GDREGISTER_CLASS(GameplayEffectSpec)
 }
 

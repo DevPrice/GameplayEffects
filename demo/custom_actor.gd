@@ -5,11 +5,11 @@ extends GameplayActor
 func _ready():
 	receiving_effect.connect(
 		func (spec: GameplayEffectSpec):
-			print("%s receiving effect '%s'..." % [name, spec.effect.resource_name])
+			print("%s receiving effect '%s'..." % [name, spec.get_effect().resource_name])
 	)
 	received_effect.connect(
 		func (spec: GameplayEffectSpec):
-			print("%s received effect '%s'." % [name, spec.effect.resource_name])
+			print("%s received effect '%s'." % [name, spec.get_effect().resource_name])
 	)
 	stat_changed.connect(
 		func (stat: GameplayStat, new_value: float, old_value: float):
@@ -18,6 +18,5 @@ func _ready():
 	for effect in initial_effects:
 		apply_effect_to_self(effect)
 
-# TODO: Override virtual method
-#func _make_effect_context():
-#	return super._make_effect_context()
+func _get_custom_context_data():
+	return 1337.0
