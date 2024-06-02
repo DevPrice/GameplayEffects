@@ -5,7 +5,6 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/callable_method_pointer.hpp>
-#include "scene_time_source.h"
 
 using namespace godot;
 
