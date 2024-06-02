@@ -15,7 +15,7 @@ class SceneEffectTimer : public EffectTimer {
     GET_SET_OBJECT_PTR(Timer, timer)
 
 public:
-    ~SceneEffectTimer();
+    virtual ~SceneEffectTimer();
     void stop() override;
 
 private:

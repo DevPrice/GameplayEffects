@@ -189,8 +189,7 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
                         _remove_effect(active_effect);
                     });
                     active_effects[active_effect].duration = duration_timer;
-                }
-                else {
+                } else {
                     _remove_effect(active_effect);
                 }
             }
