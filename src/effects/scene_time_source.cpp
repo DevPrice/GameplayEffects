@@ -45,14 +45,19 @@ SceneEffectTimer::~SceneEffectTimer() {
     stop();
 }
 
+Timer* SceneEffectTimer::get_timer() const {
+    return Object::cast_to<Timer>(ObjectDB::get_instance(timer_id));
+}
+
 void SceneEffectTimer::set_timer(Timer* p_timer) {
-    if (timer == p_timer) return;
-    if (timer) {
-        timer->disconnect("timeout", callable_mp(this, &SceneEffectTimer::_on_timeout));
+    Timer* existing_timer = get_timer();
+    if (existing_timer == p_timer) return;
+    if (existing_timer) {
+        existing_timer->disconnect("timeout", callable_mp(this, &SceneEffectTimer::_on_timeout));
     }
-    timer = p_timer;
-    if (timer) {
-        timer->connect("timeout", callable_mp(this, &SceneEffectTimer::_on_timeout));
+    timer_id = p_timer ? p_timer->get_instance_id() : ObjectID();
+    if (p_timer) {
+        p_timer->connect("timeout", callable_mp(this, &SceneEffectTimer::_on_timeout));
     }
 }
 
@@ -63,10 +68,10 @@ void SceneEffectTimer::_on_timeout() {
 }
 
 void SceneEffectTimer::stop() {
-    if (timer) {
-        callback = nullptr;
-        timer->stop();
-        timer->queue_free();
-        timer = nullptr;
+    Timer* current_timer = get_timer();
+    if (current_timer) {
+        set_timer(nullptr);
+        current_timer->stop();
+        current_timer->queue_free();
     }
 }

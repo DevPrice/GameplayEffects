@@ -12,14 +12,13 @@ using namespace godot;
 class SceneEffectTimer : public EffectTimer {
     GDCLASS(SceneEffectTimer, EffectTimer)
 
+    GET_SET_OBJECT_PTR(Timer, timer)
+
 public:
     ~SceneEffectTimer();
-    void set_timer(Timer* p_timer);
     void stop() override;
 
 private:
-    Timer* timer;
-
     void _on_timeout();
 
 protected:
