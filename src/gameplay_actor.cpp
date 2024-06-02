@@ -169,27 +169,30 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
     handle->set_active_effect(active_effect);
 
     if (lifetime.is_valid()) {
-        Ref<ModifierMagnitude> period = lifetime->get_period();
         Ref<TimeSource> time_source = lifetime->get_time_source();
-        if (period.is_valid() && time_source.is_valid()) {
-            float period_magnitude = period->get_magnitude(execution_context);
-            Ref<EffectTimer> period_timer = lifetime->get_time_source()->create_interval(execution_context, period_magnitude);
-            period_timer->set_callback([this, active_effect]() {
-                _execute_effect(active_effect);
-            });
-            active_effects[active_effect].period = period_timer;
-        }
-        Ref<ModifierMagnitude> duration = lifetime->get_duration();
-        if (duration.is_valid()) {
-            float duration_magnitude = duration->get_magnitude(execution_context);
-            if (duration_magnitude > 0 && time_source.is_valid()) {
-                Ref<EffectTimer> duration_timer = lifetime->get_time_source()->create_timer(execution_context, duration_magnitude);
-                duration_timer->set_callback([this, active_effect]() {
-                    _remove_effect(active_effect);
+        if (time_source.is_valid()) {
+            Ref<ModifierMagnitude> period = lifetime->get_period();
+            if (period.is_valid()) {
+                float period_magnitude = period->get_magnitude(execution_context);
+                Ref<EffectTimer> period_timer = time_source->create_interval(execution_context, period_magnitude);
+                period_timer->set_callback([this, active_effect]() {
+                    _execute_effect(active_effect);
                 });
-                active_effects[active_effect].period = duration_timer;
-            } else {
-                _remove_effect(active_effect);
+                active_effects[active_effect].period = period_timer;
+            }
+            Ref<ModifierMagnitude> duration = lifetime->get_duration();
+            if (duration.is_valid()) {
+                float duration_magnitude = duration->get_magnitude(execution_context);
+                if (duration_magnitude > 0) {
+                    Ref<EffectTimer> duration_timer = time_source->create_timer(execution_context, duration_magnitude);
+                    duration_timer->set_callback([this, active_effect]() {
+                        _remove_effect(active_effect);
+                    });
+                    active_effects[active_effect].duration = duration_timer;
+                }
+                else {
+                    _remove_effect(active_effect);
+                }
             }
         }
     }
