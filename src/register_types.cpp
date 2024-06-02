@@ -1,6 +1,5 @@
 #include "register_types.h"
 
-#include "gameplay_actor.h" // why does this need to be included before SceneTimeSource?
 #include "effects/effect_execution.h"
 #include "effects/effect_lifetime.h"
 #include "effects/gameplay_effect.h"
@@ -21,6 +20,7 @@
 #include "stats/captured_stat.h"
 #include "stats/gameplay_stat.h"
 #include "stats/stat_evaluator.h"
+#include "gameplay_actor.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
