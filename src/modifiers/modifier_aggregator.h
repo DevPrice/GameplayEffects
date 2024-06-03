@@ -21,8 +21,11 @@ public:
 
     void add_modifier(const std::shared_ptr<EvaluatedModifier>& modifier);
     void add_modifiers(const std::vector<std::shared_ptr<EvaluatedModifier>>& p_modifiers);
-    bool get_modified_value(const Ref<GameplayStat>& stat, float baseValue, float& modifiedValue) const;
-    float get_modified_value(const Ref<GameplayStat>& stat, float baseValue) const;
+    bool get_modified_value(const Ref<GameplayStat>& stat, float base_value, float& modified_value) const;
+    float get_modified_value(const Ref<GameplayStat>& stat, float base_value) const;
+
+private:
+    bool get_modified_value(const Ref<ModifierChannel>& channel, const Ref<GameplayStat>& stat, float base_value, float& modified_value) const;
 };
 
 #endif

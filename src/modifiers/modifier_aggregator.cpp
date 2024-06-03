@@ -13,9 +13,19 @@ void ModifierAggregator::add_modifiers(const std::vector<std::shared_ptr<Evaluat
 }
 
 bool ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, float base_value, float& modified_value) const {
+    return get_modified_value(nullptr, stat, base_value, modified_value);
+}
+
+float ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, float base_value) const {
+    float modified_value = 0.f;
+    get_modified_value(stat, base_value, modified_value);
+    return modified_value;
+}
+
+bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel, const Ref<GameplayStat>& stat, float base_value, float& modified_value) const {
     std::vector<std::shared_ptr<EvaluatedModifier>> relevant_modifiers;
-    std::copy_if(modifiers.begin(), modifiers.end(), std::back_inserter(relevant_modifiers), [&stat](const std::shared_ptr<EvaluatedModifier> modifier) {
-        return modifier && modifier->get_stat() == stat && modifier->requirements_met();
+    std::copy_if(modifiers.begin(), modifiers.end(), std::back_inserter(relevant_modifiers), [&stat, &channel](const std::shared_ptr<EvaluatedModifier> modifier) {
+        return modifier && modifier->get_stat() == stat && modifier->get_channel() == channel && modifier->requirements_met();
     });
 
     // Return the last Override, if present
@@ -46,10 +56,4 @@ bool ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, float
     modified_value = (base_value + aggregate_offset) * aggregate_multiply;
 
     return aggregate_offset != 0.f || aggregate_multiply != 1.f;
-}
-
-float ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, float base_value) const {
-    float modified_value = 0.f;
-    get_modified_value(stat, base_value, modified_value);
-    return modified_value;
 }
