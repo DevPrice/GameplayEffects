@@ -11,6 +11,7 @@
 #include "modifiers/clamped_magnitude.h"
 #include "modifiers/constant_magnitude.h"
 #include "modifiers/curve_sample_magnitude.h"
+#include "modifiers/modifier_channel.h"
 #include "modifiers/modifier_magnitude.h"
 #include "modifiers/scaled_magnitude.h"
 #include "modifiers/stat_based_magnitude.h"
@@ -44,6 +45,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(TagBasedMagnitude)
     GDREGISTER_CLASS(CurveSampleMagnitude)
     GDREGISTER_VIRTUAL_CLASS(CustomMagnitudeCalculation)
+    GDREGISTER_CLASS(ModifierChannel)
     GDREGISTER_CLASS(StatModifier)
     GDREGISTER_CLASS(CapturedStat)
     GDREGISTER_CLASS(StatEvaluator)
