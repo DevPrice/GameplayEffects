@@ -12,6 +12,9 @@ class ModifierChannel : public Resource {
 
     GET_SET_PROPERTY(int32_t, priority)
 
+public:
+    ModifierChannel() : priority(0) { }
+
 protected:
     static void _bind_methods();
 };
