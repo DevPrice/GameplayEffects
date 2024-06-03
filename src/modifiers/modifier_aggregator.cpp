@@ -4,6 +4,14 @@
 #include <algorithm>
 #include <numeric>
 
+void ModifierAggregator::add_modifier(const std::shared_ptr<EvaluatedModifier>& modifier) {
+    modifiers.push_back(modifier);
+}
+
+void ModifierAggregator::add_modifiers(const std::vector<std::shared_ptr<EvaluatedModifier>>& p_modifiers) {
+    modifiers.insert(modifiers.end(), p_modifiers.begin(), p_modifiers.end());
+}
+
 bool ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, float base_value, float& modified_value) const {
     std::vector<std::shared_ptr<EvaluatedModifier>> relevant_modifiers;
     std::copy_if(modifiers.begin(), modifiers.end(), std::back_inserter(relevant_modifiers), [&stat](const std::shared_ptr<EvaluatedModifier> modifier) {

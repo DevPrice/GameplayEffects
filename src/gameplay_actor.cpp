@@ -221,7 +221,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
 
     ModifierAggregator base_aggregator;
     if (effect->is_instant()) {
-        base_aggregator.modifiers.insert(base_aggregator.modifiers.end(), modifier_snapshot.begin(), modifier_snapshot.end());
+        base_aggregator.add_modifiers(modifier_snapshot);
     } else {
         active_effects[active_effect].modifiers = modifier_snapshot;
     }
@@ -245,7 +245,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
 
     std::vector<std::shared_ptr<EvaluatedModifier>> execution_modifiers = execution_output->get_modifiers();
-    base_aggregator.modifiers.insert(base_aggregator.modifiers.end(), execution_modifiers.begin(), execution_modifiers.end());
+    base_aggregator.add_modifiers(execution_modifiers);
 
     for (auto& stat_value : stat_snapshot) {
         float modified_value = 0.f;
@@ -268,7 +268,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     ModifierAggregator aggregator;
     for (auto& effect_state : active_effects) {
         const std::vector<std::shared_ptr<EvaluatedModifier>>& effect_modifiers = effect_state.second.modifiers;
-        aggregator.modifiers.insert(aggregator.modifiers.begin(), effect_modifiers.begin(), effect_modifiers.end());
+        aggregator.add_modifiers(effect_modifiers);
     }
     for (auto& stat : stat_values) {
         float initial_value = stat.value.current_value;

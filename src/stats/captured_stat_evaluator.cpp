@@ -53,7 +53,7 @@ float CapturedStatEvaluator::get_base_value(const Ref<CapturedStat>& stat) const
 float CapturedStatEvaluator::get_current_value(const Ref<CapturedStat>& stat) const {
     if (stat.is_valid() && stat->get_stat().is_valid()) {
         ActorSnapshot snapshot = get_snapshot(stat);
-        ModifierAggregator aggregator{snapshot.modifier_snapshot};
+        ModifierAggregator aggregator(snapshot.modifier_snapshot);
         if (const StatSnapshot* stat_snapshot = snapshot.base_value_snapshot.getptr(stat->get_stat())) {
             return aggregator.get_modified_value(stat->get_stat(), stat_snapshot->base_value);
         }

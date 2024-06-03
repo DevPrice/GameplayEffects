@@ -2,18 +2,25 @@
 #define MODIFIER_AGGREGATOR_H
 
 #include "stats/gameplay_stat.h"
+#include "modifiers/evaluated_modifier.h"
 
 #include <vector>
 #include <memory>
 #include <godot_cpp/classes/ref.hpp>
 
-class EvaluatedModifier;
-
 using namespace godot;
 
-struct ModifierAggregator {
+class ModifierAggregator {
+
+private:
     std::vector<std::shared_ptr<EvaluatedModifier>> modifiers;
 
+public:
+    ModifierAggregator() { }
+    ModifierAggregator(const std::vector<std::shared_ptr<EvaluatedModifier>>& p_modifiers) : modifiers(p_modifiers) { }
+
+    void add_modifier(const std::shared_ptr<EvaluatedModifier>& modifier);
+    void add_modifiers(const std::vector<std::shared_ptr<EvaluatedModifier>>& p_modifiers);
     bool get_modified_value(const Ref<GameplayStat>& stat, float baseValue, float& modifiedValue) const;
     float get_modified_value(const Ref<GameplayStat>& stat, float baseValue) const;
 };
