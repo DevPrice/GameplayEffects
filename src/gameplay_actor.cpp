@@ -29,6 +29,7 @@ void GameplayActor::_bind_methods() {
     ADD_SIGNAL(MethodInfo("receiving_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     ADD_SIGNAL(MethodInfo("received_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
+    BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stat_components, StatComponent)
     BIND_GET_SET_NODE(GameplayActor, avatar, Node)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, get_stat_base_value, "stat")
@@ -272,8 +273,39 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     }
     for (auto& stat : stat_values) {
         float initial_value = stat.value.current_value;
+        float base_value = stat.value.base_value;
+
+        for (int i = 0; i < stat_components.size(); ++i) {
+            const Ref<StatComponent>& stat_component = stat_components[i];
+            if (stat_component.is_valid()) {
+                stat_component->on_base_value_changing(this, stat.key, base_value);
+            }
+        }
+        for (int i = 0; i < stat_components.size(); ++i) {
+            const Ref<StatComponent>& stat_component = stat_components[i];
+            if (stat_component.is_valid()) {
+                stat_component->on_base_value_changed(this, stat.key, base_value);
+            }
+        }
+
         float modified_value = aggregator.get_modified_value(stat.key, stat.value.base_value);
+
+        for (int i = 0; i < stat_components.size(); ++i) {
+            const Ref<StatComponent>& stat_component = stat_components[i];
+            if (stat_component.is_valid()) {
+                stat_component->on_current_value_changing(this, stat.key, modified_value);
+            }
+        }
+
         stat_values[stat.key] = StatSnapshot{stat.value.base_value, modified_value};
+
+        for (int i = 0; i < stat_components.size(); ++i) {
+            const Ref<StatComponent>& stat_component = stat_components[i];
+            if (stat_component.is_valid()) {
+                stat_component->on_current_value_changed(this, stat.key, modified_value);
+            }
+        }
+
         if (abs(modified_value - initial_value) > 1e-5) {
             modified_stats.push_back(stat.key);
         }
@@ -389,3 +421,5 @@ std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_s
     }
     return modifier_snapshot;
 }
+
+GET_SET_PROPERTY_IMPL(GameplayActor, TypedArray<StatComponent>, stat_components)
