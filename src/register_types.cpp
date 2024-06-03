@@ -20,6 +20,7 @@
 #include "modifiers/custom_magnitude_calculation.h"
 #include "stats/captured_stat.h"
 #include "stats/gameplay_stat.h"
+#include "stats/stat_component.h"
 #include "stats/stat_evaluator.h"
 #include "gameplay_actor.h"
 
@@ -49,6 +50,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(StatModifier)
     GDREGISTER_CLASS(CapturedStat)
     GDREGISTER_CLASS(StatEvaluator)
+    GDREGISTER_VIRTUAL_CLASS(StatComponent)
     GDREGISTER_ABSTRACT_CLASS(GameplayRequirements)
     GDREGISTER_ABSTRACT_CLASS(EffectTimer)
     GDREGISTER_ABSTRACT_CLASS(TimeSource)

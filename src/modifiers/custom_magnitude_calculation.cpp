@@ -1,5 +1,4 @@
 #include "modifiers/custom_magnitude_calculation.h"
-#include "custom_magnitude_calculation.h"
 
 using namespace godot;
 
