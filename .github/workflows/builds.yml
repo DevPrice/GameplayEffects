@@ -141,4 +141,4 @@ jobs:
         with:
           name: godot-cpp-template
           path: |
-            ${{ github.workspace }}/bin/**
+            ${{ github.workspace }}/demo/addons/**
