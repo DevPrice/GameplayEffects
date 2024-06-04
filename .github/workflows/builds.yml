@@ -90,8 +90,17 @@ jobs:
         run: |
           Remove-Item demo/addons/gameplay_effects/bin/windows/* -Include *.exp,*.lib,*.pdb -Force
       - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: addons-${{ matrix.platform }}-${{ matrix.arch }}
+          path: |
+            ${{ github.workspace }}/demo/addons/**
+  merge:
+    runs-on: ubuntu-latest
+    needs: upload
+    steps:
+      - name: Merge Artifacts
         uses: actions/upload-artifact/merge@v4
         with:
           name: addons
-          pattern: |
-            ${{ github.workspace }}/demo/addons/**
+          pattern: addons-*
