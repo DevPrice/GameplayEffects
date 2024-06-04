@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        float-precision: [double]
+        float-precision: double
         include:
           - platform: linux
             arch: x86_64
