@@ -92,6 +92,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact/merge@v4
         with:
-          name: godot-cpp-template
-          path: |
+          name: addons
+          pattern: |
             ${{ github.workspace }}/demo/addons/**
