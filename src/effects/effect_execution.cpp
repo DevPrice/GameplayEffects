@@ -47,18 +47,5 @@ void EffectExecutionOutput::add_modifier(const Ref<GameplayStat>& stat, StatModi
     modifiers.push_back(std::make_shared<ExecutionEvaluatedModifier>(stat, operation, magnitude));
 }
 
-// inlined from GDVIRTUAL macro
-MethodInfo EffectExecution::_gdvirtual__execute_get_method_info() {
-    MethodInfo method_info;
-    method_info.name = "_execute";
-    method_info.flags = METHOD_FLAG_VIRTUAL;
-    method_info.arguments.push_back(GetTypeInfo<Ref<EffectExecutionContext>>::get_class_info());
-    method_info.arguments_metadata.push_back(GetTypeInfo<Ref<EffectExecutionContext>>::METADATA);
-    method_info.arguments.push_back(GetTypeInfo<Ref<StatEvaluator>>::get_class_info());
-    method_info.arguments_metadata.push_back(GetTypeInfo<Ref<StatEvaluator>>::METADATA);
-    method_info.arguments.push_back(GetTypeInfo<Ref<EffectExecutionOutput>>::get_class_info());
-    method_info.arguments_metadata.push_back(GetTypeInfo<Ref<EffectExecutionOutput>>::METADATA);
-    return method_info;
-}
-// end of inlined macro
+GDVIRTUAL3_IMPL(EffectExecution, _execute, Ref<EffectExecutionContext>, Ref<StatEvaluator>, Ref<EffectExecutionOutput>)
 
