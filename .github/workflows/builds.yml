@@ -11,6 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        build-target-type: ["template_debug", "template_release"]
         include:
 
           - platform: linux
