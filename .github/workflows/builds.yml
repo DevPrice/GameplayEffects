@@ -140,7 +140,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: addons-${{ matrix.platform }}-${{ matrix.arch }}
+          name: addons-${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.build-target-type }}
           path: |
             ${{ github.workspace }}/demo/addons
   merge:
