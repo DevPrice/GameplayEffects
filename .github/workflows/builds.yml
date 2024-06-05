@@ -15,6 +15,7 @@ jobs:
         arch: [x86_64, x86_32, arm64, arm32, wasm32]
         build-target-type: [template_debug, template_release]
         float-precision: [double]
+        os: [windows-latest, ubuntu-20.04]
         include:
 
           - platform: linux
