@@ -12,7 +12,6 @@ jobs:
       fail-fast: false
       matrix:
         platform: [windows, linux, android, web]
-        arch: [x86_64, x86_32, arm64, arm32, wasm32]
         build-target-type: [template_debug, template_release]
         float-precision: [double]
         include:
