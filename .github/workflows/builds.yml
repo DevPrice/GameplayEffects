@@ -118,7 +118,7 @@ jobs:
           arch: ${{ matrix.arch }}
           godot-cpp-location: godot-cpp
           float-precision: ${{ matrix.float-precision }}
-          build-target-type: template_release
+          build-target-type: ${{ matrix.build-target-type }}
 # Sign
       - name: Mac Sign
         if: ${{ matrix.platform == 'macos' }}
