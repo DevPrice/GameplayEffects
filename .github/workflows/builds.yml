@@ -14,34 +14,82 @@ jobs:
         include:
 
           - platform: linux
+            build-target-type: template_debug
             float-precision: double
             arch: x86_64
             os: ubuntu-20.04
           - platform: windows
+            build-target-type: template_debug
             float-precision: double
             arch: x86_32
             os: windows-latest
           - platform: windows
+            build-target-type: template_debug
             float-precision: double
             arch: x86_64
             os: windows-latest
           - platform: android
+            build-target-type: template_debug
             float-precision: double
             arch: arm64
             os: ubuntu-20.04
           - platform: android
+            build-target-type: template_debug
             float-precision: double
             arch: arm32
             os: ubuntu-20.04
           - platform: android
+            build-target-type: template_debug
             float-precision: double
             arch: x86_64
             os: ubuntu-20.04
           - platform: android
+            build-target-type: template_debug
             float-precision: double
             arch: x86_32
             os: ubuntu-20.04
           - platform: web
+            build-target-type: template_debug
+            float-precision: double
+            arch: wasm32
+            os: ubuntu-20.04
+          - platform: linux
+            build-target-type: template_release
+            float-precision: double
+            arch: x86_64
+            os: ubuntu-20.04
+          - platform: windows
+            build-target-type: template_release
+            float-precision: double
+            arch: x86_32
+            os: windows-latest
+          - platform: windows
+            build-target-type: template_release
+            float-precision: double
+            arch: x86_64
+            os: windows-latest
+          - platform: android
+            build-target-type: template_release
+            float-precision: double
+            arch: arm64
+            os: ubuntu-20.04
+          - platform: android
+            build-target-type: template_release
+            float-precision: double
+            arch: arm32
+            os: ubuntu-20.04
+          - platform: android
+            build-target-type: template_release
+            float-precision: double
+            arch: x86_64
+            os: ubuntu-20.04
+          - platform: android
+            build-target-type: template_release
+            float-precision: double
+            arch: x86_32
+            os: ubuntu-20.04
+          - platform: web
+            build-target-type: template_release
             float-precision: double
             arch: wasm32
             os: ubuntu-20.04
