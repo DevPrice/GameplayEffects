@@ -155,6 +155,14 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
 
     emit_signal("receiving_effect", spec);
 
+    TypedArray<EffectComponent> effect_components = effect->get_components();
+    for (int i = 0; i < effect_components.size(); ++i) {
+        Ref<EffectComponent> effect_component = effect_components[i];
+        if (effect_component.is_valid()) {
+            effect_component->on_application(execution_context);
+        }
+    }
+
     const ActiveEffect active_effect = ActiveEffect{execution_context};
 
     if (lifetime.is_null() || lifetime->get_execute_on_application()) {
@@ -327,6 +335,23 @@ bool GameplayActor::remove_effect(const Ref<ActiveEffectHandle>& handle) {
 bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
     const bool removed = active_effects.erase(active_effect);
     _recalculate_stats();
+
+    if (active_effect.execution_context.is_valid()) {
+        const Ref<GameplayEffectSpec> spec = active_effect.execution_context->get_spec();
+        if (spec.is_valid()) {
+            const Ref<GameplayEffect> effect = spec->get_effect();
+            if (effect.is_valid()) {
+                const TypedArray<EffectComponent> effect_components = effect->get_components();
+                for (int i = 0; i < effect_components.size(); ++i) {
+                    const Ref<EffectComponent> effect_component = effect_components[i];
+                    if (effect_component.is_valid()) {
+                        effect_component->on_removal(active_effect.execution_context);
+                    }
+                }
+            }
+        }
+    }
+
     return removed;
 }
 
