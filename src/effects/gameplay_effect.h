@@ -2,6 +2,7 @@
 #define GAMEPLAY_EFFECT_H
 
 #include "binding_macros.h"
+#include "effects/effect_component.h"
 #include "effects/effect_execution.h"
 #include "effects/effect_lifetime.h"
 #include "effects/gameplay_requirements.h"
@@ -18,6 +19,7 @@ class GameplayEffect : public Resource {
     GET_SET_PROPERTY(TypedArray<GameplayRequirements>, application_requirements)
     GET_SET_PROPERTY(TypedArray<StatModifier>, modifiers)
     GET_SET_PROPERTY(TypedArray<EffectExecution>, executions)
+    GET_SET_PROPERTY(TypedArray<EffectComponent>, components)
     GET_SET_PROPERTY(Ref<EffectLifetime>, lifetime)
 
 public:

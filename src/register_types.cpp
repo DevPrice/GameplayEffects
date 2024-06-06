@@ -1,5 +1,4 @@
-#include "register_types.h"
-
+#include "effects/effect_component.h"
 #include "effects/effect_execution.h"
 #include "effects/effect_lifetime.h"
 #include "effects/gameplay_effect.h"
@@ -27,6 +26,8 @@
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
+
+#include "register_types.h"
 
 using namespace godot;
 
