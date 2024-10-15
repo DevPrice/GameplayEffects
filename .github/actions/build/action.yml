@@ -32,7 +32,7 @@ runs:
   steps:
 # Android only
     - name: Android - Set up Java 11
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       if: ${{ inputs.platform == 'android' }}
       with:
         distribution: temurin
