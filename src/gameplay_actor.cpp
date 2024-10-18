@@ -404,9 +404,11 @@ void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
     stats = p_stats;
     for (int i = 0; i < stats.size(); i++) {
         const Ref<GameplayStat> stat = stats[i];
-        const StatSnapshot snapshot{stat->get_base_value(), stat->get_base_value()};
-        if (!stat_values.has(stat)) {
-            stat_values[stat] = snapshot;
+        if (stat.is_valid()) {
+            const StatSnapshot snapshot{ stat->get_base_value(), stat->get_base_value() };
+            if (!stat_values.has(stat)) {
+                stat_values[stat] = snapshot;
+            }
         }
     }
     for (auto it = stat_values.begin(); it != stat_values.end(); ++it) {
