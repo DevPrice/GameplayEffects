@@ -21,15 +21,21 @@ debug_suffix = "" if env["target"] == "template_release" else ".{}".format(env["
 arch_suffix = "" if env["platform"] == "windows" and env["arch"] == "x86_64" else ".{}".format(env["arch"])
 threads_suffix = ".nothreads" if env["platform"] == "windows" and not env["threads"] else ""
 
+print(env["threads"])
+
 if env["platform"] == "macos":
     library_name = "gameplayeffects{0}.framework/gameplayeffects{0}".format(debug_suffix),
 else:
     library_name = "gameplayeffects{}{}{}{}".format(debug_suffix, arch_suffix, threads_suffix, env["SHLIBSUFFIX"])
 
+print(library_name)
+
 library = env.SharedLibrary(
     "/".join([addon_path, "bin", env["platform"], library_name]),
     source=sources,
 )
+
+raise Exception("Sorry, no numbers below zero")
 
 Default(library)
 
