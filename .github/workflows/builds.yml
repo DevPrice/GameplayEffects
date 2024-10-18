@@ -133,6 +133,7 @@ jobs:
           godot-cpp-location: godot-cpp
           float-precision: ${{ matrix.float-precision }}
           build-target-type: ${{ matrix.build-target-type }}
+          threads: ${{ matrix.threads }}
 # Sign
       - name: Mac Sign
         if: ${{ matrix.platform == 'macos' }}
