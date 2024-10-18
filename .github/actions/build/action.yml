@@ -26,6 +26,9 @@ inputs:
   em_cache_folder:
     default: emsdk-cache
     description: Emscripten cache folder.
+  threads:
+    default: true
+    description: Threads enabled
 
 runs:
   using: composite

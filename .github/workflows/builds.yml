@@ -93,6 +93,13 @@ jobs:
             float-precision: double
             arch: wasm32
             os: ubuntu-20.04
+            threads: false
+          - platform: web
+            build-target-type: template_release
+            float-precision: double
+            arch: wasm32
+            os: ubuntu-20.04
+            threads: true
 
     runs-on: ${{ matrix.os }}
     steps:
