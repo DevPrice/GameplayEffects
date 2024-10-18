@@ -109,5 +109,5 @@ runs:
       env:
         SCONS_CACHE: ${{ github.workspace }}/${{ inputs.gdextension-location }}/${{ inputs.scons-cache }}/
       run: |
-        scons target=${{ inputs.build-target-type }} platform=${{ inputs.platform }} arch=${{ inputs.arch }} precision=${{ inputs.float-precision }} production=yes threads={{ inputs.threads }}
+        scons target=${{ inputs.build-target-type }} platform=${{ inputs.platform }} arch=${{ inputs.arch }} precision=${{ inputs.float-precision }} production=yes threads=${{ inputs.threads }}
       working-directory: ${{ inputs.gdextension-location }}
