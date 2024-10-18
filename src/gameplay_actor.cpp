@@ -20,11 +20,6 @@ void ActiveEffectHandle::_bind_methods() {
     BIND_METHOD(ActiveEffectHandle, get_spec)
 }
 
-
-void BaseGameplayActor::_bind_methods() {
-    GDVIRTUAL_BIND(_get_custom_context_data)
-}
-
 void GameplayActor::_bind_methods() {
     ADD_SIGNAL(MethodInfo("stat_changed",
         PropertyInfo(Variant::OBJECT, "stat", PROPERTY_HINT_RESOURCE_TYPE, "GameplayStat"),
@@ -42,6 +37,7 @@ void GameplayActor::_bind_methods() {
     BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
     BIND_METHOD(GameplayActor, remove_effect, "handle")
     BIND_METHOD(GameplayActor, _make_effect_context)
+    GDVIRTUAL_BIND(_get_custom_context_data)
 
     Dictionary default_tag_magnitudes;
     ClassDB::bind_method(D_METHOD("make_effect_spec", "effect", "tag_magnitudes"), &GameplayActor::make_effect_spec, DEFVAL(default_tag_magnitudes));

@@ -62,20 +62,8 @@ struct ActiveEffectState {
     Ref<EffectTimer> duration;
 };
 
-/**
- * This exists only because Godot doesn't support instantiating virtual types directly.
- */
-class BaseGameplayActor : public Node {
-    GDCLASS(BaseGameplayActor, Node)
-
-protected:
-    static void _bind_methods();
-
-    GDVIRTUAL0RC(Variant, _get_custom_context_data)
-};
-
-class GameplayActor : public BaseGameplayActor {
-    GDCLASS(GameplayActor, BaseGameplayActor)
+class GameplayActor : public Node {
+    GDCLASS(GameplayActor, Node)
 
     GET_SET_PROPERTY(TypedArray<GameplayStat>, stats)
     GET_SET_PROPERTY(TypedArray<StatComponent>, stat_components)
@@ -114,6 +102,8 @@ private:
 
 protected:
     static void _bind_methods();
+
+    GDVIRTUAL0RC(Variant, _get_custom_context_data)
 };
 
 #endif
