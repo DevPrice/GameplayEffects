@@ -19,7 +19,7 @@ sources.extend(Glob("src/**/*.cpp"))
 addon_path = "demo/addons/gameplay_effects"
 debug_suffix = "" if env["target"] == "template_release" else ".{}".format(env["target"].replace("template_", ""))
 arch_suffix = "" if env["platform"] == "windows" and env["arch"] == "x86_64" else ".{}".format(env["arch"])
-threads_suffix = "nothreads" if env["platform"] == "web" and not env["threads"] else ""
+threads_suffix = ".nothreads" if env["platform"] == "windows" and not env["threads"] else ""
 
 if env["platform"] == "macos":
     library_name = "gameplayeffects{0}.framework/gameplayeffects{0}".format(debug_suffix),
