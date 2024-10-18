@@ -27,7 +27,6 @@ inputs:
     default: emsdk-cache
     description: Emscripten cache folder.
   threads:
-    type: boolean
     default: "true"
     description: Threads enabled
 
