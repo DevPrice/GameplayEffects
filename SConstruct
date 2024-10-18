@@ -18,7 +18,7 @@ sources.extend(Glob("src/**/*.cpp"))
 
 addon_path = "demo/addons/gameplay_effects"
 debug_suffix = "" if env["target"] == "template_release" else ".{}".format(env["target"].replace("template_", ""))
-arch_suffix = "" if env["platform"] == "windows" and env["arch"] == "x86_64" else ".{}".format(env["arch"])
+arch_suffix = "" if (env["platform"] == "windows" and env["arch"] == "x86_64") or env["arch"] == "wasm32" else ".{}".format(env["arch"])
 threads_suffix = ".nothreads" if not env["threads"] else ""
 
 if env["platform"] == "macos":
