@@ -1,6 +1,7 @@
 #ifndef MODIFIER_AGGREGATOR_H
 #define MODIFIER_AGGREGATOR_H
 
+#include "typedefs.h"
 #include "stats/gameplay_stat.h"
 #include "modifiers/evaluated_modifier.h"
 
@@ -34,11 +35,11 @@ public:
 
     void add_modifier(const std::shared_ptr<EvaluatedModifier>& modifier);
     void add_modifiers(const std::vector<std::shared_ptr<EvaluatedModifier>>& p_modifiers);
-    bool get_modified_value(const Ref<GameplayStat>& stat, float base_value, float& out_modified_value) const;
-    float get_modified_value(const Ref<GameplayStat>& stat, float base_value) const;
+    bool get_modified_value(const Ref<GameplayStat>& stat, stat_value_t base_value, stat_value_t& out_modified_value) const;
+    stat_value_t get_modified_value(const Ref<GameplayStat>& stat, stat_value_t base_value) const;
 
 private:
-    bool get_modified_value(const Ref<ModifierChannel>& channel, const Ref<GameplayStat>& stat, float base_value, float& out_modified_value) const;
+    bool get_modified_value(const Ref<ModifierChannel>& channel, const Ref<GameplayStat>& stat, stat_value_t base_value, stat_value_t& out_modified_value) const;
 };
 
 #endif

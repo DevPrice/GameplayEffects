@@ -26,15 +26,15 @@ void EffectExecution::execute(const Ref<EffectExecutionContext>& execution_conte
 struct ExecutionEvaluatedModifier : public EvaluatedModifier {
     const Ref<GameplayStat> stat;
     const StatModifier::Operation operation = StatModifier::Operation::Offset;
-    const float magnitude = 0.f;
+    const stat_value_t magnitude = 0.f;
     const Ref<ModifierChannel> channel;
 
-    ExecutionEvaluatedModifier(Ref<GameplayStat> p_stat, StatModifier::Operation p_operation, float p_magnitude)
+    ExecutionEvaluatedModifier(Ref<GameplayStat> p_stat, StatModifier::Operation p_operation, stat_value_t p_magnitude)
         : stat(p_stat), operation(p_operation), magnitude(p_magnitude) { }
 
     Ref<GameplayStat> get_stat() const override { return stat; }
     StatModifier::Operation get_operation() const override { return operation; }
-    float get_magnitude() const override { return magnitude; }
+    stat_value_t get_magnitude() const override { return magnitude; }
     Ref<ModifierChannel> get_channel() const override { return channel; }
     bool requirements_met() const override { return true; }
 };
@@ -43,7 +43,7 @@ std::vector<std::shared_ptr<EvaluatedModifier>> EffectExecutionOutput::get_modif
     return modifiers;
 }
 
-void EffectExecutionOutput::add_modifier(const Ref<GameplayStat>& stat, StatModifier::Operation operation, float magnitude) {
+void EffectExecutionOutput::add_modifier(const Ref<GameplayStat>& stat, StatModifier::Operation operation, stat_value_t magnitude) {
     modifiers.push_back(std::make_shared<ExecutionEvaluatedModifier>(stat, operation, magnitude));
 }
 

@@ -20,15 +20,15 @@ void SceneEffectTimer::_bind_methods() {
 GET_SET_PROPERTY_IMPL(SceneTimeSource, bool, process_always)
 GET_SET_PROPERTY_IMPL(SceneTimeSource, bool, process_in_physics)
 
-Ref<EffectTimer> SceneTimeSource::create_timer(const Ref<EffectExecutionContext>& execution_context, float duration) const {
+Ref<EffectTimer> SceneTimeSource::create_timer(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const {
     return _create_timer(execution_context, duration, true);
 }
 
-Ref<EffectTimer> SceneTimeSource::create_interval(const Ref<EffectExecutionContext>& execution_context, float duration) const {
+Ref<EffectTimer> SceneTimeSource::create_interval(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const {
     return _create_timer(execution_context, duration, false);
 }
 
-Ref<EffectTimer> SceneTimeSource::_create_timer(const Ref<EffectExecutionContext>& execution_context, float duration, bool one_shot) const {
+Ref<EffectTimer> SceneTimeSource::_create_timer(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration, bool one_shot) const {
     Timer* timer = memnew(Timer);
     timer->set_autostart(true);
     timer->set_one_shot(one_shot);

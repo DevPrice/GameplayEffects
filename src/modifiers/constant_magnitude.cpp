@@ -12,8 +12,8 @@ ConstantMagnitude::ConstantMagnitude() {
     constant_magnitude = 0.f;
 }
 
-float ConstantMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
+stat_value_t ConstantMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
     return constant_magnitude;
 }
 
-GET_SET_PROPERTY_IMPL(ConstantMagnitude, float, constant_magnitude)
+GET_SET_PROPERTY_IMPL(ConstantMagnitude, stat_value_t, constant_magnitude)

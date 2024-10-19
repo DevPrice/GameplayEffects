@@ -2,6 +2,7 @@
 #define STAT_EVALUATOR_H
 
 #include "binding_macros.h"
+#include "typedefs.h"
 #include "stats/captured_stat.h"
 
 #include <godot_cpp/classes/resource.hpp>
@@ -21,9 +22,9 @@ private:
 public:
     void set_evaluator(const CapturedStatEvaluator* evaluator);
 
-    float get_base_value(Ref<CapturedStat> stat) const;
-    float get_current_value(Ref<CapturedStat> stat) const;
-    float get_modified_value(Ref<CapturedStat> stat, float base_value) const;
+    stat_value_t get_base_value(Ref<CapturedStat> stat) const;
+    stat_value_t get_current_value(Ref<CapturedStat> stat) const;
+    stat_value_t get_modified_value(Ref<CapturedStat> stat, stat_value_t base_value) const;
 
 protected:
     static void _bind_methods();

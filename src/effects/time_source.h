@@ -2,6 +2,7 @@
 #define TIME_SOURCE_H
 
 #include "binding_macros.h"
+#include "typedefs.h"
 
 #include <functional>
 #include <godot_cpp/classes/ref_counted.hpp>
@@ -28,8 +29,8 @@ class TimeSource : public Resource {
     GDCLASS(TimeSource, Resource)
 
 public:
-    virtual Ref<EffectTimer> create_timer(const Ref<EffectExecutionContext>& execution_context, float duration) const = 0;
-    virtual Ref<EffectTimer> create_interval(const Ref<EffectExecutionContext>& execution_context, float duration) const = 0;
+    virtual Ref<EffectTimer> create_timer(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const = 0;
+    virtual Ref<EffectTimer> create_interval(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const = 0;
 
 protected:
     static void _bind_methods();

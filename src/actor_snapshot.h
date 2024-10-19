@@ -1,6 +1,7 @@
 #ifndef ACTOR_SNAPSHOT_H
 #define ACTOR_SNAPSHOT_H
 
+#include "typedefs.h"
 #include "stats/gameplay_stat.h"
 #include "modifiers/evaluated_modifier.h"
 
@@ -10,8 +11,8 @@
 #include <vector>
 
 struct StatSnapshot {
-    float base_value = 0.f;
-    float current_value = 0.f;
+    stat_value_t base_value = 0.f;
+    stat_value_t current_value = 0.f;
 };
 
 struct ActorSnapshot {

@@ -2,6 +2,7 @@
 #define STAT_BASED_MAGNITUDE_H
 
 #include "binding_macros.h"
+#include "typedefs.h"
 #include "modifiers/modifier_magnitude.h"
 #include "stats/captured_stat.h"
 
@@ -21,7 +22,7 @@ public:
 
     StatBasedMagnitude();
 
-    float get_magnitude(const Ref<EffectExecutionContext>& context) override;
+    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) override;
 
     GET_SET_PROPERTY(Ref<CapturedStat>, captured_stat)
     GET_SET_PROPERTY(StatValueType, value_type)

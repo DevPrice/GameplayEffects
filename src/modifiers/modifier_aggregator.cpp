@@ -20,7 +20,7 @@ void ModifierAggregator::add_modifiers(const std::vector<std::shared_ptr<Evaluat
     }
 }
 
-bool ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, float base_value, float& out_modified_value) const {
+bool ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, stat_value_t base_value, stat_value_t& out_modified_value) const {
     bool modified = false;
     out_modified_value = base_value;
     for (auto& [channel, _] : modifiers) {
@@ -29,13 +29,13 @@ bool ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, float
     return modified;
 }
 
-float ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, float base_value) const {
-    float modified_value = 0.f;
+stat_value_t ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, stat_value_t base_value) const {
+    stat_value_t modified_value = 0.f;
     get_modified_value(stat, base_value, modified_value);
     return modified_value;
 }
 
-bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel, const Ref<GameplayStat>& stat, float base_value, float& out_modified_value) const {
+bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel, const Ref<GameplayStat>& stat, stat_value_t base_value, stat_value_t& out_modified_value) const {
     const std::vector<std::shared_ptr<EvaluatedModifier>>& channel_modifiers = modifiers.at(channel);
     std::vector<std::shared_ptr<EvaluatedModifier>> relevant_modifiers;
     std::copy_if(channel_modifiers.begin(), channel_modifiers.end(), std::back_inserter(relevant_modifiers), [&stat](const std::shared_ptr<EvaluatedModifier> modifier) {
@@ -55,7 +55,7 @@ bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel,
     std::copy_if(relevant_modifiers.begin(), relevant_modifiers.end(), std::back_inserter(offset_modifiers), [](const std::shared_ptr<EvaluatedModifier> modifier) {
         return modifier && modifier->get_operation() == StatModifier::Operation::Offset;
     });
-    float aggregate_offset = std::accumulate(offset_modifiers.begin(), offset_modifiers.end(), 0.f, [](const float acc, const std::shared_ptr<EvaluatedModifier> modifier) {
+    stat_value_t aggregate_offset = std::accumulate(offset_modifiers.begin(), offset_modifiers.end(), 0.f, [](const stat_value_t acc, const std::shared_ptr<EvaluatedModifier> modifier) {
         return acc + modifier->get_magnitude();
     });
 
@@ -63,7 +63,7 @@ bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel,
     std::copy_if(relevant_modifiers.begin(), relevant_modifiers.end(), std::back_inserter(multiply_modifiers), [](const std::shared_ptr<EvaluatedModifier> modifier) {
         return modifier && modifier->get_operation() == StatModifier::Operation::Multiply;
     });
-    float aggregate_multiply = 1.f + std::accumulate(multiply_modifiers.begin(), multiply_modifiers.end(), 0.f, [](const float acc, const std::shared_ptr<EvaluatedModifier> modifier) {
+    stat_value_t aggregate_multiply = 1.f + std::accumulate(multiply_modifiers.begin(), multiply_modifiers.end(), 0.f, [](const stat_value_t acc, const std::shared_ptr<EvaluatedModifier> modifier) {
         return acc + modifier->get_magnitude() - 1.f;
     });
 

@@ -6,8 +6,8 @@ void CustomMagnitudeCalculation::_bind_methods() {
     GDVIRTUAL_BIND(_get_magnitude, "context");
 }
 
-float CustomMagnitudeCalculation::get_magnitude(const Ref<EffectExecutionContext>& context) {
-    float magnitude = 0.f;
+stat_value_t CustomMagnitudeCalculation::get_magnitude(const Ref<EffectExecutionContext>& context) {
+    stat_value_t magnitude = 0.f;
     if (GDVIRTUAL_CALL(_get_magnitude, context, magnitude)) {
         return magnitude;
     }

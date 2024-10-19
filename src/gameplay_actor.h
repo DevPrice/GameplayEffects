@@ -1,6 +1,7 @@
 #ifndef GAMEPLAY_ACTOR_H
 #define GAMEPLAY_ACTOR_H
 
+#include "typedefs.h"
 #include "actor_snapshot.h"
 #include "effects/effect_execution_context.h"
 #include "effects/gameplay_effect_context.h"
@@ -69,9 +70,9 @@ class GameplayActor : public Node {
 
 public:
     StatSnapshot get_stat_snapshot(const Ref<GameplayStat>& stat) const;
-    float get_stat_base_value(const Ref<GameplayStat>& stat) const;
-    float get_stat_current_value(const Ref<GameplayStat>& stat) const;
-    void set_stat_base_value(const Ref<GameplayStat>& stat, float base_value);
+    stat_value_t get_stat_base_value(const Ref<GameplayStat>& stat) const;
+    stat_value_t get_stat_current_value(const Ref<GameplayStat>& stat) const;
+    void set_stat_base_value(const Ref<GameplayStat>& stat, stat_value_t base_value);
 
     ActorSnapshot capture_snapshot() const;
 
@@ -86,7 +87,7 @@ public:
     static void set_owning_actor(Node* node, GameplayActor* actor);
 
 private:
-    HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_value_ts;
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
 
     Ref<GameplayEffectContext> _make_effect_context();

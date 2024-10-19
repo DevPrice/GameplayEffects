@@ -2,6 +2,7 @@
 #define TAG_BASED_MAGNITUDE_H
 
 #include "binding_macros.h"
+#include "typedefs.h"
 #include "modifiers/modifier_magnitude.h"
 #include "gameplay_tag.h"
 
@@ -16,7 +17,7 @@ class TagBasedMagnitude : public ModifierMagnitude {
 public:
     TagBasedMagnitude();
 
-    float get_magnitude(const Ref<EffectExecutionContext>& context) override;
+    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) override;
 
     String get_tag_value() const;
     void set_tag_value(const String& p_tag);

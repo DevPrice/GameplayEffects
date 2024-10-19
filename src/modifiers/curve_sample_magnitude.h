@@ -2,6 +2,7 @@
 #define CURVE_SAMPLE_MAGNITUDE_H
 
 #include "binding_macros.h"
+#include "typedefs.h"
 #include "modifiers/modifier_magnitude.h"
 
 #include <godot_cpp/classes/curve.hpp>
@@ -19,7 +20,7 @@ class CurveSampleMagnitude : public ModifierMagnitude {
 public:
     CurveSampleMagnitude();
 
-    float get_magnitude(const Ref<EffectExecutionContext>& context) override;
+    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) override;
 
   protected:
     static void _bind_methods();

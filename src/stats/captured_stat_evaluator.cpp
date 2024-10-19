@@ -38,7 +38,7 @@ ActorSnapshot CapturedStatEvaluator::get_snapshot(const Ref<CapturedStat>& stat)
     return ActorSnapshot{};
 }
 
-float CapturedStatEvaluator::get_base_value(const Ref<CapturedStat>& stat) const {
+stat_value_t CapturedStatEvaluator::get_base_value(const Ref<CapturedStat>& stat) const {
     if (stat.is_valid() && stat->get_stat().is_valid()) {
         ActorSnapshot snapshot = get_snapshot(stat);
         if (const StatSnapshot* stat_snapshot = snapshot.base_value_snapshot.getptr(stat->get_stat())) {
@@ -50,7 +50,7 @@ float CapturedStatEvaluator::get_base_value(const Ref<CapturedStat>& stat) const
     return 0.0f;
 }
 
-float CapturedStatEvaluator::get_current_value(const Ref<CapturedStat>& stat) const {
+stat_value_t CapturedStatEvaluator::get_current_value(const Ref<CapturedStat>& stat) const {
     if (stat.is_valid() && stat->get_stat().is_valid()) {
         ActorSnapshot snapshot = get_snapshot(stat);
         ModifierAggregator aggregator(snapshot.modifier_snapshot);
@@ -63,7 +63,7 @@ float CapturedStatEvaluator::get_current_value(const Ref<CapturedStat>& stat) co
     return 0.0f;
 }
 
-float CapturedStatEvaluator::get_modified_value(const Ref<CapturedStat>& stat, float base_value) const {
+stat_value_t CapturedStatEvaluator::get_modified_value(const Ref<CapturedStat>& stat, stat_value_t base_value) const {
     if (stat.is_valid() && stat->get_stat().is_valid()) {
         ActorSnapshot snapshot = get_snapshot(stat);
         ModifierAggregator aggregator{snapshot.modifier_snapshot};

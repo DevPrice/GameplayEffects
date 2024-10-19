@@ -11,7 +11,7 @@ void StatBasedMagnitude::_bind_methods() {
 
 StatBasedMagnitude::StatBasedMagnitude() : value_type(StatValueType::Current) { }
 
-float StatBasedMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
+stat_value_t StatBasedMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
     if (captured_stat.is_null()) return 0.f;
 
     CapturedStatEvaluator stat_evaluator(context);

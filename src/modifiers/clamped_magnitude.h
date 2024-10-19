@@ -2,6 +2,7 @@
 #define CLAMPED_MAGNITUDE_H
 
 #include "binding_macros.h"
+#include "typedefs.h"
 #include "modifiers/modifier_magnitude.h"
 
 #include <godot_cpp/classes/ref.hpp>
@@ -14,7 +15,7 @@ class ClampedMagnitude : public ModifierMagnitude {
 public:
     ClampedMagnitude();
 
-    float get_magnitude(const Ref<EffectExecutionContext>& context) override;
+    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) override;
 
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, value)
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, min_value)

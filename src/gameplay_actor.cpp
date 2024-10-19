@@ -66,30 +66,30 @@ Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
 }
 
 StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {
-    if (!stat_values.has(stat)) {
+    if (!stat_value_ts.has(stat)) {
         UtilityFunctions::push_warning("Attempted to get snapshot of missing stat: ", stat->get_name());
         StatSnapshot snapshot;
         return snapshot;
     }
-    return stat_values.get(stat);
+    return stat_value_ts.get(stat);
 }
 
-float GameplayActor::get_stat_base_value(const Ref<GameplayStat>& stat) const {
+stat_value_t GameplayActor::get_stat_base_value(const Ref<GameplayStat>& stat) const {
     return get_stat_snapshot(stat).base_value;
 }
 
-float GameplayActor::get_stat_current_value(const Ref<GameplayStat>& stat) const {
+stat_value_t GameplayActor::get_stat_current_value(const Ref<GameplayStat>& stat) const {
     return get_stat_snapshot(stat).current_value;
 }
 
-void GameplayActor::set_stat_base_value(const Ref<GameplayStat>& stat, float base_value) {
-    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
-    stat_values[stat].base_value = base_value;
+void GameplayActor::set_stat_base_value(const Ref<GameplayStat>& stat, stat_value_t base_value) {
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_value_ts;
+    stat_value_ts[stat].base_value = base_value;
     _recalculate_stats(stat_snapshot);
 }
 
 ActorSnapshot GameplayActor::capture_snapshot() const {
-    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_value_ts;
     std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot;
 
     for (auto& [_, effect_state] : active_effects) {
@@ -181,7 +181,7 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
         if (time_source.is_valid()) {
             Ref<ModifierMagnitude> period = lifetime->get_period();
             if (period.is_valid()) {
-                float period_magnitude = period->get_magnitude(execution_context);
+                stat_value_t period_magnitude = period->get_magnitude(execution_context);
                 Ref<EffectTimer> period_timer = time_source->create_interval(execution_context, period_magnitude);
                 period_timer->set_callback([this, active_effect]() {
                     _execute_effect(active_effect);
@@ -190,7 +190,7 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
             }
             Ref<ModifierMagnitude> duration = lifetime->get_duration();
             if (duration.is_valid()) {
-                float duration_magnitude = duration->get_magnitude(execution_context);
+                stat_value_t duration_magnitude = duration->get_magnitude(execution_context);
                 if (duration_magnitude > 0) {
                     Ref<EffectTimer> duration_timer = time_source->create_timer(execution_context, duration_magnitude);
                     duration_timer->set_callback([this, active_effect]() {
@@ -250,16 +250,16 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
         stat_evaluator->set_evaluator(nullptr);
     }
 
-    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_value_ts;
 
     std::vector<std::shared_ptr<EvaluatedModifier>> execution_modifiers = execution_output->get_modifiers();
     base_aggregator.add_modifiers(execution_modifiers);
 
     for (auto& stat_value : stat_snapshot) {
-        float modified_value = 0.f;
+        stat_value_t modified_value = 0.f;
         if (base_aggregator.get_modified_value(stat_value.key, stat_value.value.base_value, modified_value)) {
-            StatSnapshot new_snapshot{modified_value, stat_value.value.current_value};
-            stat_values[stat_value.key] = new_snapshot;
+            StatSnapshot new_snapshot{ modified_value, stat_value.value.current_value };
+            stat_value_ts[stat_value.key] = new_snapshot;
         }
     }
 
@@ -267,7 +267,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
 }
 
 void GameplayActor::_recalculate_stats() {
-    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_value_ts;
     _recalculate_stats(stat_snapshot);
 }
 
@@ -278,9 +278,9 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
         const std::vector<std::shared_ptr<EvaluatedModifier>>& effect_modifiers = effect_state.second.modifiers;
         aggregator.add_modifiers(effect_modifiers);
     }
-    for (auto& stat : stat_values) {
-        float initial_value = stat.value.current_value;
-        float base_value = stat.value.base_value;
+    for (auto& stat : stat_value_ts) {
+        stat_value_t initial_value = stat.value.current_value;
+        stat_value_t base_value = stat.value.base_value;
 
         // TODO: Run components in channel-based order
         for (auto& effect_state : active_effects) {
@@ -305,7 +305,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
             }
         }
 
-        float modified_value = aggregator.get_modified_value(stat.key, base_value);
+        stat_value_t modified_value = aggregator.get_modified_value(stat.key, base_value);
 
         for (auto& effect_state : active_effects) {
             Ref<EffectExecutionContext> execution_context = effect_state.first.execution_context;
@@ -323,7 +323,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
             }
         }
 
-        stat_values[stat.key] = StatSnapshot{base_value, modified_value};
+        stat_value_ts[stat.key] = StatSnapshot{base_value, modified_value};
 
         for (auto& effect_state : active_effects) {
             Ref<EffectExecutionContext> execution_context = effect_state.first.execution_context;
@@ -346,7 +346,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
         }
     }
     for (Ref<GameplayStat> stat : modified_stats) {
-        emit_signal("stat_changed", stat, stat_values.get(stat).current_value, stat_snapshot.get(stat).current_value);
+        emit_signal("stat_changed", stat, stat_value_ts.get(stat).current_value, stat_snapshot.get(stat).current_value);
     }
 }
 
@@ -429,14 +429,14 @@ void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
         const Ref<GameplayStat> stat = stats[i];
         if (stat.is_valid()) {
             const StatSnapshot snapshot{ stat->get_base_value(), stat->get_base_value() };
-            if (!stat_values.has(stat)) {
-                stat_values[stat] = snapshot;
+            if (!stat_value_ts.has(stat)) {
+                stat_value_ts[stat] = snapshot;
             }
         }
     }
-    for (auto it = stat_values.begin(); it != stat_values.end(); ++it) {
+    for (auto it = stat_value_ts.begin(); it != stat_value_ts.end(); ++it) {
         if (!p_stats.has(it->key)) {
-            stat_values.remove(it);
+            stat_value_ts.remove(it);
         }
     }
 }

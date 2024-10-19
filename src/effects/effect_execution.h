@@ -3,6 +3,7 @@
 
 #include "binding_macros.h"
 #include "virtual_macros.h"
+#include "typedefs.h"
 #include "modifiers/evaluated_modifier.h"
 #include "modifiers/stat_modifier.h"
 #include "stats/stat_evaluator.h"
@@ -22,7 +23,7 @@ class EffectExecutionOutput : public RefCounted {
 
 public:
     std::vector<std::shared_ptr<EvaluatedModifier>> get_modifiers() const;
-    void add_modifier(const Ref<GameplayStat>& stat, StatModifier::Operation operation, float magnitude);
+    void add_modifier(const Ref<GameplayStat>& stat, StatModifier::Operation operation, stat_value_t magnitude);
 
 private:
     std::vector<std::shared_ptr<EvaluatedModifier>> modifiers;

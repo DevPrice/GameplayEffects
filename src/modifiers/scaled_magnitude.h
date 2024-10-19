@@ -2,6 +2,7 @@
 #define SCALED_MAGNITUDE_H
 
 #include "binding_macros.h"
+#include "typedefs.h"
 #include "modifiers/modifier_magnitude.h"
 
 #include <godot_cpp/classes/ref.hpp>
@@ -14,7 +15,7 @@ class ScaledMagnitude : public ModifierMagnitude {
 public:
     ScaledMagnitude();
 
-    float get_magnitude(const Ref<EffectExecutionContext>& context) override;
+    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) override;
 
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, base)
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, premultiply_offset)
