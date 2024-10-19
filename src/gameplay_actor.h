@@ -87,7 +87,7 @@ public:
     static void set_owning_actor(Node* node, GameplayActor* actor);
 
 private:
-    HashMap<Ref<GameplayStat>, StatSnapshot> stat_value_ts;
+    HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
 
     Ref<GameplayEffectContext> _make_effect_context();

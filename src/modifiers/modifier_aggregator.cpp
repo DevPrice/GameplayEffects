@@ -69,5 +69,6 @@ bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel,
 
     out_modified_value = (base_value + aggregate_offset) * aggregate_multiply;
 
+    // TODO: Improve checking for modification
     return aggregate_offset != stat_value_t{} || aggregate_multiply != 1.f;
 }
