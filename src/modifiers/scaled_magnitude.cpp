@@ -10,9 +10,9 @@ void ScaledMagnitude::_bind_methods(){
 ScaledMagnitude::ScaledMagnitude() { }
 
 stat_value_t ScaledMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
-    stat_value_t base_magnitude = base.is_valid() ? base->get_magnitude(context) : STAT_ZERO;
-    stat_value_t premultiply_offset_magnitude = premultiply_offset.is_valid() ? premultiply_offset->get_magnitude(context) : STAT_ZERO;
-    stat_value_t postmultiply_offset_magnitude = postmultiply_offset.is_valid() ? postmultiply_offset->get_magnitude(context) : STAT_ZERO;
+    stat_value_t base_magnitude = base.is_valid() ? base->get_magnitude(context) : stat_value_t{};
+    stat_value_t premultiply_offset_magnitude = premultiply_offset.is_valid() ? premultiply_offset->get_magnitude(context) : stat_value_t{};
+    stat_value_t postmultiply_offset_magnitude = postmultiply_offset.is_valid() ? postmultiply_offset->get_magnitude(context) : stat_value_t{};
     stat_value_t coefficient_magnitude = coefficient.is_valid() ? coefficient->get_magnitude(context) : 1.f;
     return (base_magnitude + premultiply_offset_magnitude) * coefficient_magnitude + postmultiply_offset_magnitude;
 }

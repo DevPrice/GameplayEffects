@@ -11,8 +11,8 @@
 #include <vector>
 
 struct StatSnapshot {
-    stat_value_t base_value = STAT_ZERO;
-    stat_value_t current_value = STAT_ZERO;
+    stat_value_t base_value{};
+    stat_value_t current_value{};
 };
 
 struct ActorSnapshot {

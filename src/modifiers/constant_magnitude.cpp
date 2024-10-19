@@ -9,7 +9,7 @@ void ConstantMagnitude::_bind_methods() {
 }
 
 ConstantMagnitude::ConstantMagnitude() {
-    constant_magnitude = STAT_ZERO;
+    constant_magnitude = stat_value_t{};
 }
 
 stat_value_t ConstantMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {

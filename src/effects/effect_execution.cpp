@@ -26,7 +26,7 @@ void EffectExecution::execute(const Ref<EffectExecutionContext>& execution_conte
 struct ExecutionEvaluatedModifier : public EvaluatedModifier {
     const Ref<GameplayStat> stat;
     const StatModifier::Operation operation = StatModifier::Operation::Offset;
-    const stat_value_t magnitude = STAT_ZERO;
+    const stat_value_t magnitude{};
     const Ref<ModifierChannel> channel;
 
     ExecutionEvaluatedModifier(Ref<GameplayStat> p_stat, StatModifier::Operation p_operation, stat_value_t p_magnitude)
