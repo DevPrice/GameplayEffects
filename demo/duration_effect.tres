@@ -1,6 +1,6 @@
 [gd_resource type="GameplayEffect" load_steps=7 format=3 uid="uid://dwxuhjjnxdmaj"]
 
-[ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_enb7y"]
+[ext_resource type="GameplayStat" uid="uid://cj6plvranefca" path="res://max_stat.tres" id="1_8csar"]
 
 [sub_resource type="ConstantMagnitude" id="ConstantMagnitude_b3ogk"]
 magnitude = 3.0
@@ -15,7 +15,7 @@ time_source = SubResource("SceneTimeSource_xyyst")
 magnitude = 69.0
 
 [sub_resource type="StatModifier" id="StatModifier_2kfw7"]
-stat = ExtResource("1_enb7y")
+stat = ExtResource("1_8csar")
 magnitude = SubResource("ConstantMagnitude_kmyvd")
 
 [resource]
