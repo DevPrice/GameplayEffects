@@ -29,7 +29,6 @@ void GameplayActor::_bind_methods() {
     ADD_SIGNAL(MethodInfo("receiving_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     ADD_SIGNAL(MethodInfo("received_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
-    BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stat_components, StatComponent)
     BIND_GET_SET_NODE(GameplayActor, avatar, Node)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, get_stat_base_value, "stat")
@@ -283,34 +282,62 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
         float initial_value = stat.value.current_value;
         float base_value = stat.value.base_value;
 
-        for (int i = 0; i < stat_components.size(); ++i) {
-            const Ref<StatComponent>& stat_component = stat_components[i];
-            if (stat_component.is_valid()) {
-                stat_component->on_base_value_changing(this, stat.key, base_value);
+        // TODO: Run components in channel-based order
+        for (auto& effect_state : active_effects) {
+            Ref<EffectExecutionContext> execution_context = effect_state.first.execution_context;
+            if (execution_context.is_valid()) {
+                Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+                if (spec.is_valid()) {
+                    TypedArray<EffectComponent> effect_components = spec->get_effect()->get_components();
+                    for (int i = 0; i < effect_components.size(); ++i) {
+                        const Ref<EffectComponent>& effect_component = effect_components[i];
+                        if (effect_component.is_valid()) {
+                            effect_component->on_base_value_changing(execution_context, stat.key, base_value);
+                        }
+                    }
+                    for (int i = 0; i < effect_components.size(); ++i) {
+                        const Ref<EffectComponent>& effect_component = effect_components[i];
+                        if (effect_component.is_valid()) {
+                            effect_component->on_base_value_changed(execution_context, stat.key, base_value);
+                        }
+                    }
+                }
             }
         }
-        for (int i = 0; i < stat_components.size(); ++i) {
-            const Ref<StatComponent>& stat_component = stat_components[i];
-            if (stat_component.is_valid()) {
-                stat_component->on_base_value_changed(this, stat.key, base_value);
+
+        float modified_value = aggregator.get_modified_value(stat.key, base_value);
+
+        for (auto& effect_state : active_effects) {
+            Ref<EffectExecutionContext> execution_context = effect_state.first.execution_context;
+            if (execution_context.is_valid()) {
+                Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+                if (spec.is_valid()) {
+                    TypedArray<EffectComponent> effect_components = spec->get_effect()->get_components();
+                    for (int i = 0; i < effect_components.size(); ++i) {
+                        const Ref<EffectComponent>& effect_component = effect_components[i];
+                        if (effect_component.is_valid()) {
+                            effect_component->on_current_value_changing(execution_context, stat.key, modified_value);
+                        }
+                    }
+                }
             }
         }
 
-        float modified_value = aggregator.get_modified_value(stat.key, stat.value.base_value);
+        stat_values[stat.key] = StatSnapshot{base_value, modified_value};
 
-        for (int i = 0; i < stat_components.size(); ++i) {
-            const Ref<StatComponent>& stat_component = stat_components[i];
-            if (stat_component.is_valid()) {
-                stat_component->on_current_value_changing(this, stat.key, modified_value);
-            }
-        }
-
-        stat_values[stat.key] = StatSnapshot{stat.value.base_value, modified_value};
-
-        for (int i = 0; i < stat_components.size(); ++i) {
-            const Ref<StatComponent>& stat_component = stat_components[i];
-            if (stat_component.is_valid()) {
-                stat_component->on_current_value_changed(this, stat.key, modified_value);
+        for (auto& effect_state : active_effects) {
+            Ref<EffectExecutionContext> execution_context = effect_state.first.execution_context;
+            if (execution_context.is_valid()) {
+                Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+                if (spec.is_valid()) {
+                    TypedArray<EffectComponent> effect_components = spec->get_effect()->get_components();
+                    for (int i = 0; i < effect_components.size(); ++i) {
+                        const Ref<EffectComponent>& effect_component = effect_components[i];
+                        if (effect_component.is_valid()) {
+                            effect_component->on_current_value_changed(execution_context, stat.key, modified_value);
+                        }
+                    }
+                }
             }
         }
 
@@ -448,5 +475,3 @@ std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_s
     }
     return modifier_snapshot;
 }
-
-GET_SET_PROPERTY_IMPL(GameplayActor, TypedArray<StatComponent>, stat_components)

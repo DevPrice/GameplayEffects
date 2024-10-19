@@ -7,7 +7,6 @@
 #include "effects/gameplay_effect_spec.h"
 #include "modifiers/evaluated_modifier.h"
 #include "stats/gameplay_stat.h"
-#include "stats/stat_component.h"
 
 #include <godot_cpp/core/gdvirtual.gen.inc>
 #include <godot_cpp/classes/node.hpp>
@@ -66,7 +65,6 @@ class GameplayActor : public Node {
     GDCLASS(GameplayActor, Node)
 
     GET_SET_PROPERTY(TypedArray<GameplayStat>, stats)
-    GET_SET_PROPERTY(TypedArray<StatComponent>, stat_components)
     GET_SET_OBJECT_PTR(Node, avatar)
 
 public:

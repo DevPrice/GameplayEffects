@@ -1,0 +1,5 @@
+[gd_resource type="GameplayStat" format=3 uid="uid://cj6plvranefca"]
+
+[resource]
+base_value = 500.0
+resource_name = "Max stat"
