@@ -10,7 +10,7 @@ void GameplayStat::_bind_methods(){
 }
 
 GameplayStat::GameplayStat() {
-    base_value = 0.f;
+    base_value = STAT_ZERO;
 }
 
 GET_SET_PROPERTY_IMPL(GameplayStat, stat_value_t, base_value)

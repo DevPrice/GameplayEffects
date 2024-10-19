@@ -13,7 +13,7 @@ void ClampedMagnitude::_bind_methods() {
 ClampedMagnitude::ClampedMagnitude() { }
 
 stat_value_t ClampedMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
-    stat_value_t value_magnitude = value.is_valid() ? value->get_magnitude(context) : 0.f;
+    stat_value_t value_magnitude = value.is_valid() ? value->get_magnitude(context) : STAT_ZERO;
     if (min_value.is_valid()) {
         stat_value_t min_value_magnitude = min_value->get_magnitude(context);
         if (value_magnitude < min_value_magnitude) return min_value_magnitude;

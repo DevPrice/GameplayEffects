@@ -53,7 +53,7 @@ void GameplayEffectSpec::add_tag_magnitudes(const Dictionary & p_tag_magnitudes)
     for (int i = 0; i < tags.size(); ++i) {
         Variant& key = tags[i];
         const GameplayTag tag(key.stringify());
-        const stat_value_t magnitude = p_tag_magnitudes.get(key, 0.f);
+        const stat_value_t magnitude = p_tag_magnitudes.get(key, STAT_ZERO);
         set_tag_magnitude(tag, magnitude);
     }
 }

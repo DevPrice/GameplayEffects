@@ -256,7 +256,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     base_aggregator.add_modifiers(execution_modifiers);
 
     for (auto& stat_value : stat_snapshot) {
-        stat_value_t modified_value = 0.f;
+        stat_value_t modified_value = STAT_ZERO;
         if (base_aggregator.get_modified_value(stat_value.key, stat_value.value.base_value, modified_value)) {
             StatSnapshot new_snapshot{ modified_value, stat_value.value.current_value };
             stat_value_ts[stat_value.key] = new_snapshot;
