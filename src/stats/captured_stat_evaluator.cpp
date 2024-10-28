@@ -47,7 +47,7 @@ stat_value_t CapturedStatEvaluator::get_base_value(const Ref<CapturedStat>& stat
         return stat->get_stat()->get_base_value();
     }
     UtilityFunctions::push_error("Captured stat is invalid! Unable to get stat base value.");
-    return 0.0f;
+    return stat_value_t{};
 }
 
 stat_value_t CapturedStatEvaluator::get_current_value(const Ref<CapturedStat>& stat) const {
@@ -60,7 +60,7 @@ stat_value_t CapturedStatEvaluator::get_current_value(const Ref<CapturedStat>& s
         return aggregator.get_modified_value(stat->get_stat(), stat->get_stat()->get_base_value());
     }
     UtilityFunctions::push_error("Captured stat is invalid! Unable to get stat current value.");
-    return 0.0f;
+    return stat_value_t{};
 }
 
 stat_value_t CapturedStatEvaluator::get_modified_value(const Ref<CapturedStat>& stat, stat_value_t base_value) const {
@@ -70,5 +70,5 @@ stat_value_t CapturedStatEvaluator::get_modified_value(const Ref<CapturedStat>& 
         return aggregator.get_modified_value(stat->get_stat(), base_value);
     }
     UtilityFunctions::push_error("Captured stat is invalid! Unable to get stat current value.");
-    return 0.0f;
+    return stat_value_t{};
 }

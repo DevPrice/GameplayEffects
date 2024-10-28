@@ -14,7 +14,7 @@ stat_value_t TagBasedMagnitude::get_magnitude(const Ref<EffectExecutionContext>&
     if (context->get_spec().is_valid() && context->get_spec().is_valid() && context->get_spec()->get_tag_magnitude(tag, magnitude)) {
         return magnitude;
     }
-    return 0.0f;
+    return stat_value_t{};
 }
 
 String TagBasedMagnitude::get_tag_value() const {

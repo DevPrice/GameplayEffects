@@ -22,7 +22,7 @@ stat_value_t StatEvaluator::get_base_value(Ref<CapturedStat> stat) const {
         return stat_evaluator->get_base_value(stat);
     }
     UtilityFunctions::push_error("This StatEvaluator isn't associated with an effect execution!");
-    return 0.0f;
+    return stat_value_t{};
 }
 
 stat_value_t StatEvaluator::get_current_value(Ref<CapturedStat> stat) const {
@@ -30,7 +30,7 @@ stat_value_t StatEvaluator::get_current_value(Ref<CapturedStat> stat) const {
         return stat_evaluator->get_current_value(stat);
     }
     UtilityFunctions::push_error("This StatEvaluator isn't associated with an effect execution!");
-    return 0.0f;
+    return stat_value_t{};
 }
 
 stat_value_t StatEvaluator::get_modified_value(Ref<CapturedStat> stat, stat_value_t base_value) const {
@@ -38,5 +38,5 @@ stat_value_t StatEvaluator::get_modified_value(Ref<CapturedStat> stat, stat_valu
         return stat_evaluator->get_modified_value(stat, base_value);
     }
     UtilityFunctions::push_error("This StatEvaluator isn't associated with an effect execution!");
-    return 0.0f;
+    return stat_value_t{};
 }
