@@ -8,6 +8,7 @@ using namespace godot;
 void CapturedStat::_bind_methods() {
     BIND_ENUM_CONSTANT(Source)
     BIND_ENUM_CONSTANT(Target)
+    BIND_GET_SET(CapturedStat, snapshot, Variant::BOOL)
     BIND_GET_SET_ENUM(CapturedStat, capture_from, "Source:0,Target:1")
     BIND_GET_SET_RESOURCE(CapturedStat, stat, GameplayStat)
 }
