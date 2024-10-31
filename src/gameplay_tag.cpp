@@ -41,3 +41,30 @@ bool GameplayTag::operator==(const GameplayTag &other) const {
 std::size_t GameplayTag::Hasher::operator()(const GameplayTag &tag) const {
     return tag.value.to_lower().hash();
 }
+
+void GameplayTagSet::add_tag(const GameplayTag& tag) {
+    tags.insert(tag);
+}
+
+bool GameplayTagSet::remove_tag(const GameplayTag& tag) {
+    return tags.erase(tag);
+}
+
+bool GameplayTagSet::has_tag(const GameplayTag& tag) const {
+    if (has_tag_exact(tag)) return true;
+    // TODO: Use a more efficient data structure
+    for (auto i = tags.begin(); i != tags.end(); ++i) {
+        if (tag == *i) return true;
+    }
+    return false;
+}
+
+bool GameplayTagSet::has_tag_exact(const GameplayTag& tag) const {
+    return tags.count(tag) > 0;
+}
+
+void GameplayTagSet::get_string_array(TypedArray<String>& array) const {
+    for (auto i = tags.begin(); i != tags.end(); ++i) {
+        array.push_back(i->to_string());
+    }
+}
