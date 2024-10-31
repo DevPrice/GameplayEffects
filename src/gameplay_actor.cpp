@@ -518,7 +518,7 @@ GameplayTagSet ActiveEffect::capture_granted_tags() const {
                 for (int i = 0; i < components.size(); ++i) {
                     Ref<EffectComponent> component = components[i];
                     if (component.is_valid()) {
-                        if (const GrantTagsComponent const* grant_tags_component = Object::cast_to<GrantTagsComponent>(*component)) {
+                        if (const GrantTagsComponent* grant_tags_component = Object::cast_to<GrantTagsComponent>(*component)) {
                             TypedArray<String> captured_tags = grant_tags_component->get_granted_tags();
                             for (size_t j = 0; j < captured_tags.size(); ++j) {
                                 const String tag = captured_tags[i];
