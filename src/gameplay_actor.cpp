@@ -2,6 +2,7 @@
 #include "binding_macros.h"
 #include "containers.h"
 #include "effects/effect_execution.h"
+#include "effects/grant_tags_component.h"
 #include "effects/time_source.h"
 #include "modifiers/modifier_aggregator.h"
 #include "modifiers/modifier_snapshot.h"
@@ -36,6 +37,7 @@ void GameplayActor::_bind_methods() {
     BIND_GET_SET_NODE(GameplayActor, avatar, Node)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, get_loose_tags)
+    BIND_METHOD(GameplayActor, get_granted_tags)
     BIND_METHOD(GameplayActor, has_tag, "tag")
     BIND_METHOD(GameplayActor, has_tag_exact, "tag")
     BIND_METHOD(GameplayActor, get_stat_base_value, "stat")
@@ -192,6 +194,7 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
     if (lifetime.is_null() || lifetime->get_execute_on_application()) {
         _execute_effect(active_effect);
     } else {
+        active_effects[active_effect].granted_tags = active_effect.capture_granted_tags();
         active_effects[active_effect].modifiers = active_effect.capture_modifier_snapshot();
         _recalculate_stats();
     }
@@ -256,6 +259,7 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     if (effect->is_instant()) {
         base_aggregator.add_modifiers(modifier_snapshot);
     } else {
+        active_effects[active_effect].granted_tags = active_effect.capture_granted_tags();
         active_effects[active_effect].modifiers = modifier_snapshot;
     }
 
@@ -299,9 +303,11 @@ void GameplayActor::_recalculate_stats() {
 void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot) {
     std::vector<Ref<GameplayStat>> modified_stats;
     ModifierAggregator aggregator;
+    granted_tags.clear();
     for (auto& effect_state : active_effects) {
         const std::vector<std::shared_ptr<EvaluatedModifier>>& effect_modifiers = effect_state.second.modifiers;
         aggregator.add_modifiers(effect_modifiers);
+        granted_tags.append(effect_state.second.granted_tags);
     }
     for (auto& stat : stat_values) {
         stat_value_t initial_value = stat.value.current_value;
@@ -499,4 +505,30 @@ std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_s
         }
     }
     return modifier_snapshot;
+}
+
+GameplayTagSet ActiveEffect::capture_granted_tags() const {
+    GameplayTagSet result;
+    if (execution_context.is_valid()) {
+        Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+        if (spec.is_valid()) {
+            Ref<GameplayEffect> effect = spec->get_effect();
+            if (effect.is_valid()) {
+                TypedArray<EffectComponent> components = effect->get_components();
+                for (int i = 0; i < components.size(); ++i) {
+                    Ref<EffectComponent> component = components[i];
+                    if (component.is_valid()) {
+                        if (const GrantTagsComponent const* grant_tags_component = Object::cast_to<GrantTagsComponent>(*component)) {
+                            TypedArray<String> captured_tags = grant_tags_component->get_granted_tags();
+                            for (size_t j = 0; j < captured_tags.size(); ++j) {
+                                const String tag = captured_tags[i];
+                                result.add_tag(tag);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result;
 }

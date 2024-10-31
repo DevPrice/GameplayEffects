@@ -27,6 +27,7 @@ struct ActiveEffect {
     const Ref<EffectExecutionContext> execution_context;
 
     std::vector<std::shared_ptr<EvaluatedModifier>> capture_modifier_snapshot() const;
+    GameplayTagSet capture_granted_tags() const;
 
     ActiveEffect(const Ref<EffectExecutionContext>& p_execution_context) : execution_context(p_execution_context) { }
 
@@ -59,6 +60,7 @@ protected:
 
 struct ActiveEffectState {
     std::vector<std::shared_ptr<EvaluatedModifier>> modifiers;
+    GameplayTagSet granted_tags;
     Ref<EffectTimer> period;
     Ref<EffectTimer> duration;
 };
