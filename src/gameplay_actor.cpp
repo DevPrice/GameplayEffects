@@ -20,6 +20,10 @@ void ActiveEffectHandle::_bind_methods() {
     BIND_METHOD(ActiveEffectHandle, get_spec)
 }
 
+GameplayActor::GameplayActor() {
+    tag_container = Ref(memnew(GameplayTagContainer));
+}
+
 void GameplayActor::_bind_methods() {
     ADD_SIGNAL(MethodInfo("stat_changed",
         PropertyInfo(Variant::OBJECT, "stat", PROPERTY_HINT_RESOURCE_TYPE, "GameplayStat"),
@@ -31,6 +35,7 @@ void GameplayActor::_bind_methods() {
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
     BIND_GET_SET_NODE(GameplayActor, avatar, Node)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
+    BIND_METHOD(GameplayActor, get_tags);
     BIND_METHOD(GameplayActor, get_stat_base_value, "stat")
     BIND_METHOD(GameplayActor, get_stat_current_value, "stat")
     BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
@@ -63,6 +68,10 @@ Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
         }
     }
     return nullptr;
+}
+
+Ref<GameplayTagContainer> GameplayActor::get_tags() const {
+    return tag_container;
 }
 
 StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {

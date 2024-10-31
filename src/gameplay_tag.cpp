@@ -54,7 +54,7 @@ bool GameplayTagSet::has_tag(const GameplayTag& tag) const {
     if (has_tag_exact(tag)) return true;
     // TODO: Use a more efficient data structure
     for (auto i = tags.begin(); i != tags.end(); ++i) {
-        if (tag == *i) return true;
+        if (i->matches(tag)) return true;
     }
     return false;
 }

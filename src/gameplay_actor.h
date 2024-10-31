@@ -3,6 +3,7 @@
 
 #include "typedefs.h"
 #include "actor_snapshot.h"
+#include "gameplay_tag_container.h"
 #include "effects/effect_execution_context.h"
 #include "effects/gameplay_effect_context.h"
 #include "effects/gameplay_effect_spec.h"
@@ -69,6 +70,10 @@ class GameplayActor : public Node {
     GET_SET_OBJECT_PTR(Node, avatar)
 
 public:
+    GameplayActor();
+
+    Ref<GameplayTagContainer> get_tags() const;
+
     StatSnapshot get_stat_snapshot(const Ref<GameplayStat>& stat) const;
     stat_value_t get_stat_base_value(const Ref<GameplayStat>& stat) const;
     stat_value_t get_stat_current_value(const Ref<GameplayStat>& stat) const;
@@ -89,6 +94,7 @@ public:
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
+    Ref<GameplayTagContainer> tag_container;
 
     Ref<GameplayEffectContext> _make_effect_context();
     Ref<EffectExecutionContext> _make_execution_context(const Ref<GameplayEffectSpec>& spec);
