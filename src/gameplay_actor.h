@@ -72,7 +72,11 @@ class GameplayActor : public Node {
 public:
     GameplayActor();
 
-    Ref<GameplayTagContainer> get_tags() const;
+    Ref<GameplayTagContainer> get_loose_tags() const;
+    TypedArray<String> get_granted_tags() const;
+
+    bool has_tag(const String& tag) const;
+    bool has_tag_exact(const String& tag) const;
 
     StatSnapshot get_stat_snapshot(const Ref<GameplayStat>& stat) const;
     stat_value_t get_stat_base_value(const Ref<GameplayStat>& stat) const;
@@ -94,7 +98,8 @@ public:
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
-    Ref<GameplayTagContainer> tag_container;
+    Ref<GameplayTagContainer> loose_tags;
+    GameplayTagSet granted_tags;
 
     Ref<GameplayEffectContext> _make_effect_context();
     Ref<EffectExecutionContext> _make_execution_context(const Ref<GameplayEffectSpec>& spec);

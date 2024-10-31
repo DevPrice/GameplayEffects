@@ -3,7 +3,10 @@
 void GameplayTagContainer::_bind_methods() {
     BIND_METHOD(GameplayTagContainer, add_tag, "tag")
     BIND_METHOD(GameplayTagContainer, add_tags, "tags")
+    BIND_METHOD(GameplayTagContainer, append, "other")
     BIND_METHOD(GameplayTagContainer, remove_tag, "tag")
+    BIND_METHOD(GameplayTagContainer, remove_tags, "tags")
+    BIND_METHOD(GameplayTagContainer, clear)
     BIND_METHOD(GameplayTagContainer, has_tag, "tag")
     BIND_METHOD(GameplayTagContainer, has_tag_exact, "tag")
     BIND_METHOD(GameplayTagContainer, to_array)
@@ -20,8 +23,25 @@ void GameplayTagContainer::add_tags(const TypedArray<String>& p_tags) {
     }
 }
 
+void GameplayTagContainer::append(const GameplayTagContainer* other) {
+    if (other) {
+        tags.append(other->tags);
+    }
+}
+
 bool GameplayTagContainer::remove_tag(const String& tag) {
     return tags.remove_tag(tag);
+}
+
+void GameplayTagContainer::remove_tags(const TypedArray<String>& p_tags) {
+    for (size_t i = 0; i < p_tags.size(); ++i) {
+        const String tag = p_tags[i];
+        tags.remove_tag(tag);
+    }
+}
+
+void GameplayTagContainer::clear() {
+    tags.clear();
 }
 
 bool GameplayTagContainer::has_tag(const String& tag) const {

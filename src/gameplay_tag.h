@@ -32,7 +32,9 @@ public:
     void add_tag(const GameplayTag& tag);
     template<typename _InputIterator>
     void add_tags(_InputIterator first, _InputIterator last) { tags.insert(first, last); }
+    void append(const GameplayTagSet& other);
     bool remove_tag(const GameplayTag& tag);
+    void clear();
 
     bool has_tag(const GameplayTag& tag) const;
     bool has_tag_exact(const GameplayTag& tag) const;

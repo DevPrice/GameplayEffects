@@ -46,8 +46,16 @@ void GameplayTagSet::add_tag(const GameplayTag& tag) {
     tags.insert(tag);
 }
 
+void GameplayTagSet::append(const GameplayTagSet& other) {
+    tags.insert(other.tags.begin(), other.tags.end());
+}
+
 bool GameplayTagSet::remove_tag(const GameplayTag& tag) {
     return tags.erase(tag);
+}
+
+void GameplayTagSet::clear() {
+    tags.clear();
 }
 
 bool GameplayTagSet::has_tag(const GameplayTag& tag) const {

@@ -1,4 +1,5 @@
 #include "effects/effect_component.h"
+#include "effects/grant_tags_component.h"
 #include "effects/effect_execution.h"
 #include "effects/effect_lifetime.h"
 #include "effects/gameplay_effect.h"
@@ -60,6 +61,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(EffectExecutionOutput)
     GDREGISTER_VIRTUAL_CLASS(EffectExecution)
     GDREGISTER_VIRTUAL_CLASS(EffectComponent)
+    GDREGISTER_CLASS(GrantTagsComponent)
     GDREGISTER_CLASS(EffectLifetime)
     GDREGISTER_CLASS(GameplayEffect)
     GDREGISTER_CLASS(GameplayEffectContext)

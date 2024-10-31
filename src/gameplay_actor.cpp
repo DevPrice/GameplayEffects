@@ -21,7 +21,7 @@ void ActiveEffectHandle::_bind_methods() {
 }
 
 GameplayActor::GameplayActor() {
-    tag_container = Ref(memnew(GameplayTagContainer));
+    loose_tags = Ref(memnew(GameplayTagContainer));
 }
 
 void GameplayActor::_bind_methods() {
@@ -35,7 +35,9 @@ void GameplayActor::_bind_methods() {
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
     BIND_GET_SET_NODE(GameplayActor, avatar, Node)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
-    BIND_METHOD(GameplayActor, get_tags);
+    BIND_METHOD(GameplayActor, get_loose_tags)
+    BIND_METHOD(GameplayActor, has_tag, "tag")
+    BIND_METHOD(GameplayActor, has_tag_exact, "tag")
     BIND_METHOD(GameplayActor, get_stat_base_value, "stat")
     BIND_METHOD(GameplayActor, get_stat_current_value, "stat")
     BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
@@ -70,8 +72,22 @@ Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
     return nullptr;
 }
 
-Ref<GameplayTagContainer> GameplayActor::get_tags() const {
-    return tag_container;
+Ref<GameplayTagContainer> GameplayActor::get_loose_tags() const {
+    return loose_tags;
+}
+
+TypedArray<String> GameplayActor::get_granted_tags() const {
+    TypedArray<String> result;
+    granted_tags.get_string_array(result);
+    return result;
+}
+
+bool GameplayActor::has_tag(const String& tag) const {
+    return (loose_tags.is_valid() && loose_tags->has_tag(tag)) || granted_tags.has_tag(tag);
+}
+
+bool GameplayActor::has_tag_exact(const String& tag) const {
+    return (loose_tags.is_valid() && loose_tags->has_tag_exact(tag)) || granted_tags.has_tag_exact(tag);
 }
 
 StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {
