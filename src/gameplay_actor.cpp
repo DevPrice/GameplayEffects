@@ -241,7 +241,16 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
         UtilityFunctions::push_error("Attempted to execute effect with no execution context!");
         return;
     }
-    const Ref<GameplayEffect> effect = execution_context->get_spec()->get_effect();
+    const Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+    if (spec.is_null()) {
+        UtilityFunctions::push_error("Attempted to execute effect with no spec!");
+        return;
+    }
+    const Ref<GameplayEffect> effect = spec->get_effect();
+    if (effect.is_null()) {
+        UtilityFunctions::push_error("Attempted to execute effect with no definition!");
+        return;
+    }
 
     const Ref<EffectLifetime> lifetime = effect->get_lifetime();
     if (lifetime.is_valid()) {
