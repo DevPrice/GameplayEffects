@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bev47rqqjl73e"]
+[gd_scene load_steps=23 format=3 uid="uid://bev47rqqjl73e"]
 
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_2cm7l"]
 [ext_resource type="Script" path="res://actor_scene.gd" id="1_ns5m8"]
@@ -47,9 +47,19 @@ magnitude = SubResource("TagBasedMagnitude_8s7wr")
 modifiers = Array[StatModifier]([SubResource("StatModifier_pcmm1")])
 resource_name = "Tag based effect"
 
+[sub_resource type="GrantTagsComponent" id="GrantTagsComponent_x168r"]
+granted_tags = Array[String](["granted.tag.fromeffect"])
+
+[sub_resource type="EffectLifetime" id="EffectLifetime_cxyvi"]
+
+[sub_resource type="GameplayEffect" id="GameplayEffect_qvigl"]
+components = Array[EffectComponent]([SubResource("GrantTagsComponent_x168r")])
+lifetime = SubResource("EffectLifetime_cxyvi")
+resource_name = "Tag effect"
+
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_ns5m8")
-effects = Array[GameplayEffect]([ExtResource("3_xcw1x"), SubResource("GameplayEffect_xt40u"), ExtResource("2_s0rhe"), ExtResource("4_1fotw"), SubResource("GameplayEffect_0hl5l"), SubResource("GameplayEffect_8kpcb"), ExtResource("6_wcjt3")])
+effects = Array[GameplayEffect]([ExtResource("3_xcw1x"), SubResource("GameplayEffect_xt40u"), ExtResource("2_s0rhe"), ExtResource("4_1fotw"), SubResource("GameplayEffect_0hl5l"), SubResource("GameplayEffect_8kpcb"), ExtResource("6_wcjt3"), SubResource("GameplayEffect_qvigl")])
 
 [node name="Source" type="GameplayActor" parent="."]
 stats = Array[GameplayStat]([ExtResource("7_wupqv"), ExtResource("1_2cm7l")])

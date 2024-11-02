@@ -32,6 +32,8 @@ struct ActiveEffect {
     ActiveEffect(const Ref<EffectExecutionContext>& p_execution_context) : execution_context(p_execution_context) { }
 
     bool operator==(const ActiveEffect &other) const {
+        if (execution_context == other.execution_context) return true;
+        if (execution_context == nullptr || other.execution_context == nullptr) return false;
         return *execution_context == *other.execution_context;
     }
 
