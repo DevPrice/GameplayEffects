@@ -37,6 +37,7 @@ struct ActiveEffect {
 
     struct Hasher {
         std::size_t operator()(const ActiveEffect& active_effect) const {
+            if (active_effect.execution_context.is_null()) return 0;
             return (std::size_t)active_effect.execution_context->get_spec().ptr() ^ (std::size_t)active_effect.execution_context->get_target_actor();
         }
     };
