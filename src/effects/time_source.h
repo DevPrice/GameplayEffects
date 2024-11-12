@@ -2,6 +2,7 @@
 #define TIME_SOURCE_H
 
 #include "binding_macros.h"
+#include "virtual_macros.h"
 #include "typedefs.h"
 
 #include <functional>
@@ -15,13 +16,18 @@ class EffectExecutionContext;
 class EffectTimer : public RefCounted {
     GDCLASS(EffectTimer, RefCounted)
 
+    GET_SET_OBJECT_PTR(Object, timer)
+
 public:
+    virtual ~EffectTimer();
     void set_callback(std::function<void()> p_callback);
-    virtual void stop() = 0;
+    void stop();
+
+private:
+    std::function<void()> callback;
+    void _on_timeout();
 
 protected:
-    std::function<void()> callback;
-
     static void _bind_methods();
 };
 
@@ -29,8 +35,11 @@ class TimeSource : public Resource {
     GDCLASS(TimeSource, Resource)
 
 public:
-    virtual Ref<EffectTimer> create_timer(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const = 0;
-    virtual Ref<EffectTimer> create_interval(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const = 0;
+    virtual Ref<EffectTimer> create_timer(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const;
+    virtual Ref<EffectTimer> create_interval(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const;
+
+    GDVIRTUAL2RC_NO_IMPL(Object*, _create_timer, const Ref<EffectExecutionContext>&, stat_value_t)
+    GDVIRTUAL2RC_NO_IMPL(Object*, _create_interval, const Ref<EffectExecutionContext>&, stat_value_t)
 
 protected:
     static void _bind_methods();
