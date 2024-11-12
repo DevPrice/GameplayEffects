@@ -7,7 +7,10 @@ void EffectExecutionContext::_bind_methods() {
 }
 
 ActorSnapshot EffectExecutionContext::get_target_snapshot() const {
-    return ActorSnapshot();
+    if (target_snapshot) {
+        return *target_snapshot;
+    }
+    return ActorSnapshot{};
 }
 
 void EffectExecutionContext::set_target_snapshot(const ActorSnapshot& p_target_snapshot) {

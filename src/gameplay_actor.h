@@ -49,10 +49,10 @@ class ActiveEffectHandle : public RefCounted {
     GDCLASS(ActiveEffectHandle, RefCounted)
 
 private:
-    std::unique_ptr<ActiveEffect> active_effect;
+    std::shared_ptr<ActiveEffect> active_effect;
 
 public:
-    std::unique_ptr<ActiveEffect> get_active_effect() const;
+    std::shared_ptr<ActiveEffect> get_active_effect() const;
     void set_active_effect(const ActiveEffect& active_effect);
 
     Ref<GameplayEffectSpec> get_spec() const;

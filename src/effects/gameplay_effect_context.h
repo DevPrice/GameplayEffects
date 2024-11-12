@@ -21,10 +21,10 @@ class GameplayEffectContext : public RefCounted {
     GET_SET_PROPERTY(Variant, custom_data)
 
 private:
-    std::unique_ptr<ActorSnapshot> source_snapshot;
+    std::shared_ptr<ActorSnapshot> source_snapshot;
 
 public:
-    std::unique_ptr<ActorSnapshot> get_source_snapshot() const;
+    std::shared_ptr<ActorSnapshot> get_source_snapshot() const;
     void set_source_snapshot(const ActorSnapshot& actor_snapshot);
 
 protected:

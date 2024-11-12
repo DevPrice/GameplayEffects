@@ -53,15 +53,12 @@ void GameplayActor::_bind_methods() {
     ClassDB::bind_method(D_METHOD("apply_effect_to_target", "effect", "target", "tag_magnitudes"), &GameplayActor::apply_effect_to_target, DEFVAL(default_tag_magnitudes));
 }
 
-std::unique_ptr<ActiveEffect> ActiveEffectHandle::get_active_effect() const {
-    if (active_effect) {
-        return std::make_unique<ActiveEffect>(*active_effect);
-    }
-    return nullptr;
+std::shared_ptr<ActiveEffect> ActiveEffectHandle::get_active_effect() const {
+    return active_effect;
 }
 
 void ActiveEffectHandle::set_active_effect(const ActiveEffect& p_active_effect) {
-    active_effect = std::make_unique<ActiveEffect>(p_active_effect);
+    active_effect = std::make_shared<ActiveEffect>(p_active_effect);
 }
 
 Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
@@ -392,7 +389,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
 
 bool GameplayActor::remove_effect(const Ref<ActiveEffectHandle>& handle) {
     if (handle.is_valid()) {
-        if (std::unique_ptr<ActiveEffect> effect_ref = handle->get_active_effect()) {
+        if (std::shared_ptr<ActiveEffect> effect_ref = handle->get_active_effect()) {
             return _remove_effect(*effect_ref);
         }
     }
@@ -401,18 +398,21 @@ bool GameplayActor::remove_effect(const Ref<ActiveEffectHandle>& handle) {
 
 bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
     const bool removed = active_effects.erase(active_effect);
-    _recalculate_stats();
 
-    if (active_effect.execution_context.is_valid()) {
-        const Ref<GameplayEffectSpec> spec = active_effect.execution_context->get_spec();
-        if (spec.is_valid()) {
-            const Ref<GameplayEffect> effect = spec->get_effect();
-            if (effect.is_valid()) {
-                const TypedArray<EffectComponent> effect_components = effect->get_components();
-                for (int i = 0; i < effect_components.size(); ++i) {
-                    const Ref<EffectComponent> effect_component = effect_components[i];
-                    if (effect_component.is_valid()) {
-                        effect_component->on_removal(active_effect.execution_context);
+    if (removed) {
+        _recalculate_stats();
+
+        if (active_effect.execution_context.is_valid()) {
+            const Ref<GameplayEffectSpec> spec = active_effect.execution_context->get_spec();
+            if (spec.is_valid()) {
+                const Ref<GameplayEffect> effect = spec->get_effect();
+                if (effect.is_valid()) {
+                    const TypedArray<EffectComponent> effect_components = effect->get_components();
+                    for (int i = 0; i < effect_components.size(); ++i) {
+                        const Ref<EffectComponent> effect_component = effect_components[i];
+                        if (effect_component.is_valid()) {
+                            effect_component->on_removal(active_effect.execution_context);
+                        }
                     }
                 }
             }

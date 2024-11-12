@@ -23,7 +23,7 @@ ActorSnapshot CapturedStatEvaluator::get_snapshot(const Ref<CapturedStat>& stat)
                 Ref<GameplayEffectContext> effect_context = spec->get_context();
                 if (effect_context.is_valid()) {
                     if (stat->get_snapshot()) {
-                        if (std::unique_ptr<ActorSnapshot> actor_snapshot = effect_context->get_source_snapshot()) {
+                        if (std::shared_ptr<ActorSnapshot> actor_snapshot = effect_context->get_source_snapshot()) {
                             return *actor_snapshot;
                         }
                     }
