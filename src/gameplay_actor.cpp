@@ -503,14 +503,23 @@ void GameplayActor::set_avatar(Node* p_avatar) {
 }
 
 std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {
-    const TypedArray<StatModifier> modifiers = execution_context->get_spec()->get_effect()->get_modifiers();
     std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot;
-    for (size_t i = 0; i < modifiers.size(); i++) {
-        const Ref<StatModifier> modifier = modifiers[i];
-        if (modifier.is_valid()) {
-            const float magnitude = modifier->get_magnitude()->get_magnitude(execution_context);
-            std::shared_ptr<EvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, magnitude);
-            modifier_snapshot.push_back(evaluated_modifier);
+    const Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+    if (spec.is_valid()) {
+        const Ref<GameplayEffect> effect = spec->get_effect();
+        if (effect.is_valid()) {
+            const TypedArray<StatModifier> modifiers = effect->get_modifiers();
+            for (size_t i = 0; i < modifiers.size(); i++) {
+                const Ref<StatModifier> modifier = modifiers[i];
+                if (modifier.is_valid()) {
+                    const Ref<ModifierMagnitude> magnitude = modifier->get_magnitude();
+                    if (magnitude.is_valid()) {
+                        const float evaluated_magnitude = magnitude->get_magnitude(execution_context);
+                        std::shared_ptr<EvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, evaluated_magnitude);
+                        modifier_snapshot.push_back(evaluated_modifier);
+                    }
+                }
+            }
         }
     }
     return modifier_snapshot;
