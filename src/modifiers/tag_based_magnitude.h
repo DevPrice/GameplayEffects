@@ -17,7 +17,7 @@ class TagBasedMagnitude : public ModifierMagnitude {
 public:
     TagBasedMagnitude();
 
-    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) override;
+    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) const override;
 
     String get_tag_value() const;
     void set_tag_value(const String& p_tag);

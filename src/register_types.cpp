@@ -17,7 +17,6 @@
 #include "modifiers/stat_based_magnitude.h"
 #include "modifiers/stat_modifier.h"
 #include "modifiers/tag_based_magnitude.h"
-#include "modifiers/custom_magnitude_calculation.h"
 #include "stats/captured_stat.h"
 #include "stats/gameplay_stat.h"
 #include "stats/stat_evaluator.h"
@@ -40,19 +39,18 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(GameplayTagContainer)
     GDREGISTER_CLASS(ActiveEffectHandle)
     GDREGISTER_CLASS(GameplayStat)
-    GDREGISTER_ABSTRACT_CLASS(ModifierMagnitude)
+    GDREGISTER_VIRTUAL_CLASS(ModifierMagnitude)
     GDREGISTER_CLASS(ConstantMagnitude)
     GDREGISTER_CLASS(ClampedMagnitude)
     GDREGISTER_CLASS(ScaledMagnitude)
     GDREGISTER_CLASS(StatBasedMagnitude)
     GDREGISTER_CLASS(TagBasedMagnitude)
     GDREGISTER_CLASS(CurveSampleMagnitude)
-    GDREGISTER_VIRTUAL_CLASS(CustomMagnitudeCalculation)
     GDREGISTER_CLASS(ModifierChannel)
     GDREGISTER_CLASS(StatModifier)
     GDREGISTER_CLASS(CapturedStat)
     GDREGISTER_CLASS(StatEvaluator)
-    GDREGISTER_ABSTRACT_CLASS(GameplayRequirements)
+    GDREGISTER_VIRTUAL_CLASS(GameplayRequirements)
     GDREGISTER_ABSTRACT_CLASS(EffectTimer)
     GDREGISTER_VIRTUAL_CLASS(TimeSource)
     GDREGISTER_CLASS(SceneTimeSource)

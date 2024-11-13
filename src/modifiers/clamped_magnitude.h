@@ -15,7 +15,7 @@ class ClampedMagnitude : public ModifierMagnitude {
 public:
     ClampedMagnitude();
 
-    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) override;
+    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) const override;
 
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, value)
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, min_value)

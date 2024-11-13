@@ -17,7 +17,7 @@ class ConstantMagnitude : public ModifierMagnitude {
 public:
     ConstantMagnitude();
 
-    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) override;
+    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) const override;
 
   protected:
     static void _bind_methods();

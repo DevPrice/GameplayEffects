@@ -9,7 +9,7 @@ void TagBasedMagnitude::_bind_methods() {
 
 TagBasedMagnitude::TagBasedMagnitude() : tag(GameplayTag("")) { }
 
-stat_value_t TagBasedMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
+stat_value_t TagBasedMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) const {
     stat_value_t magnitude{};
     if (context->get_spec().is_valid() && context->get_spec().is_valid() && context->get_spec()->get_tag_magnitude(tag, magnitude)) {
         return magnitude;

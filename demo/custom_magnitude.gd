@@ -1,4 +1,4 @@
-class_name CustomMagnitude extends CustomMagnitudeCalculation
+class_name CustomMagnitude extends ModifierMagnitude
 
 func _get_magnitude(context: EffectExecutionContext) -> float:
 	var custom_data = context.get_spec().get_context().get_custom_data()

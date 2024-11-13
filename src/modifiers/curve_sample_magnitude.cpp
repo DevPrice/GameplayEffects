@@ -7,7 +7,7 @@ void CurveSampleMagnitude::_bind_methods() {
 
 CurveSampleMagnitude::CurveSampleMagnitude() { }
 
-stat_value_t CurveSampleMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) {
+stat_value_t CurveSampleMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) const {
     if (offset.is_null() || curve.is_null()) return stat_value_t{};
 
     stat_value_t offset_magnitude = offset->get_magnitude(context);

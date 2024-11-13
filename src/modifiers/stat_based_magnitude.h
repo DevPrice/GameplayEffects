@@ -22,7 +22,7 @@ public:
 
     StatBasedMagnitude();
 
-    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) override;
+    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) const override;
 
     GET_SET_PROPERTY(Ref<CapturedStat>, captured_stat)
     GET_SET_PROPERTY(StatValueType, value_type)
