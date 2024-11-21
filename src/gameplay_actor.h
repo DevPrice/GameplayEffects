@@ -124,6 +124,7 @@ private:
     Ref<GameplayTagContainer> loose_tags;
     GameplayTagSet granted_tags;
 
+    Signal _get_stat_signal(const Ref<GameplayStat>& stat, const StringName& signal_name);
     Ref<GameplayEffectContext> _make_effect_context();
     Ref<EffectExecutionContext> _make_execution_context(const Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);

@@ -124,29 +124,24 @@ void GameplayActor::set_stat_base_value(const Ref<GameplayStat>& stat, const sta
 }
 
 Signal GameplayActor::base_value_changed(const Ref<GameplayStat>& stat) {
-    const auto element = stat_signals.find(stat);
-    if (element != stat_signals.end()) {
-        const Ref<StatSignals> signals = element->second;
-        if (signals.is_valid()) {
-            return Signal(signals.ptr(), StringName("base_value_changed"));
-        }
-    }
-    const Ref<StatSignals> new_signals = memnew(StatSignals);
-    stat_signals.emplace(stat, new_signals);
-    return Signal(new_signals.ptr(), StringName("base_value_changed"));
+    return _get_stat_signal(stat, "base_value_changed");
 }
 
 Signal GameplayActor::current_value_changed(const Ref<GameplayStat>& stat) {
+    return _get_stat_signal(stat, "current_value_changed");
+}
+
+Signal GameplayActor::_get_stat_signal(const Ref<GameplayStat>& stat, const StringName& signal_name) {
     const auto element = stat_signals.find(stat);
     if (element != stat_signals.end()) {
         const Ref<StatSignals> signals = element->second;
         if (signals.is_valid()) {
-            return Signal(signals.ptr(), StringName("current_value_changed"));
+            return Signal(signals.ptr(), signal_name);
         }
     }
     Ref<StatSignals> new_signals = memnew(StatSignals);
     stat_signals.emplace(stat, new_signals);
-    return Signal(new_signals.ptr(), StringName("current_value_changed"));
+    return Signal(new_signals.ptr(), signal_name);
 }
 
 ActorSnapshot GameplayActor::capture_snapshot() const {
