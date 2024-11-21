@@ -6,7 +6,6 @@
 #include "stats/captured_stat.h"
 
 #include <godot_cpp/classes/resource.hpp>
-#include <memory>
 
 class CapturedStatEvaluator;
 class EffectExecutionContext;

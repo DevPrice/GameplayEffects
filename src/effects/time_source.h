@@ -19,8 +19,8 @@ class EffectTimer : public RefCounted {
     GET_SET_OBJECT_PTR(Object, timer)
 
 public:
-    virtual ~EffectTimer();
-    void set_callback(std::function<void()> p_callback);
+    ~EffectTimer() override;
+    void set_callback(const std::function<void()>& p_callback);
     void stop();
 
 private:

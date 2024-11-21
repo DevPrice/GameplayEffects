@@ -35,6 +35,9 @@ void GameplayActor::_bind_methods() {
         PropertyInfo(Variant::OBJECT, "stat", PROPERTY_HINT_RESOURCE_TYPE, "GameplayStat"),
         PropertyInfo(Variant::FLOAT, "new_value"),
         PropertyInfo(Variant::FLOAT, "old_value")));
+    ADD_SIGNAL(MethodInfo("tags_changed",
+        PropertyInfo(Variant::ARRAY, "added_tags", PROPERTY_HINT_TYPE_STRING, String::num(Variant::STRING)),
+        PropertyInfo(Variant::ARRAY, "removed_tags", PROPERTY_HINT_TYPE_STRING, String::num(Variant::STRING))));
     ADD_SIGNAL(MethodInfo("avatar_changed", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_NODE_TYPE, "Node")));
     ADD_SIGNAL(MethodInfo("receiving_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     ADD_SIGNAL(MethodInfo("received_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
@@ -52,6 +55,7 @@ void GameplayActor::_bind_methods() {
     BIND_METHOD(GameplayActor, apply_effect_spec, "spec")
     BIND_METHOD(GameplayActor, remove_effect, "handle")
     BIND_METHOD(GameplayActor, _make_effect_context)
+    BIND_METHOD(GameplayActor, _on_loose_tags_changed)
     GDVIRTUAL_BIND(_get_custom_context_data)
 
     const Dictionary default_tag_magnitudes;
@@ -82,6 +86,13 @@ GameplayActor::GameplayActor() {
     loose_tags = Ref(memnew(GameplayTagContainer));
 }
 
+void GameplayActor::_ready() {
+    Node::_ready();
+    if (loose_tags.is_valid()) {
+        loose_tags->connect("tags_changed", callable_mp(this, &GameplayActor::_on_loose_tags_changed));
+    }
+}
+
 Ref<GameplayTagContainer> GameplayActor::get_loose_tags() const {
     return loose_tags;
 }
@@ -103,8 +114,7 @@ bool GameplayActor::has_tag_exact(const String& tag) const {
 StatSnapshot GameplayActor::get_stat_snapshot(const Ref<GameplayStat>& stat) const {
     if (!stat_values.has(stat)) {
         UtilityFunctions::push_warning("Attempted to get snapshot of missing stat: ", stat->get_name());
-        const StatSnapshot snapshot;
-        return snapshot;
+        return StatSnapshot();
     }
     return stat_values.get(stat);
 }
@@ -142,6 +152,11 @@ Signal GameplayActor::_get_stat_signal(const Ref<GameplayStat>& stat, const Stri
     Ref<StatSignals> new_signals = memnew(StatSignals);
     stat_signals.emplace(stat, new_signals);
     return Signal(new_signals.ptr(), signal_name);
+}
+
+void GameplayActor::_on_loose_tags_changed(const TypedArray<String>& added_tags, const TypedArray<String>& removed_tags) {
+    _recalculate_stats();
+    emit_signal("tags_changed", added_tags, removed_tags);
 }
 
 ActorSnapshot GameplayActor::capture_snapshot() const {
@@ -341,6 +356,7 @@ void GameplayActor::_recalculate_stats() {
 void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot) {
     std::vector<Ref<GameplayStat>> modified_stats;
     ModifierAggregator aggregator;
+    GameplayTagSet initial_granted_tags(granted_tags);
     granted_tags.clear();
     for (auto& [_, effect_state] : active_effects) {
         const std::vector<std::shared_ptr<EvaluatedModifier>>& effect_modifiers = effect_state.modifiers;
@@ -427,6 +443,15 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
             signals->emit_signal("current_value_changed", modified_value, initial_value);
         }
         emit_signal("stat_changed", stat, modified_value, initial_value);
+    }
+    GameplayTagSet added = granted_tags - initial_granted_tags;
+    GameplayTagSet removed = initial_granted_tags - granted_tags;
+    if (!added.is_empty() || !removed.is_empty()) {
+        TypedArray<String> added_tags;
+        added.to_string_array(added_tags);
+        TypedArray<String> removed_tags;
+        removed.to_string_array(removed_tags);
+        emit_signal("tags_changed", added_tags, removed_tags);
     }
 }
 

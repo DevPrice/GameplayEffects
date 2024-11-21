@@ -52,8 +52,9 @@ GameplayTagSet::GameplayTagSet(const std::unordered_set<GameplayTag, GameplayTag
     tags.insert(p_tags.begin(), p_tags.end());
 }
 
-void GameplayTagSet::add_tag(const GameplayTag& tag) {
-    tags.insert(tag);
+bool GameplayTagSet::add_tag(const GameplayTag& tag) {
+    auto [_, added] = tags.insert(tag);
+    return added;
 }
 
 bool GameplayTagSet::remove_tag(const GameplayTag& tag) {
@@ -67,10 +68,9 @@ void GameplayTagSet::clear() {
 bool GameplayTagSet::has_tag(const GameplayTag& tag) const {
     if (has_tag_exact(tag)) return true;
     // TODO: Use a more efficient data structure
-    for (auto i = tags.begin(); i != tags.end(); ++i) {
-        if (i->matches(tag)) return true;
-    }
-    return false;
+    return std::any_of(tags.begin(), tags.end(), [&tag](const GameplayTag& element) -> bool {
+        return element.matches(tag);
+    });
 }
 
 bool GameplayTagSet::has_tag_exact(const GameplayTag& tag) const {
@@ -78,7 +78,7 @@ bool GameplayTagSet::has_tag_exact(const GameplayTag& tag) const {
 }
 
 bool GameplayTagSet::is_empty() const {
-    return tags.size() < 1;
+    return tags.size() == 0;
 }
 
 void GameplayTagSet::to_string_array(TypedArray<String>& out_array) const {

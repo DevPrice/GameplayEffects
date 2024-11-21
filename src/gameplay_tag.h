@@ -33,7 +33,7 @@ public:
     GameplayTagSet() = default;
     explicit GameplayTagSet(const std::unordered_set<GameplayTag, GameplayTag::Hasher>& p_tags);
 
-    void add_tag(const GameplayTag& tag);
+    bool add_tag(const GameplayTag& tag);
     template<typename _InputIterator>
     void add_tags(_InputIterator first, _InputIterator last) { tags.insert(first, last); }
     bool remove_tag(const GameplayTag& tag);

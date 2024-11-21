@@ -5,7 +5,6 @@
 #include <godot_cpp/classes/wrapped.hpp>
 
 #include "effects/time_source.h"
-#include "time_source.h"
 
 using namespace godot;
 
@@ -41,7 +40,7 @@ Ref<EffectTimer> TimeSource::create_interval(const Ref<EffectExecutionContext>& 
 GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_timer, Ref<EffectExecutionContext>, stat_value_t)
 GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_interval, Ref<EffectExecutionContext>, stat_value_t)
 
-void EffectTimer::set_callback(std::function<void()> p_callback) {
+void EffectTimer::set_callback(const std::function<void()>& p_callback) {
     callback = p_callback;
 }
 
@@ -72,8 +71,7 @@ void EffectTimer::_on_timeout() {
 }
 
 void EffectTimer::stop() {
-    Object* current_timer = get_timer();
-    if (current_timer) {
+    if (Object* current_timer = get_timer()) {
         set_timer(nullptr);
         if (current_timer->has_method("stop")) {
             current_timer->call("stop");

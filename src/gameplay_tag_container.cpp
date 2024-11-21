@@ -18,10 +18,11 @@ void GameplayTagContainer::_bind_methods() {
 }
 
 void GameplayTagContainer::add_tag(const String& tag) {
-    tags.add_tag(tag);
-    TypedArray<String> added_tags;
-    added_tags.append(tag);
-    emit_signal("tags_changed", added_tags, TypedArray<String>());
+    if (tags.add_tag(tag)) {
+        TypedArray<String> added_tags;
+        added_tags.append(tag);
+        emit_signal("tags_changed", added_tags, TypedArray<String>());
+    }
 }
 
 void GameplayTagContainer::add_tags(const TypedArray<String>& p_tags) {

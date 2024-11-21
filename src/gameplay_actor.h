@@ -60,7 +60,7 @@ private:
 
 public:
     std::shared_ptr<ActiveEffect> get_active_effect() const;
-    void set_active_effect(const ActiveEffect& active_effect);
+    void set_active_effect(const ActiveEffect& p_active_effect);
 
     Ref<GameplayEffectSpec> get_spec() const;
 
@@ -90,6 +90,8 @@ class GameplayActor : public Node {
 
 public:
     GameplayActor();
+
+    void _ready() override;
 
     Ref<GameplayTagContainer> get_loose_tags() const;
     TypedArray<String> get_granted_tags() const;
@@ -125,6 +127,7 @@ private:
     GameplayTagSet granted_tags;
 
     Signal _get_stat_signal(const Ref<GameplayStat>& stat, const StringName& signal_name);
+    void _on_loose_tags_changed(const TypedArray<String>& added_tags, const TypedArray<String>& removed_tags);
     Ref<GameplayEffectContext> _make_effect_context();
     Ref<EffectExecutionContext> _make_execution_context(const Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);
@@ -132,6 +135,7 @@ private:
     void _recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);
     bool _remove_effect(const ActiveEffect& active_effect);
 
+private:
     static String& get_actor_meta_name();
 
 protected:
