@@ -20,7 +20,7 @@ class EffectTimer : public RefCounted {
 
 public:
     ~EffectTimer() override;
-    void set_callback(const std::function<void()>& p_callback);
+    void set_callback(std::function<void()> p_callback);
     void stop();
 
 private:

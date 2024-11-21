@@ -88,7 +88,9 @@ GameplayActor::GameplayActor() {
 
 void GameplayActor::_ready() {
     Node::_ready();
+    UtilityFunctions::print("Actor ready");
     if (loose_tags.is_valid()) {
+        UtilityFunctions::print("Connecting...");
         loose_tags->connect("tags_changed", callable_mp(this, &GameplayActor::_on_loose_tags_changed));
     }
 }
@@ -252,11 +254,15 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
         const Ref<TimeSource> time_source = lifetime->get_time_source();
         if (time_source.is_valid()) {
             const Ref<ModifierMagnitude> period = lifetime->get_period();
+            // TODO: Implement a weak object ref wrapper
+            ObjectID this_id(get_instance_id());
             if (period.is_valid()) {
                 const stat_value_t period_magnitude = period->get_magnitude(execution_context);
                 const Ref<EffectTimer> period_timer = time_source->create_interval(execution_context, period_magnitude);
-                period_timer->set_callback([this, active_effect]() {
-                    _execute_effect(active_effect);
+                period_timer->set_callback([this_id, active_effect] {
+                    if (GameplayActor* const self = cast_to<GameplayActor>(ObjectDB::get_instance(this_id))) {
+                        self->_execute_effect(active_effect);
+                    }
                 });
                 active_effects[active_effect].period = period_timer;
             }
@@ -265,9 +271,12 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
                 const stat_value_t duration_magnitude = duration->get_magnitude(execution_context);
                 if (duration_magnitude > 0) {
                     const Ref<EffectTimer> duration_timer = time_source->create_timer(execution_context, duration_magnitude);
-                    duration_timer->set_callback([this, active_effect]() {
-                        _remove_effect(active_effect);
+                    duration_timer->set_callback([this_id, active_effect] {
+                        if (GameplayActor* const self = cast_to<GameplayActor>(ObjectDB::get_instance(this_id))) {
+                            self->_remove_effect(active_effect);
+                        }
                     });
+                    Callable().bind()
                     active_effects[active_effect].duration = duration_timer;
                 } else {
                     _remove_effect(active_effect);

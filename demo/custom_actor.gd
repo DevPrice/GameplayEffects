@@ -20,7 +20,7 @@ func _ready():
 	)
 	tags_changed.connect(
 		func (added: Array[String], removed: Array[String]):
-			print("[%s]: Added=%s, Removed=%s" % [name, added, removed])
+			print("[%s] Added=%s, Removed=%s" % [name, added, removed])
 	)
 	for effect in initial_effects:
 		apply_effect_to_self(effect)

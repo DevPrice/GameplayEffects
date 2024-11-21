@@ -40,7 +40,7 @@ Ref<EffectTimer> TimeSource::create_interval(const Ref<EffectExecutionContext>& 
 GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_timer, Ref<EffectExecutionContext>, stat_value_t)
 GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_interval, Ref<EffectExecutionContext>, stat_value_t)
 
-void EffectTimer::set_callback(const std::function<void()>& p_callback) {
+void EffectTimer::set_callback(const std::function<void()> p_callback) {
     callback = p_callback;
 }
 
