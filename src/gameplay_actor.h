@@ -23,6 +23,13 @@
 
 using namespace godot;
 
+struct RefHasher {
+    template<typename T>
+    std::size_t operator()(const Ref<T>& ref) const {
+        return (std::size_t)ref.ptr();
+    }
+};
+
 struct ActiveEffect {
     const Ref<EffectExecutionContext> execution_context;
 
@@ -68,6 +75,13 @@ struct ActiveEffectState {
     Ref<EffectTimer> duration;
 };
 
+class StatSignals : public RefCounted {
+    GDCLASS(StatSignals, RefCounted)
+
+protected:
+    static void _bind_methods();
+};
+
 class GameplayActor : public Node {
     GDCLASS(GameplayActor, Node)
 
@@ -88,6 +102,9 @@ public:
     stat_value_t get_stat_current_value(const Ref<GameplayStat>& stat) const;
     void set_stat_base_value(const Ref<GameplayStat>& stat, stat_value_t base_value);
 
+    Signal base_value_changed(const Ref<GameplayStat>& stat);
+    Signal current_value_changed(const Ref<GameplayStat>& stat);
+
     ActorSnapshot capture_snapshot() const;
 
     Ref<GameplayEffectSpec> make_effect_spec(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes = Dictionary());
@@ -102,6 +119,7 @@ public:
 
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;
+    std::unordered_map<Ref<GameplayStat>, Ref<StatSignals>, RefHasher> stat_signals;
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
     Ref<GameplayTagContainer> loose_tags;
     GameplayTagSet granted_tags;

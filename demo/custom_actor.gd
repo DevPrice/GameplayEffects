@@ -18,6 +18,10 @@ func _ready():
 		func (stat: GameplayStat, new_value: float, old_value: float):
 			print("[%s] %s: %s -> %s" % [name, stat.resource_name, old_value, new_value])
 	)
+	current_value_changed(test_stat).connect(
+		func (new_value: float, old_value: float):
+			print("%s -> %s" % [old_value, new_value])
+	)
 	for effect in initial_effects:
 		apply_effect_to_self(effect)
 

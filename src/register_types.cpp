@@ -38,6 +38,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_RUNTIME_CLASS(GameplayActor)
     GDREGISTER_CLASS(GameplayTagContainer)
     GDREGISTER_CLASS(ActiveEffectHandle)
+    GDREGISTER_CLASS(StatSignals)
     GDREGISTER_CLASS(GameplayStat)
     GDREGISTER_VIRTUAL_CLASS(ModifierMagnitude)
     GDREGISTER_CLASS(ConstantMagnitude)
