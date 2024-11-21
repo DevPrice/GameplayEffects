@@ -1,6 +1,7 @@
 #include "gameplay_actor.h"
 #include "binding_macros.h"
 #include "containers.h"
+#include "weak_object_ref.h"
 #include "effects/effect_execution.h"
 #include "effects/grant_tags_component.h"
 #include "effects/time_source.h"
@@ -254,14 +255,13 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
         const Ref<TimeSource> time_source = lifetime->get_time_source();
         if (time_source.is_valid()) {
             const Ref<ModifierMagnitude> period = lifetime->get_period();
-            // TODO: Implement a weak object ref wrapper
-            ObjectID this_id(get_instance_id());
+            WeakObjectRef<GameplayActor> weak_this(this);
             if (period.is_valid()) {
                 const stat_value_t period_magnitude = period->get_magnitude(execution_context);
                 const Ref<EffectTimer> period_timer = time_source->create_interval(execution_context, period_magnitude);
-                period_timer->set_callback([this_id, active_effect] {
-                    if (GameplayActor* const self = cast_to<GameplayActor>(ObjectDB::get_instance(this_id))) {
-                        self->_execute_effect(active_effect);
+                period_timer->set_callback([weak_this, active_effect] {
+                    if (weak_this) {
+                        weak_this->_execute_effect(active_effect);
                     }
                 });
                 active_effects[active_effect].period = period_timer;
@@ -271,12 +271,11 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
                 const stat_value_t duration_magnitude = duration->get_magnitude(execution_context);
                 if (duration_magnitude > 0) {
                     const Ref<EffectTimer> duration_timer = time_source->create_timer(execution_context, duration_magnitude);
-                    duration_timer->set_callback([this_id, active_effect] {
-                        if (GameplayActor* const self = cast_to<GameplayActor>(ObjectDB::get_instance(this_id))) {
-                            self->_remove_effect(active_effect);
+                    duration_timer->set_callback([weak_this, active_effect] {
+                        if (weak_this) {
+                            weak_this->_remove_effect(active_effect);
                         }
                     });
-                    Callable().bind()
                     active_effects[active_effect].duration = duration_timer;
                 } else {
                     _remove_effect(active_effect);
