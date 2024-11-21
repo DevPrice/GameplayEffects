@@ -20,6 +20,7 @@ public:
     bool matches(const GameplayTag& other) const;
 
     bool operator==(const GameplayTag& other) const;
+    bool operator<(const GameplayTag& other) const;
 
     struct Hasher {
         std::size_t operator()(const GameplayTag& tag) const;
@@ -29,17 +30,26 @@ public:
 class GameplayTagSet {
 
 public:
+    GameplayTagSet() = default;
+    explicit GameplayTagSet(const std::unordered_set<GameplayTag, GameplayTag::Hasher>& p_tags);
+
     void add_tag(const GameplayTag& tag);
     template<typename _InputIterator>
     void add_tags(_InputIterator first, _InputIterator last) { tags.insert(first, last); }
-    void append(const GameplayTagSet& other);
     bool remove_tag(const GameplayTag& tag);
     void clear();
 
     bool has_tag(const GameplayTag& tag) const;
     bool has_tag_exact(const GameplayTag& tag) const;
+    bool is_empty() const;
 
-    void get_string_array(TypedArray<String>& array) const;
+    void to_string_array(TypedArray<String>& out_array) const;
+    void to_set(std::unordered_set<GameplayTag, GameplayTag::Hasher>& out_tags) const;
+
+    GameplayTagSet operator+(const GameplayTagSet& other) const;
+    GameplayTagSet operator-(const GameplayTagSet& other) const;
+    GameplayTagSet& operator+=(const GameplayTagSet& other);
+    GameplayTagSet& operator-=(const GameplayTagSet& other);
 
 private:
     std::unordered_set<GameplayTag, GameplayTag::Hasher> tags;

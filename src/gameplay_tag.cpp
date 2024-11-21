@@ -1,5 +1,7 @@
 #include "gameplay_tag.h"
 
+#include <algorithm>
+#include <iterator>
 #include <godot_cpp/variant/packed_string_array.hpp>
 
 using namespace godot;
@@ -38,16 +40,20 @@ bool GameplayTag::operator==(const GameplayTag &other) const {
     return true;
 }
 
+bool GameplayTag::operator<(const GameplayTag& other) const {
+    return value < other.value;
+}
+
 std::size_t GameplayTag::Hasher::operator()(const GameplayTag &tag) const {
     return tag.value.to_lower().hash();
 }
 
-void GameplayTagSet::add_tag(const GameplayTag& tag) {
-    tags.insert(tag);
+GameplayTagSet::GameplayTagSet(const std::unordered_set<GameplayTag, GameplayTag::Hasher>& p_tags) {
+    tags.insert(p_tags.begin(), p_tags.end());
 }
 
-void GameplayTagSet::append(const GameplayTagSet& other) {
-    tags.insert(other.tags.begin(), other.tags.end());
+void GameplayTagSet::add_tag(const GameplayTag& tag) {
+    tags.insert(tag);
 }
 
 bool GameplayTagSet::remove_tag(const GameplayTag& tag) {
@@ -71,8 +77,38 @@ bool GameplayTagSet::has_tag_exact(const GameplayTag& tag) const {
     return tags.count(tag) > 0;
 }
 
-void GameplayTagSet::get_string_array(TypedArray<String>& array) const {
+bool GameplayTagSet::is_empty() const {
+    return tags.size() < 1;
+}
+
+void GameplayTagSet::to_string_array(TypedArray<String>& out_array) const {
     for (auto i = tags.begin(); i != tags.end(); ++i) {
-        array.push_back(i->to_string());
+        out_array.push_back(i->to_string());
     }
+}
+
+void GameplayTagSet::to_set(std::unordered_set<GameplayTag, GameplayTag::Hasher>& out_tags) const {
+    out_tags.insert(tags.begin(), tags.end());
+}
+
+GameplayTagSet GameplayTagSet::operator+(const GameplayTagSet& other) const {
+    GameplayTagSet result(tags);
+    result += other;
+    return result;
+}
+
+GameplayTagSet GameplayTagSet::operator-(const GameplayTagSet& other) const {
+    std::unordered_set<GameplayTag, GameplayTag::Hasher> difference;
+    std::set_difference(tags.begin(), tags.end(), other.tags.begin(), other.tags.end(), std::inserter(difference, difference.begin()));
+    return GameplayTagSet(difference);
+}
+
+GameplayTagSet& GameplayTagSet::operator+=(const GameplayTagSet& other) {
+    tags.insert(other.tags.begin(), other.tags.end());
+    return *this;
+}
+
+GameplayTagSet& GameplayTagSet::operator-=(const GameplayTagSet& other) {
+    tags.erase(other.tags.begin(), other.tags.end());
+    return *this;
 }

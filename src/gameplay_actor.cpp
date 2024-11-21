@@ -88,7 +88,7 @@ Ref<GameplayTagContainer> GameplayActor::get_loose_tags() const {
 
 TypedArray<String> GameplayActor::get_granted_tags() const {
     TypedArray<String> result;
-    granted_tags.get_string_array(result);
+    granted_tags.to_string_array(result);
     return result;
 }
 
@@ -345,7 +345,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     for (auto& [_, effect_state] : active_effects) {
         const std::vector<std::shared_ptr<EvaluatedModifier>>& effect_modifiers = effect_state.modifiers;
         aggregator.add_modifiers(effect_modifiers);
-        granted_tags.append(effect_state.granted_tags);
+        granted_tags += effect_state.granted_tags;
     }
     for (auto& stat : stat_values) {
         const stat_value_t initial_value = stat.value.current_value;
