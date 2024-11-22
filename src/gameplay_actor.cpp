@@ -83,11 +83,6 @@ Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
     return nullptr;
 }
 
-GameplayActor::GameplayActor() {
-    stats.make_read_only();
-}
-
-
 Ref<GameplayTagContainer> GameplayActor::get_loose_tags() {
     if (loose_tags.is_null()) {
         loose_tags = Ref(memnew(GameplayTagContainer));
@@ -531,27 +526,27 @@ void GameplayActor::set_owning_actor(Node* node, GameplayActor* actor) {
 }
 
 TypedArray<GameplayStat> GameplayActor::get_stats() const {
+    TypedArray<GameplayStat> stats;
+    for (const auto& [stat, _] : stat_values) {
+        stats.append(stat);
+    }
+    stats.make_read_only();
     return stats;
 }
 
 void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
-    stats = p_stats.duplicate();
-    stats.make_read_only();
-    for (int i = 0; i < stats.size(); i++) {
-        const Ref<GameplayStat> stat = stats[i];
+    for (int i = 0; i < p_stats.size(); i++) {
+        const Ref<GameplayStat> stat = p_stats[i];
         if (stat.is_valid()) {
-            const StatSnapshot snapshot{ stat->get_base_value(), stat->get_base_value() };
             if (!stat_values.has(stat)) {
-                stat_values[stat] = snapshot;
+                stat_values[stat] = StatSnapshot{ stat->get_base_value(), stat->get_base_value() };
             }
         }
     }
     for (auto it = stat_values.begin(); it != stat_values.end(); ++it) {
         if (!p_stats.has(it->key)) {
             stat_values.remove(it);
-            if (stat_signals.count(it->key)) {
-                stat_signals.erase(it->key);
-            }
+            stat_signals.erase(it->key);
         }
     }
 }

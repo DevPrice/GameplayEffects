@@ -85,11 +85,11 @@ protected:
 class GameplayActor : public Node {
     GDCLASS(GameplayActor, Node)
 
-    GET_SET_PROPERTY(TypedArray<GameplayStat>, stats)
     GET_SET_OBJECT_PTR(Node, avatar)
 
 public:
-    GameplayActor();
+    TypedArray<GameplayStat> get_stats() const;
+    void set_stats(TypedArray<GameplayStat> p_stats);
 
     Ref<GameplayTagContainer> get_loose_tags();
     TypedArray<String> get_granted_tags() const;
