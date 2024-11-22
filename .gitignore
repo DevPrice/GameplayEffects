@@ -184,6 +184,9 @@ godot.creator.*
 # Visual Studio Code workspace file
 *.code-workspace
 
+# JetBrains
+/.idea
+
 # Scons progress indicator
 .scons_node_count
 
