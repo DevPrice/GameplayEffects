@@ -83,6 +83,11 @@ Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
     return nullptr;
 }
 
+GameplayActor::GameplayActor() {
+    stats.make_read_only();
+}
+
+
 Ref<GameplayTagContainer> GameplayActor::get_loose_tags() {
     if (loose_tags.is_null()) {
         loose_tags = Ref(memnew(GameplayTagContainer));
@@ -409,8 +414,8 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
 
         stat_values[stat.key] = StatSnapshot{base_value, modified_value};
 
-        for (const auto& effect_state : active_effects) {
-            Ref<EffectExecutionContext> execution_context = effect_state.first.execution_context;
+        for (const auto& [active_effect, _] : active_effects) {
+            Ref<EffectExecutionContext> execution_context = active_effect.execution_context;
             if (execution_context.is_valid()) {
                 Ref<GameplayEffectSpec> spec = execution_context->get_spec();
                 if (spec.is_valid()) {
@@ -530,7 +535,8 @@ TypedArray<GameplayStat> GameplayActor::get_stats() const {
 }
 
 void GameplayActor::set_stats(const TypedArray<GameplayStat> p_stats) {
-    stats = p_stats;
+    stats = p_stats.duplicate();
+    stats.make_read_only();
     for (int i = 0; i < stats.size(); i++) {
         const Ref<GameplayStat> stat = stats[i];
         if (stat.is_valid()) {

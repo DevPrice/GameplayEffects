@@ -89,6 +89,8 @@ class GameplayActor : public Node {
     GET_SET_OBJECT_PTR(Node, avatar)
 
 public:
+    GameplayActor();
+
     Ref<GameplayTagContainer> get_loose_tags();
     TypedArray<String> get_granted_tags() const;
 
