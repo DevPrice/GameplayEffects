@@ -89,11 +89,7 @@ class GameplayActor : public Node {
     GET_SET_OBJECT_PTR(Node, avatar)
 
 public:
-    GameplayActor();
-
-    void _ready() override;
-
-    Ref<GameplayTagContainer> get_loose_tags() const;
+    Ref<GameplayTagContainer> get_loose_tags();
     TypedArray<String> get_granted_tags() const;
 
     bool has_tag(const String& tag) const;

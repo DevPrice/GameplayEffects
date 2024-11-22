@@ -83,20 +83,11 @@ Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
     return nullptr;
 }
 
-GameplayActor::GameplayActor() {
-    loose_tags = Ref(memnew(GameplayTagContainer));
-}
-
-void GameplayActor::_ready() {
-    Node::_ready();
-    UtilityFunctions::print("Actor ready");
-    if (loose_tags.is_valid()) {
-        UtilityFunctions::print("Connecting...");
+Ref<GameplayTagContainer> GameplayActor::get_loose_tags() {
+    if (loose_tags.is_null()) {
+        loose_tags = Ref(memnew(GameplayTagContainer));
         loose_tags->connect("tags_changed", callable_mp(this, &GameplayActor::_on_loose_tags_changed));
     }
-}
-
-Ref<GameplayTagContainer> GameplayActor::get_loose_tags() const {
     return loose_tags;
 }
 
