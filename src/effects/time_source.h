@@ -11,7 +11,7 @@
 
 using namespace godot;
 
-class EffectExecutionContext;
+class EffectApplicationContext;
 
 class EffectTimer : public RefCounted {
     GDCLASS(EffectTimer, RefCounted)
@@ -35,11 +35,11 @@ class TimeSource : public Resource {
     GDCLASS(TimeSource, Resource)
 
 public:
-    virtual Ref<EffectTimer> create_timer(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const;
-    virtual Ref<EffectTimer> create_interval(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const;
+    virtual Ref<EffectTimer> create_timer(const Ref<EffectApplicationContext>& application_context, stat_value_t duration) const;
+    virtual Ref<EffectTimer> create_interval(const Ref<EffectApplicationContext>& application_context, stat_value_t duration) const;
 
-    GDVIRTUAL2RC_NO_IMPL(Object*, _create_timer, const Ref<EffectExecutionContext>&, stat_value_t)
-    GDVIRTUAL2RC_NO_IMPL(Object*, _create_interval, const Ref<EffectExecutionContext>&, stat_value_t)
+    GDVIRTUAL2RC_NO_IMPL(Object*, _create_timer, const Ref<EffectApplicationContext>&, stat_value_t)
+    GDVIRTUAL2RC_NO_IMPL(Object*, _create_interval, const Ref<EffectApplicationContext>&, stat_value_t)
 
 protected:
     static void _bind_methods();

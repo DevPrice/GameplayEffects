@@ -1,4 +1,4 @@
-#include "effects/effect_execution_context.h"
+#include "effects/effect_application_context.h"
 #include "binding_macros.h"
 
 #include <godot_cpp/core/class_db.hpp>
@@ -17,9 +17,9 @@ void EffectTimer::_bind_methods() {
     BIND_METHOD(EffectTimer, _on_timeout)
 }
 
-Ref<EffectTimer> TimeSource::create_timer(const Ref<EffectExecutionContext>& execution_context, const stat_value_t duration) const {
+Ref<EffectTimer> TimeSource::create_timer(const Ref<EffectApplicationContext>& application_context, const stat_value_t duration) const {
     Object* out_timer;
-    if (GDVIRTUAL_REQUIRED_CALL(_create_timer, execution_context, duration, out_timer)) {
+    if (GDVIRTUAL_REQUIRED_CALL(_create_timer, application_context, duration, out_timer)) {
         Ref<EffectTimer> effect_timer = memnew(EffectTimer);
         effect_timer->set_timer(out_timer);
         return effect_timer;
@@ -27,9 +27,9 @@ Ref<EffectTimer> TimeSource::create_timer(const Ref<EffectExecutionContext>& exe
     return nullptr;
 }
 
-Ref<EffectTimer> TimeSource::create_interval(const Ref<EffectExecutionContext>& execution_context, const stat_value_t duration) const {
+Ref<EffectTimer> TimeSource::create_interval(const Ref<EffectApplicationContext>& application_context, const stat_value_t duration) const {
     Object* out_timer;
-    if (GDVIRTUAL_REQUIRED_CALL(_create_interval, execution_context, duration, out_timer)) {
+    if (GDVIRTUAL_REQUIRED_CALL(_create_interval, application_context, duration, out_timer)) {
         Ref<EffectTimer> effect_timer = memnew(EffectTimer);
         effect_timer->set_timer(out_timer);
         return effect_timer;
@@ -37,8 +37,8 @@ Ref<EffectTimer> TimeSource::create_interval(const Ref<EffectExecutionContext>& 
     return nullptr;
 }
 
-GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_timer, Ref<EffectExecutionContext>, stat_value_t)
-GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_interval, Ref<EffectExecutionContext>, stat_value_t)
+GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_timer, Ref<EffectApplicationContext>, stat_value_t)
+GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_interval, Ref<EffectApplicationContext>, stat_value_t)
 
 void EffectTimer::set_callback(const std::function<void()> p_callback) {
     callback = p_callback;

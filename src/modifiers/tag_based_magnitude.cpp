@@ -1,5 +1,5 @@
 #include "tag_based_magnitude.h"
-#include "effects/effect_execution_context.h"
+#include "effects/effect_application_context.h"
 
 void TagBasedMagnitude::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_tag"), &TagBasedMagnitude::get_tag_value);
@@ -9,7 +9,7 @@ void TagBasedMagnitude::_bind_methods() {
 
 TagBasedMagnitude::TagBasedMagnitude() : tag(GameplayTag("")) { }
 
-stat_value_t TagBasedMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) const {
+stat_value_t TagBasedMagnitude::get_magnitude(const Ref<EffectApplicationContext>& context) const {
     stat_value_t magnitude{};
     if (context->get_spec().is_valid() && context->get_spec().is_valid() && context->get_spec()->get_tag_magnitude(tag, magnitude)) {
         return magnitude;

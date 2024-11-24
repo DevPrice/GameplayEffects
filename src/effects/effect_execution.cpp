@@ -1,5 +1,5 @@
 #include "effects/effect_execution.h"
-#include "effects/effect_execution_context.h"
+#include "effects/effect_application_context.h"
 #include "binding_macros.h"
 #include "modifiers/evaluated_modifier.h"
 #include "modifiers/stat_modifier.h"
@@ -19,8 +19,8 @@ void EffectExecution::_bind_methods() {
     GDVIRTUAL_BIND(_execute, "context", "stat_evaluator", "output")
 }
 
-void EffectExecution::execute(const Ref<EffectExecutionContext>& execution_context, const Ref<StatEvaluator>& stat_evaluator, const Ref<EffectExecutionOutput>& output) {
-    GDVIRTUAL_REQUIRED_CALL(_execute, execution_context, stat_evaluator, output);
+void EffectExecution::execute(const Ref<EffectApplicationContext>& application_context, const Ref<StatEvaluator>& stat_evaluator, const Ref<EffectExecutionOutput>& output) {
+    GDVIRTUAL_REQUIRED_CALL(_execute, application_context, stat_evaluator, output);
 }
 
 struct ExecutionEvaluatedModifier : public EvaluatedModifier {
@@ -47,5 +47,5 @@ void EffectExecutionOutput::add_modifier(const Ref<GameplayStat>& stat, StatModi
     modifiers.push_back(std::make_shared<ExecutionEvaluatedModifier>(stat, operation, magnitude));
 }
 
-GDVIRTUAL3_IMPL(EffectExecution, _execute, Ref<EffectExecutionContext>, Ref<StatEvaluator>, Ref<EffectExecutionOutput>)
+GDVIRTUAL3_IMPL(EffectExecution, _execute, Ref<EffectApplicationContext>, Ref<StatEvaluator>, Ref<EffectExecutionOutput>)
 

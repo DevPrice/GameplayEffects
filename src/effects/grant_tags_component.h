@@ -14,7 +14,7 @@ class GrantTagsComponent : public EffectComponent {
     GET_SET_PROPERTY(TypedArray<String>, granted_tags)
 
 public:
-    void on_application(const Ref<EffectExecutionContext>& context) override;
+    void on_application(const Ref<EffectApplicationContext>& context) override;
 
 protected:
     static void _bind_methods();

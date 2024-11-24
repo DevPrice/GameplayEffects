@@ -18,11 +18,11 @@ class SceneTimeSource : public TimeSource {
 public:
     SceneTimeSource() : process_always(false), process_in_physics(false) { }
 
-    Ref<EffectTimer> create_timer(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const override;
-    Ref<EffectTimer> create_interval(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration) const override;
+    Ref<EffectTimer> create_timer(const Ref<EffectApplicationContext>& application_context, stat_value_t duration) const override;
+    Ref<EffectTimer> create_interval(const Ref<EffectApplicationContext>& application_context, stat_value_t duration) const override;
 
 private:
-    Ref<EffectTimer> _create_timer(const Ref<EffectExecutionContext>& execution_context, stat_value_t duration, bool one_shot) const;
+    Ref<EffectTimer> _create_timer(const Ref<EffectApplicationContext>& application_context, stat_value_t duration, bool one_shot) const;
 
 protected:
     static void _bind_methods();

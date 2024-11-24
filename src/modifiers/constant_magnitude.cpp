@@ -12,7 +12,7 @@ ConstantMagnitude::ConstantMagnitude() {
     constant_magnitude = stat_value_t{};
 }
 
-stat_value_t ConstantMagnitude::get_magnitude(const Ref<EffectExecutionContext>& context) const {
+stat_value_t ConstantMagnitude::get_magnitude(const Ref<EffectApplicationContext>& context) const {
     return constant_magnitude;
 }
 

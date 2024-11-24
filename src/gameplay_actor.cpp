@@ -75,9 +75,9 @@ void ActiveEffectHandle::set_active_effect(const ActiveEffect& p_active_effect) 
 
 Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
     if (active_effect) {
-        const Ref<EffectExecutionContext> execution_context = active_effect->execution_context;
-        if (execution_context.is_valid()) {
-            return execution_context->get_spec();
+        const Ref<EffectApplicationContext> application_context = active_effect->application_context;
+        if (application_context.is_valid()) {
+            return application_context->get_spec();
         }
     }
     return nullptr;
@@ -203,12 +203,12 @@ Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {
     return effect_context;
 }
 
-Ref<EffectExecutionContext> GameplayActor::_make_execution_context(const Ref<GameplayEffectSpec>& spec) {
-    Ref<EffectExecutionContext> execution_context = memnew(EffectExecutionContext);
-    execution_context->set_spec(spec);
-    execution_context->set_target_actor(this);
-    execution_context->set_target_snapshot(capture_snapshot());
-    return execution_context;
+Ref<EffectApplicationContext> GameplayActor::_make_application_context(const Ref<GameplayEffectSpec>& spec) {
+    Ref<EffectApplicationContext> application_context = memnew(EffectApplicationContext);
+    application_context->set_spec(spec);
+    application_context->set_target_actor(this);
+    application_context->set_target_snapshot(capture_snapshot());
+    return application_context;
 }
 
 Ref<ActiveEffectHandle> GameplayActor::apply_effect_to_self(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes) {
@@ -226,12 +226,12 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
     if (!spec.is_valid()) return nullptr;
 
     const Ref<GameplayEffect> effect = spec->get_effect();
-    const Ref<EffectExecutionContext> execution_context = _make_execution_context(spec);
+    const Ref<EffectApplicationContext> application_context = _make_application_context(spec);
     const Ref<EffectLifetime> lifetime = effect->get_lifetime();
 
     const TypedArray<GameplayRequirements> application_requirements = spec->get_effect()->get_application_requirements();
-    const bool requirements_met = array_all_of(application_requirements, [&execution_context](Ref<GameplayRequirements> requirements) {
-        return !requirements.is_valid() || requirements->requirements_met(execution_context);
+    const bool requirements_met = array_all_of(application_requirements, [&application_context](Ref<GameplayRequirements> requirements) {
+        return !requirements.is_valid() || requirements->requirements_met(application_context);
     });
     if (!requirements_met) return nullptr;
 
@@ -241,11 +241,11 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
     for (int i = 0; i < effect_components.size(); ++i) {
         Ref<EffectComponent> effect_component = effect_components[i];
         if (effect_component.is_valid()) {
-            effect_component->on_application(execution_context);
+            effect_component->on_application(application_context);
         }
     }
 
-    const ActiveEffect active_effect = ActiveEffect{execution_context};
+    const ActiveEffect active_effect = ActiveEffect{application_context};
 
     if (lifetime.is_null() || lifetime->get_execute_on_application()) {
         _execute_effect(active_effect);
@@ -266,8 +266,8 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
             const Ref<ModifierMagnitude> period = lifetime->get_period();
             WeakObjectRef<GameplayActor> weak_this(this);
             if (period.is_valid()) {
-                const stat_value_t period_magnitude = period->get_magnitude(execution_context);
-                const Ref<EffectTimer> period_timer = time_source->create_interval(execution_context, period_magnitude);
+                const stat_value_t period_magnitude = period->get_magnitude(application_context);
+                const Ref<EffectTimer> period_timer = time_source->create_interval(application_context, period_magnitude);
                 period_timer->set_callback([weak_this, active_effect] {
                     if (weak_this) {
                         weak_this->_execute_effect(active_effect);
@@ -277,9 +277,9 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
             }
             const Ref<ModifierMagnitude> duration = lifetime->get_duration();
             if (duration.is_valid()) {
-                const stat_value_t duration_magnitude = duration->get_magnitude(execution_context);
+                const stat_value_t duration_magnitude = duration->get_magnitude(application_context);
                 if (duration_magnitude > 0) {
-                    const Ref<EffectTimer> duration_timer = time_source->create_timer(execution_context, duration_magnitude);
+                    const Ref<EffectTimer> duration_timer = time_source->create_timer(application_context, duration_magnitude);
                     duration_timer->set_callback([weak_this, active_effect] {
                         if (weak_this) {
                             weak_this->_remove_effect(active_effect);
@@ -297,12 +297,12 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
 }
 
 void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
-    const Ref<EffectExecutionContext> execution_context = active_effect.execution_context;
-    if (execution_context.is_null()) {
+    const Ref<EffectApplicationContext> application_context = active_effect.application_context;
+    if (application_context.is_null()) {
         UtilityFunctions::push_error("Attempted to execute effect with no execution context!");
         return;
     }
-    const Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+    const Ref<GameplayEffectSpec> spec = application_context->get_spec();
     if (spec.is_null()) {
         UtilityFunctions::push_error("Attempted to execute effect with no spec!");
         return;
@@ -316,8 +316,8 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     const Ref<EffectLifetime> lifetime = effect->get_lifetime();
     if (lifetime.is_valid()) {
         const TypedArray<GameplayRequirements> ongoing_requirements = lifetime->get_ongoing_requirements();
-        const bool requirements_met = array_all_of(ongoing_requirements, [&execution_context](Ref<GameplayRequirements> requirements) {
-            return !requirements.is_valid() || requirements->requirements_met(execution_context);
+        const bool requirements_met = array_all_of(ongoing_requirements, [&application_context](Ref<GameplayRequirements> requirements) {
+            return !requirements.is_valid() || requirements->requirements_met(application_context);
         });
         if (!requirements_met) return;
     }
@@ -337,13 +337,13 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     const Ref<EffectExecutionOutput> execution_output = memnew(EffectExecutionOutput);
 
     if (executions.size() > 0) {
-        const std::unique_ptr<CapturedStatEvaluator> captured_stat_evaluator = std::make_unique<CapturedStatEvaluator>(execution_context);
+        const std::unique_ptr<CapturedStatEvaluator> captured_stat_evaluator = std::make_unique<CapturedStatEvaluator>(application_context);
         const Ref<StatEvaluator> stat_evaluator = memnew(StatEvaluator);
         stat_evaluator->set_evaluator(captured_stat_evaluator.get());
         for (int i = 0; i < executions.size(); i++) {
             const Ref<EffectExecution> execution = executions[i];
             if (execution.is_valid()) {
-                execution->execute(execution_context, stat_evaluator, execution_output);
+                execution->execute(application_context, stat_evaluator, execution_output);
             }
         }
         stat_evaluator->set_evaluator(nullptr);
@@ -386,21 +386,21 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
 
         // TODO: Run components in channel-based order
         for (auto& [active_effect, _] : active_effects) {
-            Ref<EffectExecutionContext> execution_context = active_effect.execution_context;
-            if (execution_context.is_valid()) {
-                Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+            Ref<EffectApplicationContext> application_context = active_effect.application_context;
+            if (application_context.is_valid()) {
+                Ref<GameplayEffectSpec> spec = application_context->get_spec();
                 if (spec.is_valid()) {
                     TypedArray<EffectComponent> effect_components = spec->get_effect()->get_components();
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent>& effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_base_value_changing(execution_context, stat.key, base_value);
+                            effect_component->on_base_value_changing(application_context, stat.key, base_value);
                         }
                     }
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent>& effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_base_value_changed(execution_context, stat.key, base_value);
+                            effect_component->on_base_value_changed(application_context, stat.key, base_value);
                         }
                     }
                 }
@@ -410,15 +410,15 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
         stat_value_t modified_value = aggregator.get_modified_value(stat.key, base_value);
 
         for (const auto& [active_effect, _] : active_effects) {
-            Ref<EffectExecutionContext> execution_context = active_effect.execution_context;
-            if (execution_context.is_valid()) {
-                Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+            Ref<EffectApplicationContext> application_context = active_effect.application_context;
+            if (application_context.is_valid()) {
+                Ref<GameplayEffectSpec> spec = application_context->get_spec();
                 if (spec.is_valid()) {
                     TypedArray<EffectComponent> effect_components = spec->get_effect()->get_components();
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent>& effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_current_value_changing(execution_context, stat.key, modified_value);
+                            effect_component->on_current_value_changing(application_context, stat.key, modified_value);
                         }
                     }
                 }
@@ -428,15 +428,15 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
         stat_values[stat.key] = StatSnapshot{base_value, modified_value};
 
         for (const auto& [active_effect, _] : active_effects) {
-            Ref<EffectExecutionContext> execution_context = active_effect.execution_context;
-            if (execution_context.is_valid()) {
-                Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+            Ref<EffectApplicationContext> application_context = active_effect.application_context;
+            if (application_context.is_valid()) {
+                Ref<GameplayEffectSpec> spec = application_context->get_spec();
                 if (spec.is_valid()) {
                     TypedArray<EffectComponent> effect_components = spec->get_effect()->get_components();
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent>& effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_current_value_changed(execution_context, stat.key, modified_value);
+                            effect_component->on_current_value_changed(application_context, stat.key, modified_value);
                         }
                     }
                 }
@@ -483,14 +483,14 @@ bool GameplayActor::remove_effect(const Ref<ActiveEffectHandle>& handle) {
 }
 
 bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
-    const Ref<EffectExecutionContext> execution_context = active_effect.execution_context;
+    const Ref<EffectApplicationContext> application_context = active_effect.application_context;
     const bool removed = active_effects.erase(active_effect);
 
     if (removed) {
         _recalculate_stats();
 
-        if (execution_context.is_valid()) {
-            const Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+        if (application_context.is_valid()) {
+            const Ref<GameplayEffectSpec> spec = application_context->get_spec();
             if (spec.is_valid()) {
                 const Ref<GameplayEffect> effect = spec->get_effect();
                 if (effect.is_valid()) {
@@ -498,7 +498,7 @@ bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent> effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_removal(execution_context);
+                            effect_component->on_removal(application_context);
                         }
                     }
                 }
@@ -594,7 +594,7 @@ void GameplayActor::set_avatar(Node* p_avatar) {
 
 std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {
     std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot;
-    const Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+    const Ref<GameplayEffectSpec> spec = application_context->get_spec();
     if (spec.is_valid()) {
         const Ref<GameplayEffect> effect = spec->get_effect();
         if (effect.is_valid()) {
@@ -604,8 +604,8 @@ std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_s
                 if (modifier.is_valid()) {
                     const Ref<ModifierMagnitude> magnitude = modifier->get_magnitude();
                     if (magnitude.is_valid()) {
-                        const float evaluated_magnitude = magnitude->get_magnitude(execution_context);
-                        std::shared_ptr<EvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, execution_context, evaluated_magnitude);
+                        const float evaluated_magnitude = magnitude->get_magnitude(application_context);
+                        std::shared_ptr<EvaluatedModifier> evaluated_modifier = std::make_shared<ModifierSnapshot>(modifier, application_context, evaluated_magnitude);
                         modifier_snapshot.push_back(evaluated_modifier);
                     }
                 }
@@ -617,8 +617,8 @@ std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_s
 
 GameplayTagSet ActiveEffect::capture_granted_tags() const {
     GameplayTagSet result;
-    if (execution_context.is_valid()) {
-        const Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+    if (application_context.is_valid()) {
+        const Ref<GameplayEffectSpec> spec = application_context->get_spec();
         if (spec.is_valid()) {
             const Ref<GameplayEffect> effect = spec->get_effect();
             if (effect.is_valid()) {

@@ -15,7 +15,7 @@ class ScaledMagnitude : public ModifierMagnitude {
 public:
     ScaledMagnitude();
 
-    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) const override;
+    stat_value_t get_magnitude(const Ref<EffectApplicationContext>& context) const override;
 
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, base)
     GET_SET_PROPERTY(Ref<ModifierMagnitude>, premultiply_offset)

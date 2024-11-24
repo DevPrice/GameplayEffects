@@ -16,7 +16,7 @@
 
 using namespace godot;
 
-class EffectExecutionContext;
+class EffectApplicationContext;
 
 class EffectExecutionOutput : public RefCounted {
     GDCLASS(EffectExecutionOutput, RefCounted)
@@ -36,10 +36,10 @@ class EffectExecution : public Resource {
     GDCLASS(EffectExecution, Resource)
 
 public:
-    virtual void execute(const Ref<EffectExecutionContext>& execution_context, const Ref<StatEvaluator>& stat_evaluator, const Ref<EffectExecutionOutput>& output);
+    virtual void execute(const Ref<EffectApplicationContext>& application_context, const Ref<StatEvaluator>& stat_evaluator, const Ref<EffectExecutionOutput>& output);
 
 protected:
-    GDVIRTUAL3_NO_IMPL(_execute, const Ref<EffectExecutionContext>&, const Ref<StatEvaluator>&, const Ref<EffectExecutionOutput>&)
+    GDVIRTUAL3_NO_IMPL(_execute, const Ref<EffectApplicationContext>&, const Ref<StatEvaluator>&, const Ref<EffectExecutionOutput>&)
 
 protected:
     static void _bind_methods();

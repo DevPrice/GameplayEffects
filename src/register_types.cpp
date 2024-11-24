@@ -56,7 +56,7 @@ void init_gameplay_effects_module(ModuleInitializationLevel p_level) {
     GDREGISTER_ABSTRACT_CLASS(EffectTimer)
     GDREGISTER_VIRTUAL_CLASS(TimeSource)
     GDREGISTER_CLASS(SceneTimeSource)
-    GDREGISTER_CLASS(EffectExecutionContext)
+    GDREGISTER_CLASS(EffectApplicationContext)
     GDREGISTER_CLASS(EffectExecutionOutput)
     GDREGISTER_VIRTUAL_CLASS(EffectExecution)
     GDREGISTER_VIRTUAL_CLASS(EffectComponent)

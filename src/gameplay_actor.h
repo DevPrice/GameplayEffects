@@ -4,7 +4,7 @@
 #include "typedefs.h"
 #include "actor_snapshot.h"
 #include "gameplay_tag_container.h"
-#include "effects/effect_execution_context.h"
+#include "effects/effect_application_context.h"
 #include "effects/gameplay_effect_context.h"
 #include "effects/gameplay_effect_spec.h"
 #include "modifiers/evaluated_modifier.h"
@@ -31,23 +31,23 @@ struct RefHasher {
 };
 
 struct ActiveEffect {
-    const Ref<EffectExecutionContext> execution_context;
+    const Ref<EffectApplicationContext> application_context;
 
     std::vector<std::shared_ptr<EvaluatedModifier>> capture_modifier_snapshot() const;
     GameplayTagSet capture_granted_tags() const;
 
-    ActiveEffect(const Ref<EffectExecutionContext>& p_execution_context) : execution_context(p_execution_context) { }
+    ActiveEffect(const Ref<EffectApplicationContext>& p_application_context) : application_context(p_application_context) { }
 
     bool operator==(const ActiveEffect &other) const {
-        if (execution_context == other.execution_context) return true;
-        if (execution_context == nullptr || other.execution_context == nullptr) return false;
-        return *execution_context == *other.execution_context;
+        if (application_context == other.application_context) return true;
+        if (application_context == nullptr || other.application_context == nullptr) return false;
+        return *application_context == *other.application_context;
     }
 
     struct Hasher {
         std::size_t operator()(const ActiveEffect& active_effect) const {
-            if (active_effect.execution_context.is_null()) return 0;
-            return (std::size_t)active_effect.execution_context->get_spec().ptr() ^ (std::size_t)active_effect.execution_context->get_target_actor();
+            if (active_effect.application_context.is_null()) return 0;
+            return (std::size_t)active_effect.application_context->get_spec().ptr() ^ (std::size_t)active_effect.application_context->get_target_actor();
         }
     };
 };
@@ -127,7 +127,7 @@ private:
     Signal _get_stat_signal(const Ref<GameplayStat>& stat, const StringName& signal_name);
     void _on_loose_tags_changed(const TypedArray<String>& added_tags, const TypedArray<String>& removed_tags);
     Ref<GameplayEffectContext> _make_effect_context();
-    Ref<EffectExecutionContext> _make_execution_context(const Ref<GameplayEffectSpec>& spec);
+    Ref<EffectApplicationContext> _make_application_context(const Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);
     void _recalculate_stats();
     void _recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot);

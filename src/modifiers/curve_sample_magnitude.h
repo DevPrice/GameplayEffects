@@ -20,7 +20,7 @@ class CurveSampleMagnitude : public ModifierMagnitude {
 public:
     CurveSampleMagnitude();
 
-    stat_value_t get_magnitude(const Ref<EffectExecutionContext>& context) const override;
+    stat_value_t get_magnitude(const Ref<EffectApplicationContext>& context) const override;
 
   protected:
     static void _bind_methods();

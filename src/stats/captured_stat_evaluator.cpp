@@ -1,24 +1,24 @@
 #include "stats/captured_stat_evaluator.h"
-#include "effects/effect_execution_context.h"
+#include "effects/effect_application_context.h"
 #include "gameplay_actor.h"
 #include "modifiers/modifier_aggregator.h"
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
-CapturedStatEvaluator::CapturedStatEvaluator(const Ref<EffectExecutionContext>& effect_execution_context)
-    : execution_context(effect_execution_context) { }
+CapturedStatEvaluator::CapturedStatEvaluator(const Ref<EffectApplicationContext>& effect_application_context)
+    : application_context(effect_application_context) { }
 
 ActorSnapshot CapturedStatEvaluator::get_snapshot(const Ref<CapturedStat>& stat) const {
-    if (stat.is_valid() && execution_context.is_valid()) {
+    if (stat.is_valid() && application_context.is_valid()) {
         if (stat->get_capture_from() == CapturedStat::CaptureSource::Target) {
             if (stat->get_snapshot()) {
-                return execution_context->get_target_snapshot();
+                return application_context->get_target_snapshot();
             }
-            if (const GameplayActor* target_actor = execution_context->get_target_actor()) {
+            if (const GameplayActor* target_actor = application_context->get_target_actor()) {
                 return target_actor->capture_snapshot();
             }
         } else {
-            Ref<GameplayEffectSpec> spec = execution_context->get_spec();
+            Ref<GameplayEffectSpec> spec = application_context->get_spec();
             if (spec.is_valid()) {
                 Ref<GameplayEffectContext> effect_context = spec->get_context();
                 if (effect_context.is_valid()) {

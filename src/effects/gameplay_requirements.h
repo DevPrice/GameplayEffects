@@ -9,16 +9,16 @@
 
 using namespace godot;
 
-class EffectExecutionContext;
+class EffectApplicationContext;
 
 class GameplayRequirements : public Resource {
     GDCLASS(GameplayRequirements, Resource)
 
 public:
-    virtual bool requirements_met(const Ref<EffectExecutionContext>& execution_context);
+    virtual bool requirements_met(const Ref<EffectApplicationContext>& application_context);
 
 protected:
-    GDVIRTUAL1R_NO_IMPL(bool, _requirements_met, const Ref<EffectExecutionContext>&)
+    GDVIRTUAL1R_NO_IMPL(bool, _requirements_met, const Ref<EffectApplicationContext>&)
 
 protected:
     static void _bind_methods();

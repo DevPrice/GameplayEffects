@@ -1,12 +1,12 @@
 #include "gameplay_actor.h"
-#include "effects/effect_execution_context.h"
+#include "effects/effect_application_context.h"
 #include "grant_tags_component.h"
 
 void GrantTagsComponent::_bind_methods() {
     BIND_GET_SET_STRING_ARRAY(GrantTagsComponent, granted_tags)
 }
 
-void GrantTagsComponent::on_application(const Ref<EffectExecutionContext>& context) {
+void GrantTagsComponent::on_application(const Ref<EffectApplicationContext>& context) {
     EffectComponent::on_application(context);
     if (context.is_valid()) {
         Ref<GameplayEffectSpec> spec = context->get_spec();

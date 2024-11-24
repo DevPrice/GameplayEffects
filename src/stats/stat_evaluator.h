@@ -8,7 +8,7 @@
 #include <godot_cpp/classes/resource.hpp>
 
 class CapturedStatEvaluator;
-class EffectExecutionContext;
+class EffectApplicationContext;
 
 using namespace godot;
 
