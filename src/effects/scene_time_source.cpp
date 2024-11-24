@@ -42,6 +42,8 @@ Ref<EffectTimer> SceneTimeSource::_create_timer(const Ref<EffectExecutionContext
     timer->set_autostart(true);
     timer->set_one_shot(one_shot);
     timer->set_wait_time(duration);
+    timer->set_process_mode(process_always ? Node::PROCESS_MODE_ALWAYS : Node::PROCESS_MODE_INHERIT);
+    timer->set_physics_process(process_in_physics);
     Ref<EffectTimer> effect_timer = memnew(EffectTimer);
     effect_timer->set_timer(timer);
     if (GameplayActor* target_actor = execution_context.is_valid() ? execution_context->get_target_actor() : nullptr) {
