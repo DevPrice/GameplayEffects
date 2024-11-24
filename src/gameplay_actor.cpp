@@ -149,8 +149,26 @@ Signal GameplayActor::_get_stat_signal(const Ref<GameplayStat>& stat, const Stri
 }
 
 void GameplayActor::_on_loose_tags_changed(const TypedArray<String>& added_tags, const TypedArray<String>& removed_tags) {
-    _recalculate_stats();
-    emit_signal("tags_changed", added_tags, removed_tags);
+    TypedArray<String> actual_added_tags;
+    TypedArray<String> actual_removed_tags;
+    for (size_t i = 0; i < added_tags.size(); ++i) {
+        const String tag_string = added_tags[i];
+        const GameplayTag tag(tag_string);
+        if (!granted_tags.has_tag_exact(tag)) {
+            actual_added_tags.append(tag_string);
+        }
+    }
+    for (size_t i = 0; i < removed_tags.size(); ++i) {
+        const String tag_string = removed_tags[i];
+        const GameplayTag tag(tag_string);
+        if (!granted_tags.has_tag_exact(tag)) {
+            actual_removed_tags.append(tag_string);
+        }
+    }
+    if (!actual_added_tags.is_empty() || !removed_tags.is_empty()) {
+        _recalculate_stats();
+        emit_signal("tags_changed", actual_added_tags, actual_removed_tags);
+    }
 }
 
 ActorSnapshot GameplayActor::capture_snapshot() const {
@@ -443,8 +461,9 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
         }
         emit_signal("stat_changed", stat, modified_value, initial_value);
     }
-    GameplayTagSet added = granted_tags - initial_granted_tags;
-    GameplayTagSet removed = initial_granted_tags - granted_tags;
+    GameplayTagSet loose_tag_set = loose_tags.is_valid() ? loose_tags->to_tag_set() : GameplayTagSet();
+    GameplayTagSet added = granted_tags - initial_granted_tags - loose_tag_set;
+    GameplayTagSet removed = initial_granted_tags - granted_tags - loose_tag_set;
     if (!added.is_empty() || !removed.is_empty()) {
         TypedArray<String> added_tags;
         added.to_string_array(added_tags);

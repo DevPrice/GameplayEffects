@@ -22,6 +22,7 @@ public:
     bool has_tag_exact(const String& tag) const;
 
     TypedArray<String> to_array() const;
+    GameplayTagSet to_tag_set() const;
 
 private:
     GameplayTagSet tags;

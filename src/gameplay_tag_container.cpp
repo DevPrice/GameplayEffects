@@ -96,3 +96,7 @@ TypedArray<String> GameplayTagContainer::to_array() const {
     tags.to_string_array(result);
     return result;
 }
+
+GameplayTagSet GameplayTagContainer::to_tag_set() const {
+    return tags;
+}
