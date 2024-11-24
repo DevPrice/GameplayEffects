@@ -24,6 +24,7 @@ class GameplayEffect : public Resource {
 
 public:
     bool is_instant() const;
+    TypedArray<String> get_effect_tags() const;
 
 protected:
     static void _bind_methods();

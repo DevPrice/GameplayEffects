@@ -50,7 +50,7 @@ void ClassName::set_##Name(Type* p_##Name) { \
 }
 
 #define BIND_METHOD(ClassName, Name, ...) \
-    ClassDB::bind_method(D_METHOD(#Name, ## __VA_ARGS__), &ClassName::Name);
+    ClassDB::bind_method(D_METHOD(#Name, ##__VA_ARGS__), &ClassName::Name);
 
 #define BIND_STATIC_METHOD(ClassName, Name, ...) \
     ClassDB::bind_static_method(#ClassName, D_METHOD(#Name, ##__VA_ARGS__), &ClassName::Name);
