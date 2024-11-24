@@ -12,7 +12,7 @@ using namespace godot;
 
 class GameplayActor;
 
-struct EffectExecutionContext : public RefCounted {
+class EffectExecutionContext : public RefCounted {
     GDCLASS(EffectExecutionContext, RefCounted)
 
     GET_SET_PROPERTY(Ref<GameplayEffectSpec>, spec)

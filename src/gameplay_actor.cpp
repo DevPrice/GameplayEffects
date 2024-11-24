@@ -483,13 +483,14 @@ bool GameplayActor::remove_effect(const Ref<ActiveEffectHandle>& handle) {
 }
 
 bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
+    const Ref<EffectExecutionContext> execution_context = active_effect.execution_context;
     const bool removed = active_effects.erase(active_effect);
 
     if (removed) {
         _recalculate_stats();
 
-        if (active_effect.execution_context.is_valid()) {
-            const Ref<GameplayEffectSpec> spec = active_effect.execution_context->get_spec();
+        if (execution_context.is_valid()) {
+            const Ref<GameplayEffectSpec> spec = execution_context->get_spec();
             if (spec.is_valid()) {
                 const Ref<GameplayEffect> effect = spec->get_effect();
                 if (effect.is_valid()) {
@@ -497,7 +498,7 @@ bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent> effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_removal(active_effect.execution_context);
+                            effect_component->on_removal(execution_context);
                         }
                     }
                 }
