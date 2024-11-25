@@ -384,7 +384,6 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
         const stat_value_t initial_value = stat.value.current_value;
         stat_value_t base_value = stat.value.base_value;
 
-        // TODO: Run components in channel-based order
         for (auto& [active_effect, _] : active_effects) {
             Ref<EffectApplicationContext> application_context = active_effect.application_context;
             if (application_context.is_valid()) {
