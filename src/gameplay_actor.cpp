@@ -371,7 +371,6 @@ void GameplayActor::_recalculate_stats() {
 }
 
 void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnapshot>& stat_snapshot) {
-    std::vector<Ref<GameplayStat>> modified_stats;
     ModifierAggregator aggregator;
     GameplayTagSet initial_granted_tags(granted_tags);
     granted_tags.clear();
@@ -381,7 +380,6 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
         granted_tags += effect_state.granted_tags;
     }
     for (auto& stat : stat_values) {
-        const stat_value_t initial_value = stat.value.current_value;
         stat_value_t base_value = stat.value.base_value;
 
         for (auto& [active_effect, _] : active_effects) {
@@ -441,24 +439,25 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
                 }
             }
         }
-
-        if (abs(modified_value - initial_value) > 1e-5) {
-            modified_stats.push_back(stat.key);
-        }
     }
-    for (Ref<GameplayStat> stat : modified_stats) {
+    for (auto& [stat, _] : stat_values) {
         const Ref<StatSignals> signals = stat_signals[stat];
         const stat_value_t initial_value = stat_snapshot.get(stat).current_value;
         const stat_value_t modified_value = stat_values.get(stat).current_value;
+        const bool current_value_changed = !Math::is_equal_approx(initial_value, modified_value);
         if (signals.is_valid()) {
             const stat_value_t initial_base_value = stat_snapshot.get(stat).base_value;
             const stat_value_t modified_base_value = stat_values.get(stat).base_value;
             if (!Math::is_equal_approx(initial_base_value, modified_base_value)) {
                 signals->emit_signal("base_value_changed", modified_base_value, initial_base_value);
             }
-            signals->emit_signal("current_value_changed", modified_value, initial_value);
+            if (current_value_changed) {
+                signals->emit_signal("current_value_changed", modified_value, initial_value);
+            }
         }
-        emit_signal("stat_changed", stat, modified_value, initial_value);
+        if (current_value_changed) {
+            emit_signal("stat_changed", stat, modified_value, initial_value);
+        }
     }
     GameplayTagSet loose_tag_set = loose_tags.is_valid() ? loose_tags->to_tag_set() : GameplayTagSet();
     GameplayTagSet added = granted_tags - initial_granted_tags - loose_tag_set;
