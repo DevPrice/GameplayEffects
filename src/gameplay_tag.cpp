@@ -6,35 +6,40 @@
 
 using namespace godot;
 
-GameplayTag::GameplayTag(const String & p_value) : value(p_value) { }
+std::vector<StringName> GameplayTag::make_parts(const String& tag) {
+    const PackedStringArray raw_parts = tag.split(".", false);
+    std::vector<StringName> parts;
+    parts.reserve(raw_parts.size());
+    for (int i = 0; i < raw_parts.size(); ++i) {
+        const String& part = raw_parts[i];
+        parts.emplace_back(part.strip_edges().to_lower().to_snake_case());
+    }
+    return parts;
+}
 
-GameplayTag::GameplayTag(const GameplayTag & other) : value(other.value) { }
+GameplayTag::GameplayTag(const String& p_value) : value(p_value), normalized_parts(make_parts(p_value)) {}
+
+GameplayTag::GameplayTag(const GameplayTag& other) : value(other.value), normalized_parts(other.normalized_parts) {}
 
 String GameplayTag::to_string() const {
     return value;
 }
 
 bool GameplayTag::matches(const GameplayTag &other) const {
-    auto segments = value.split(".");
-    auto other_segments = other.value.split(".");
+    if (normalized_parts.size() < other.normalized_parts.size()) return false;
 
-    if (segments.size() < other_segments.size()) return false;
-
-    for (int i = 0; i < other_segments.size(); ++i) {
-        if (segments[i] != other_segments[i]) return false;
+    for (int i = 0; i < other.normalized_parts.size(); ++i) {
+        if (normalized_parts[i] != other.normalized_parts[i]) return false;
     }
 
     return true;
 }
 
 bool GameplayTag::operator==(const GameplayTag &other) const {
-    auto segments = value.split(".");
-    auto other_segments = other.value.split(".");
+    if (normalized_parts.size() != other.normalized_parts.size()) return false;
 
-    if (segments.size() != other_segments.size()) return false;
-
-    for (int i = 0; i < segments.size(); ++i) {
-        if (segments[i] != other_segments[i]) return false;
+    for (int i = 0; i < normalized_parts.size(); ++i) {
+        if (normalized_parts[i] != other.normalized_parts[i]) return false;
     }
 
     return true;

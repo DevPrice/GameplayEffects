@@ -11,6 +11,9 @@ class GameplayTag {
 
 private:
     String value;
+    std::vector<StringName> normalized_parts;
+
+    static std::vector<StringName> make_parts(const String& tag);
 
 public:
     GameplayTag(const String& p_value);
