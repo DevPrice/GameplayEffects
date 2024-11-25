@@ -134,7 +134,7 @@ private:
     bool _remove_effect(const ActiveEffect& active_effect);
 
 private:
-    static String& get_actor_meta_name();
+    static StringName& get_actor_meta_name();
 
 protected:
     static void _bind_methods();

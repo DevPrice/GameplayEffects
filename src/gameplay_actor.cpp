@@ -507,8 +507,8 @@ bool GameplayActor::_remove_effect(const ActiveEffect& active_effect) {
     return removed;
 }
 
-String& GameplayActor::get_actor_meta_name() {
-    static String actor_meta_name = "instigator_gameplay_actor";
+StringName& GameplayActor::get_actor_meta_name() {
+    static StringName actor_meta_name("instigator_gameplay_actor");
     return actor_meta_name;
 }
 
