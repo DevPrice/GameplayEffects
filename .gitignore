@@ -7,6 +7,7 @@
 # Godot 3.x ignores
 include/gen
 src/gen
+*.tmp
 
 # Build configuarion.
 /custom.py
