@@ -26,7 +26,7 @@ using namespace godot;
 struct RefHasher {
     template<typename T>
     std::size_t operator()(const Ref<T>& ref) const {
-        return (std::size_t)ref.ptr();
+        return reinterpret_cast<std::size_t>(ref.ptr());
     }
 };
 
@@ -47,7 +47,7 @@ struct ActiveEffect {
     struct Hasher {
         std::size_t operator()(const ActiveEffect& active_effect) const {
             if (active_effect.application_context.is_null()) return 0;
-            return (std::size_t)active_effect.application_context->get_spec().ptr() ^ (std::size_t)active_effect.application_context->get_target_actor();
+            return reinterpret_cast<std::size_t>(active_effect.application_context->get_spec().ptr()) ^ reinterpret_cast<std::size_t>(active_effect.application_context->get_target_actor());
         }
     };
 };
