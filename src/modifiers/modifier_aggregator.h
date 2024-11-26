@@ -40,6 +40,7 @@ public:
 
 private:
     bool get_modified_value(const Ref<ModifierChannel>& channel, const Ref<GameplayStat>& stat, stat_value_t base_value, stat_value_t& out_modified_value) const;
+    static stat_value_t aggregate_with_bias(const std::vector<stat_value_t>& modifier_values, stat_value_t bias);
 };
 
 #endif

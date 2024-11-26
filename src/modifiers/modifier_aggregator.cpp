@@ -1,7 +1,6 @@
 #include "modifiers/modifier_aggregator.h"
 #include "modifiers/evaluated_modifier.h"
 
-#include <godot_cpp/variant/utility_functions.hpp>
 #include <algorithm>
 #include <numeric>
 
@@ -20,7 +19,7 @@ void ModifierAggregator::add_modifiers(const std::vector<std::shared_ptr<Evaluat
     }
 }
 
-bool ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, stat_value_t base_value, stat_value_t& out_modified_value) const {
+bool ModifierAggregator::get_modified_value(const Ref<GameplayStat>& stat, const stat_value_t base_value, stat_value_t& out_modified_value) const {
     bool modified = false;
     out_modified_value = base_value;
     for (auto& [channel, _] : modifiers) {
@@ -43,8 +42,8 @@ bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel,
     });
 
     // Return the last Override, if present
-    for (int i = relevant_modifiers.size() - 1; i >= 0; i--) {
-        std::shared_ptr<EvaluatedModifier> modifier = relevant_modifiers[i];
+    for (int i = relevant_modifiers.size() - 1; i >= 0; --i) {
+        const std::shared_ptr<EvaluatedModifier> modifier = relevant_modifiers[i];
         if (modifier->get_operation() == StatModifier::Operation::Override) {
             out_modified_value = modifier->get_magnitude();
             return true;
@@ -55,20 +54,51 @@ bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel,
     std::copy_if(relevant_modifiers.begin(), relevant_modifiers.end(), std::back_inserter(offset_modifiers), [](const std::shared_ptr<EvaluatedModifier> modifier) {
         return modifier && modifier->get_operation() == StatModifier::Operation::Offset;
     });
-    stat_value_t aggregate_offset = std::accumulate(offset_modifiers.begin(), offset_modifiers.end(), stat_value_t{}, [](const stat_value_t acc, const std::shared_ptr<EvaluatedModifier> modifier) {
-        return acc + modifier->get_magnitude();
-    });
+
+    stat_value_t aggregate_offset;
+    if (channel.is_valid() && channel->_gdvirtual_aggregate_offset_overridden()) {
+        PackedFloat64Array offset_magnitudes;
+        for (auto it = offset_modifiers.begin(); it != offset_modifiers.end(); ++it) {
+            offset_magnitudes.push_back((*it)->get_magnitude());
+        }
+        channel->_gdvirtual_aggregate_offset_call<false>(stat, offset_magnitudes, aggregate_offset);
+    } else {
+        std::vector<stat_value_t> offset_magnitudes;
+        offset_magnitudes.reserve(offset_modifiers.size());
+        std::transform(offset_modifiers.begin(), offset_modifiers.end(), std::back_inserter(offset_magnitudes), [](auto element) {
+            return element->get_magnitude();
+        });
+        aggregate_offset = aggregate_with_bias(offset_magnitudes, 0.f);
+    }
 
     std::vector<std::shared_ptr<EvaluatedModifier>> multiply_modifiers;
     std::copy_if(relevant_modifiers.begin(), relevant_modifiers.end(), std::back_inserter(multiply_modifiers), [](const std::shared_ptr<EvaluatedModifier> modifier) {
         return modifier && modifier->get_operation() == StatModifier::Operation::Multiply;
     });
-    stat_value_t aggregate_multiply = 1.f + std::accumulate(multiply_modifiers.begin(), multiply_modifiers.end(), stat_value_t{}, [](const stat_value_t acc, const std::shared_ptr<EvaluatedModifier> modifier) {
-        return acc + modifier->get_magnitude() - 1.f;
-    });
+
+    stat_value_t aggregate_multiply;
+    if (channel.is_valid() && channel->_gdvirtual_aggregate_multiply_overridden()) {
+        PackedFloat64Array multiply_magnitudes;
+        for (auto it = multiply_modifiers.begin(); it != multiply_modifiers.end(); ++it) {
+            multiply_magnitudes.push_back((*it)->get_magnitude());
+        }
+        channel->_gdvirtual_aggregate_multiply_call<false>(stat, multiply_magnitudes, aggregate_multiply);
+    } else {
+        std::vector<stat_value_t> multiply_magnitudes;
+        multiply_magnitudes.reserve(multiply_modifiers.size());
+        std::transform(multiply_modifiers.begin(), multiply_modifiers.end(), std::back_inserter(multiply_magnitudes), [](auto element) {
+            return element->get_magnitude();
+        });
+        aggregate_multiply = aggregate_with_bias(multiply_magnitudes, 1.f);
+    }
 
     out_modified_value = (base_value + aggregate_offset) * aggregate_multiply;
 
-    // TODO: Improve checking for modification
     return aggregate_offset != stat_value_t{} || aggregate_multiply != 1.f;
+}
+
+stat_value_t ModifierAggregator::aggregate_with_bias(const std::vector<stat_value_t>& modifier_values, stat_value_t bias) {
+    return bias + std::accumulate(modifier_values.begin(), modifier_values.end(), stat_value_t{}, [bias](const stat_value_t acc, const stat_value_t modifier_magnitude) {
+        return acc + modifier_magnitude - bias;
+    });
 }
