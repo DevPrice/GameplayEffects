@@ -4,6 +4,7 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
 #include <unordered_set>
+#include <vector>
 
 using namespace godot;
 
