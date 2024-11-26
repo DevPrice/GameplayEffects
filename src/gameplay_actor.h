@@ -115,7 +115,7 @@ public:
     bool remove_effect(const Ref<ActiveEffectHandle>& handle);
 
     static GameplayActor* find_actor_for_node(Node* node);
-    static void set_owning_actor(Node* node, GameplayActor* actor);
+    static void set_owning_actor(Node* node, const GameplayActor* actor);
 
 private:
     HashMap<Ref<GameplayStat>, StatSnapshot> stat_values;

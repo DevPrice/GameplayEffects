@@ -515,14 +515,14 @@ StringName& GameplayActor::get_actor_meta_name() {
 GameplayActor* GameplayActor::find_actor_for_node(Node* node) {
     if (GameplayActor* as_actor = cast_to<GameplayActor>(node)) return as_actor;
 
-    const String& actor_meta_name = get_actor_meta_name();
+    const StringName& actor_meta_name = get_actor_meta_name();
     if (node) {
         if (node->has_meta(actor_meta_name)) {
             if (GameplayActor* instigating_actor = cast_to<GameplayActor>(node->get_meta(actor_meta_name))) {
                 return instigating_actor;
             }
         }
-        const String get_gameplay_actor_method = "get_gameplay_actor";
+        static const StringName get_gameplay_actor_method("get_gameplay_actor");
         if (node->has_method(get_gameplay_actor_method)) {
             if (GameplayActor* actor = cast_to<GameplayActor>(node->call(get_gameplay_actor_method))) {
                 return actor;
@@ -533,7 +533,7 @@ GameplayActor* GameplayActor::find_actor_for_node(Node* node) {
     return nullptr;
 }
 
-void GameplayActor::set_owning_actor(Node* node, GameplayActor* actor) {
+void GameplayActor::set_owning_actor(Node* node, const GameplayActor* actor) {
     if (node == nullptr) return;
 
     if (actor) {
