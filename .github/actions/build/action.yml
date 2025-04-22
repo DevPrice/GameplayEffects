@@ -57,10 +57,11 @@ runs:
 # Web only
     - name: Web - Set up Emscripten latest
       if: ${{ inputs.platform == 'web' }}
-      uses: mymindstorm/setup-emsdk@v13
+      uses: mymindstorm/setup-emsdk@v14
       with:
         version: ${{ inputs.em_version }}
-        actions-cache-folder: ${{ inputs.em_cache_folder }}.${{ inputs.float-precision }}.${{ inputs.build-target-type }}.${{ inputs.threads || 'true' }}
+        actions-cache-folder: ${{ inputs.em_cache_folder }}
+        cache-key: ${{ inputs.float-precision }}.${{ inputs.build-target-type }}.${{ inputs.threads || 'true' }}
     - name: Web - Verify Emscripten setup
       if: ${{ inputs.platform == 'web' }}
       shell: sh
