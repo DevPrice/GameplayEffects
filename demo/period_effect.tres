@@ -1,6 +1,6 @@
 [gd_resource type="GameplayEffect" load_steps=7 format=3 uid="uid://bdcuk074ketf0"]
 
-[ext_resource type="Script" path="res://test_execution.gd" id="1_oeqri"]
+[ext_resource type="Script" uid="uid://c8k2xpg8mofap" path="res://test_execution.gd" id="1_oeqri"]
 
 [sub_resource type="EffectExecution" id="EffectExecution_abl5j"]
 resource_local_to_scene = false
