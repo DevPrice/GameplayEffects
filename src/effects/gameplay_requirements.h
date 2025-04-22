@@ -18,7 +18,7 @@ public:
     virtual bool requirements_met(const Ref<EffectApplicationContext>& application_context);
 
 protected:
-    GDVIRTUAL1R_NO_IMPL(bool, _requirements_met, const Ref<EffectApplicationContext>&)
+    GDVIRTUAL1R_REQUIRED_NO_IMPL(bool, _requirements_met, const Ref<EffectApplicationContext>&)
 
 protected:
     static void _bind_methods();

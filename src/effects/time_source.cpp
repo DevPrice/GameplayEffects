@@ -19,7 +19,7 @@ void EffectTimer::_bind_methods() {
 
 Ref<EffectTimer> TimeSource::create_timer(const Ref<EffectApplicationContext>& application_context, const stat_value_t duration) const {
     Object* out_timer;
-    if (GDVIRTUAL_REQUIRED_CALL(_create_timer, application_context, duration, out_timer)) {
+    if (GDVIRTUAL_CALL(_create_timer, application_context, duration, out_timer)) {
         Ref<EffectTimer> effect_timer = memnew(EffectTimer);
         effect_timer->set_timer(out_timer);
         return effect_timer;
@@ -29,7 +29,7 @@ Ref<EffectTimer> TimeSource::create_timer(const Ref<EffectApplicationContext>& a
 
 Ref<EffectTimer> TimeSource::create_interval(const Ref<EffectApplicationContext>& application_context, const stat_value_t duration) const {
     Object* out_timer;
-    if (GDVIRTUAL_REQUIRED_CALL(_create_interval, application_context, duration, out_timer)) {
+    if (GDVIRTUAL_CALL(_create_interval, application_context, duration, out_timer)) {
         Ref<EffectTimer> effect_timer = memnew(EffectTimer);
         effect_timer->set_timer(out_timer);
         return effect_timer;
@@ -37,8 +37,8 @@ Ref<EffectTimer> TimeSource::create_interval(const Ref<EffectApplicationContext>
     return nullptr;
 }
 
-GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_timer, Ref<EffectApplicationContext>, stat_value_t)
-GDVIRTUAL2RC_IMPL(TimeSource, Object*, _create_interval, Ref<EffectApplicationContext>, stat_value_t)
+GDVIRTUAL2RC_REQUIRED_IMPL(TimeSource, Object*, _create_timer, Ref<EffectApplicationContext>, stat_value_t)
+GDVIRTUAL2RC_REQUIRED_IMPL(TimeSource, Object*, _create_interval, Ref<EffectApplicationContext>, stat_value_t)
 
 void EffectTimer::set_callback(const std::function<void()> p_callback) {
     callback = p_callback;

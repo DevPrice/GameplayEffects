@@ -12,8 +12,8 @@ void GameplayRequirements::_bind_methods() {
 
 bool GameplayRequirements::requirements_met(const Ref<EffectApplicationContext>& application_context) {
     bool result = true;
-    GDVIRTUAL_REQUIRED_CALL(_requirements_met, application_context, result);
+    GDVIRTUAL_CALL(_requirements_met, application_context, result);
     return result;
 }
 
-GDVIRTUAL1R_IMPL(GameplayRequirements, bool, _requirements_met, Ref<EffectApplicationContext>)
+GDVIRTUAL1R_REQUIRED_IMPL(GameplayRequirements, bool, _requirements_met, Ref<EffectApplicationContext>)

@@ -20,7 +20,7 @@ void EffectExecution::_bind_methods() {
 }
 
 void EffectExecution::execute(const Ref<EffectApplicationContext>& application_context, const Ref<StatEvaluator>& stat_evaluator, const Ref<EffectExecutionOutput>& output) {
-    GDVIRTUAL_REQUIRED_CALL(_execute, application_context, stat_evaluator, output);
+    GDVIRTUAL_CALL(_execute, application_context, stat_evaluator, output);
 }
 
 struct ExecutionEvaluatedModifier : public EvaluatedModifier {
@@ -47,5 +47,5 @@ void EffectExecutionOutput::add_modifier(const Ref<GameplayStat>& stat, StatModi
     modifiers.push_back(std::make_shared<ExecutionEvaluatedModifier>(stat, operation, magnitude));
 }
 
-GDVIRTUAL3_IMPL(EffectExecution, _execute, Ref<EffectApplicationContext>, Ref<StatEvaluator>, Ref<EffectExecutionOutput>)
+GDVIRTUAL3_REQUIRED_IMPL(EffectExecution, _execute, Ref<EffectApplicationContext>, Ref<StatEvaluator>, Ref<EffectExecutionOutput>)
 

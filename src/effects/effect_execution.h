@@ -39,7 +39,7 @@ public:
     virtual void execute(const Ref<EffectApplicationContext>& application_context, const Ref<StatEvaluator>& stat_evaluator, const Ref<EffectExecutionOutput>& output);
 
 protected:
-    GDVIRTUAL3_NO_IMPL(_execute, const Ref<EffectApplicationContext>&, const Ref<StatEvaluator>&, const Ref<EffectExecutionOutput>&)
+    GDVIRTUAL3_REQUIRED_NO_IMPL(_execute, const Ref<EffectApplicationContext>&, const Ref<StatEvaluator>&, const Ref<EffectExecutionOutput>&)
 
 protected:
     static void _bind_methods();

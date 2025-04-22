@@ -8,7 +8,7 @@ void ModifierMagnitude::_bind_methods() {
 
 stat_value_t ModifierMagnitude::get_magnitude(const Ref<EffectApplicationContext>& context) const {
     stat_value_t magnitude{};
-    GDVIRTUAL_REQUIRED_CALL(get_magnitude, context, magnitude);
+    GDVIRTUAL_CALL(get_magnitude, context, magnitude);
     return magnitude;
 }
 

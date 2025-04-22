@@ -56,12 +56,12 @@ bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel,
     });
 
     stat_value_t aggregate_offset;
-    if (channel.is_valid() && channel->_gdvirtual_aggregate_offset_overridden()) {
+    if (channel.is_valid() && channel->GDVIRTUAL_IS_OVERRIDDEN(aggregate_offset)) {
         PackedFloat64Array offset_magnitudes;
         for (auto it = offset_modifiers.begin(); it != offset_modifiers.end(); ++it) {
             offset_magnitudes.push_back((*it)->get_magnitude());
         }
-        channel->_gdvirtual_aggregate_offset_call<false>(stat, offset_magnitudes, aggregate_offset);
+        channel->GDVIRTUAL_CALL(aggregate_offset, stat, offset_magnitudes, aggregate_offset);
     } else {
         std::vector<stat_value_t> offset_magnitudes;
         offset_magnitudes.reserve(offset_modifiers.size());
@@ -77,12 +77,12 @@ bool ModifierAggregator::get_modified_value(const Ref<ModifierChannel>& channel,
     });
 
     stat_value_t aggregate_multiply;
-    if (channel.is_valid() && channel->_gdvirtual_aggregate_multiply_overridden()) {
+    if (channel.is_valid() && channel->GDVIRTUAL_IS_OVERRIDDEN(aggregate_multiply)) {
         PackedFloat64Array multiply_magnitudes;
         for (auto it = multiply_modifiers.begin(); it != multiply_modifiers.end(); ++it) {
             multiply_magnitudes.push_back((*it)->get_magnitude());
         }
-        channel->_gdvirtual_aggregate_multiply_call<false>(stat, multiply_magnitudes, aggregate_multiply);
+        channel->GDVIRTUAL_CALL(aggregate_multiply, stat, multiply_magnitudes, aggregate_multiply);
     } else {
         std::vector<stat_value_t> multiply_magnitudes;
         multiply_magnitudes.reserve(multiply_modifiers.size());
