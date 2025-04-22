@@ -17,7 +17,7 @@ jobs:
             build-target-type: template_debug
             float-precision: double
             arch: x86_64
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: windows
             build-target-type: template_debug
             float-precision: double
@@ -32,39 +32,39 @@ jobs:
             build-target-type: template_debug
             float-precision: double
             arch: arm64
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: android
             build-target-type: template_debug
             float-precision: double
             arch: arm32
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: android
             build-target-type: template_debug
             float-precision: double
             arch: x86_64
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: android
             build-target-type: template_debug
             float-precision: double
             arch: x86_32
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: web
             build-target-type: template_debug
             float-precision: double
             arch: wasm32
-            os: ubuntu-20.04
+            os: ubuntu-24.04
             threads: 'true'
           - platform: web
             build-target-type: template_debug
             float-precision: double
             arch: wasm32
-            os: ubuntu-20.04
+            os: ubuntu-24.04
             threads: 'false'
           - platform: linux
             build-target-type: template_release
             float-precision: double
             arch: x86_64
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: windows
             build-target-type: template_release
             float-precision: double
@@ -79,33 +79,33 @@ jobs:
             build-target-type: template_release
             float-precision: double
             arch: arm64
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: android
             build-target-type: template_release
             float-precision: double
             arch: arm32
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: android
             build-target-type: template_release
             float-precision: double
             arch: x86_64
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: android
             build-target-type: template_release
             float-precision: double
             arch: x86_32
-            os: ubuntu-20.04
+            os: ubuntu-24.04
           - platform: web
             build-target-type: template_release
             float-precision: double
             arch: wasm32
-            os: ubuntu-20.04
+            os: ubuntu-24.04
             threads: 'false'
           - platform: web
             build-target-type: template_release
             float-precision: double
             arch: wasm32
-            os: ubuntu-20.04
+            os: ubuntu-24.04
             threads: 'true'
 
     runs-on: ${{ matrix.os }}
