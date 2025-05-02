@@ -16,7 +16,7 @@ class SceneTimeSource : public TimeSource {
     GET_SET_PROPERTY(bool, process_in_physics)
 
 public:
-    SceneTimeSource() : process_always(false), process_in_physics(false) { }
+    SceneTimeSource() : process_always(false), process_in_physics(true) { }
 
     Ref<EffectTimer> create_timer(const Ref<EffectApplicationContext>& application_context, stat_value_t duration) const override;
     Ref<EffectTimer> create_interval(const Ref<EffectApplicationContext>& application_context, stat_value_t duration) const override;
