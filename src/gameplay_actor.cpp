@@ -60,6 +60,10 @@ void GameplayActor::_bind_methods() {
     GDVIRTUAL_BIND(_get_custom_context_data)
 
     const Dictionary default_tag_magnitudes;
+    ClassDB::bind_method(D_METHOD("can_apply_effect", "effect", "tag_magnitudes"), &GameplayActor::can_apply_effect, DEFVAL(default_tag_magnitudes));
+    ClassDB::bind_method(D_METHOD("can_apply_effect_spec", "spec"), &GameplayActor::can_apply_effect_spec);
+    ClassDB::bind_method(D_METHOD("can_afford_effect", "effect", "tag_magnitudes"), &GameplayActor::can_afford_effect, DEFVAL(default_tag_magnitudes));
+    ClassDB::bind_method(D_METHOD("can_afford_effect_spec", "spec"), &GameplayActor::can_afford_effect_spec);
     ClassDB::bind_method(D_METHOD("make_effect_spec", "effect", "tag_magnitudes"), &GameplayActor::make_effect_spec, DEFVAL(default_tag_magnitudes));
     ClassDB::bind_method(D_METHOD("apply_effect_to_self", "effect", "tag_magnitudes"), &GameplayActor::apply_effect_to_self, DEFVAL(default_tag_magnitudes));
     ClassDB::bind_method(D_METHOD("apply_effect_to_target", "effect", "target", "tag_magnitudes"), &GameplayActor::apply_effect_to_target, DEFVAL(default_tag_magnitudes));
@@ -190,6 +194,48 @@ Ref<GameplayEffectSpec> GameplayActor::make_effect_spec(const Ref<GameplayEffect
     spec->set_context(_make_effect_context());
     spec->add_tag_magnitudes(tag_magnitudes);
     return spec;
+}
+
+bool GameplayActor::can_apply_effect(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes) {
+    const Ref<GameplayEffectSpec> spec = make_effect_spec(effect, tag_magnitudes);
+    return can_apply_effect_spec(spec);
+}
+
+bool GameplayActor::can_apply_effect_spec(const Ref<GameplayEffectSpec>& spec) {
+    if (spec.is_null()) return nullptr;
+
+    const Ref<GameplayEffect> effect = spec->get_effect();
+    const Ref<EffectApplicationContext> application_context = _make_application_context(spec);
+
+    const TypedArray<GameplayRequirements> application_requirements = spec->get_effect()->get_application_requirements();
+    return array_all_of(application_requirements, [&application_context](Ref<GameplayRequirements> requirements) {
+        return requirements.is_null() || requirements->requirements_met(application_context);
+    });
+}
+
+bool GameplayActor::can_afford_effect(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes) {
+    const Ref<GameplayEffectSpec> spec = make_effect_spec(effect, tag_magnitudes);
+    return can_afford_effect_spec(spec);
+}
+
+bool GameplayActor::can_afford_effect_spec(const Ref<GameplayEffectSpec>& spec) {
+    if (spec.is_null()) return nullptr;
+
+    const Ref<GameplayEffect> effect = spec->get_effect();
+    const Ref<EffectApplicationContext> application_context = _make_application_context(spec);
+    const ActiveEffect active_effect = ActiveEffect(application_context);
+
+    TypedArray<StatModifier> modifiers = effect->get_modifiers();
+    const std::vector<std::shared_ptr<EvaluatedModifier>> modifier_snapshot = active_effect.capture_modifier_snapshot();
+
+    const ModifierAggregator aggregator(modifier_snapshot);
+    for (auto [stat, stat_snapshot] : stat_values) {
+        const stat_value_t modified_value = aggregator.get_modified_value(stat, stat_snapshot.base_value);
+        if (modified_value < stat_value_t{}) {
+            return false;
+        }
+    }
+    return true;
 }
 
 Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {

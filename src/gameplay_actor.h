@@ -109,6 +109,11 @@ public:
 
     Ref<GameplayEffectSpec> make_effect_spec(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes = Dictionary());
 
+    bool can_apply_effect(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes = Dictionary());
+    bool can_apply_effect_spec(const Ref<GameplayEffectSpec>& spec);
+    bool can_afford_effect(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes = Dictionary());
+    bool can_afford_effect_spec(const Ref<GameplayEffectSpec>& spec);
+
     Ref<ActiveEffectHandle> apply_effect_to_self(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes = Dictionary());
     Ref<ActiveEffectHandle> apply_effect_to_target(const Ref<GameplayEffect>& effect, Node* target, const Dictionary& tag_magnitudes = Dictionary());
     Ref<ActiveEffectHandle> apply_effect_spec(const Ref<GameplayEffectSpec>& spec);
