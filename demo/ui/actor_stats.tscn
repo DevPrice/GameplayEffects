@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://vy0hoai550yp"]
+
+[ext_resource type="Script" uid="uid://vfm3jmlv5aow" path="res://ui/actor_stats.gd" id="1_f7jbf"]
+[ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="2_iwfyk"]
+[ext_resource type="GameplayStat" uid="uid://cj6plvranefca" path="res://max_stat.tres" id="3_g4rxk"]
+
+[node name="ActorStats" type="Control" node_paths=PackedStringArray("title", "stat_bar", "stat_label", "tag_list")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_f7jbf")
+stat = ExtResource("2_iwfyk")
+max_stat = ExtResource("3_g4rxk")
+title = NodePath("VBoxContainer/Title")
+stat_bar = NodePath("VBoxContainer/StatBar")
+stat_label = NodePath("VBoxContainer/StatValue")
+tag_list = NodePath("VBoxContainer/ItemList")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+text = "Stats"
+fit_content = true
+
+[node name="StatBar" type="ProgressBar" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="StatValue" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+text = "100/100"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="ItemList" type="ItemList" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

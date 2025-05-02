@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bev47rqqjl73e"]
+[gd_scene load_steps=24 format=3 uid="uid://bev47rqqjl73e"]
 
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_2cm7l"]
 [ext_resource type="Script" uid="uid://bs0fli7ey5ecv" path="res://actor_scene.gd" id="1_ns5m8"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://cpy0040nd1dbp" path="res://custom_actor.gd" id="4_3ndp2"]
 [ext_resource type="GameplayEffect" uid="uid://bdcuk074ketf0" path="res://period_effect.tres" id="6_wcjt3"]
 [ext_resource type="GameplayStat" uid="uid://cj6plvranefca" path="res://max_stat.tres" id="7_wupqv"]
+[ext_resource type="PackedScene" uid="uid://vy0hoai550yp" path="res://ui/actor_stats.tscn" id="10_3dsr0"]
 
 [sub_resource type="EffectComponent" id="EffectComponent_02scl"]
 resource_local_to_scene = false
@@ -57,7 +58,12 @@ components = Array[EffectComponent]([SubResource("GrantTagsComponent_x168r")])
 lifetime = SubResource("EffectLifetime_cxyvi")
 resource_name = "Tag effect"
 
-[node name="Node2D" type="Node2D"]
+[node name="Root" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_ns5m8")
 effects = Array[GameplayEffect]([ExtResource("3_xcw1x"), SubResource("GameplayEffect_xt40u"), ExtResource("2_s0rhe"), ExtResource("4_1fotw"), SubResource("GameplayEffect_0hl5l"), SubResource("GameplayEffect_8kpcb"), ExtResource("6_wcjt3"), SubResource("GameplayEffect_qvigl")])
 
@@ -70,3 +76,37 @@ script = ExtResource("4_3ndp2")
 stats = Array[GameplayStat]([ExtResource("7_wupqv"), ExtResource("1_2cm7l")])
 unique_name_in_owner = true
 script = ExtResource("4_3ndp2")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 24
+text = "Gameplay Effects Demo"
+fit_content = true
+scroll_active = false
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 550
+
+[node name="SourceStats" parent="MarginContainer/VBoxContainer/HSplitContainer" node_paths=PackedStringArray("actor") instance=ExtResource("10_3dsr0")]
+layout_mode = 2
+actor = NodePath("../../../../Source")
+
+[node name="TargetStats" parent="MarginContainer/VBoxContainer/HSplitContainer" node_paths=PackedStringArray("actor") instance=ExtResource("10_3dsr0")]
+layout_mode = 2
+actor = NodePath("../../../../Target")
