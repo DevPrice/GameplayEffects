@@ -20,7 +20,8 @@ GET_SET_PROPERTY_IMPL(SceneTimeSource, bool, process_in_physics)
 Ref<EffectTimer> SceneTimeSource::create_timer(const Ref<EffectApplicationContext>& application_context, stat_value_t duration) const {
     Object* out_timer;
     if (GDVIRTUAL_CALL(_create_timer, application_context, duration, out_timer)) {
-        Ref<EffectTimer> effect_timer = memnew(EffectTimer);
+        Ref<EffectTimer> effect_timer;
+        effect_timer.instantiate();
         effect_timer->set_timer(out_timer);
         return effect_timer;
     }
@@ -30,7 +31,8 @@ Ref<EffectTimer> SceneTimeSource::create_timer(const Ref<EffectApplicationContex
 Ref<EffectTimer> SceneTimeSource::create_interval(const Ref<EffectApplicationContext>& application_context, stat_value_t duration) const {
     Object* out_timer;
     if (GDVIRTUAL_CALL(_create_interval, application_context, duration, out_timer)) {
-        Ref<EffectTimer> effect_timer = memnew(EffectTimer);
+        Ref<EffectTimer> effect_timer;
+        effect_timer.instantiate();
         effect_timer->set_timer(out_timer);
         return effect_timer;
     }
@@ -44,7 +46,8 @@ Ref<EffectTimer> SceneTimeSource::_create_timer(const Ref<EffectApplicationConte
     timer->set_wait_time(duration);
     timer->set_process_mode(process_always ? Node::PROCESS_MODE_ALWAYS : Node::PROCESS_MODE_INHERIT);
     timer->set_physics_process(process_in_physics);
-    Ref<EffectTimer> effect_timer = memnew(EffectTimer);
+    Ref<EffectTimer> effect_timer;
+    effect_timer.instantiate();
     effect_timer->set_timer(timer);
     if (GameplayActor* target_actor = application_context.is_valid() ? application_context->get_target_actor() : nullptr) {
         target_actor->add_child(timer);

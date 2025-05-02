@@ -20,7 +20,8 @@ void EffectTimer::_bind_methods() {
 Ref<EffectTimer> TimeSource::create_timer(const Ref<EffectApplicationContext>& application_context, const stat_value_t duration) const {
     Object* out_timer;
     if (GDVIRTUAL_CALL(_create_timer, application_context, duration, out_timer)) {
-        Ref<EffectTimer> effect_timer = memnew(EffectTimer);
+        Ref<EffectTimer> effect_timer;
+        effect_timer.instantiate();
         effect_timer->set_timer(out_timer);
         return effect_timer;
     }
@@ -30,7 +31,8 @@ Ref<EffectTimer> TimeSource::create_timer(const Ref<EffectApplicationContext>& a
 Ref<EffectTimer> TimeSource::create_interval(const Ref<EffectApplicationContext>& application_context, const stat_value_t duration) const {
     Object* out_timer;
     if (GDVIRTUAL_CALL(_create_interval, application_context, duration, out_timer)) {
-        Ref<EffectTimer> effect_timer = memnew(EffectTimer);
+        Ref<EffectTimer> effect_timer;
+        effect_timer.instantiate();
         effect_timer->set_timer(out_timer);
         return effect_timer;
     }

@@ -14,7 +14,8 @@ void GameplayEffectSpec::_bind_methods() {
 }
 
 Ref<GameplayEffectSpec> GameplayEffectSpec::with_tag_magnitude(const String& tag, stat_value_t magnitude) const {
-    Ref<GameplayEffectSpec> new_spec = memnew(GameplayEffectSpec);
+    Ref<GameplayEffectSpec> new_spec;
+    new_spec.instantiate();
     new_spec->set_effect(effect);
     new_spec->set_context(context);
     new_spec->set_tag_magnitudes(tag_magnitudes);
@@ -23,7 +24,8 @@ Ref<GameplayEffectSpec> GameplayEffectSpec::with_tag_magnitude(const String& tag
 }
 
 Ref<GameplayEffectSpec> GameplayEffectSpec::with_tag_magnitudes(const Dictionary& p_tag_magnitudes) const {
-    Ref<GameplayEffectSpec> new_spec = memnew(GameplayEffectSpec);
+    Ref<GameplayEffectSpec> new_spec;
+    new_spec.instantiate();
     new_spec->set_effect(effect);
     new_spec->set_context(context);
     new_spec->set_tag_magnitudes(tag_magnitudes);

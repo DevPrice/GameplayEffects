@@ -85,7 +85,7 @@ Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
 
 Ref<GameplayTagContainer> GameplayActor::get_loose_tags() {
     if (loose_tags.is_null()) {
-        loose_tags = Ref(memnew(GameplayTagContainer));
+        loose_tags.instantiate();
         loose_tags->connect("tags_changed", callable_mp(this, &GameplayActor::_on_loose_tags_changed));
     }
     return loose_tags;
@@ -143,7 +143,8 @@ Signal GameplayActor::_get_stat_signal(const Ref<GameplayStat>& stat, const Stri
             return Signal(signals.ptr(), signal_name);
         }
     }
-    Ref<StatSignals> new_signals = memnew(StatSignals);
+    Ref<StatSignals> new_signals;
+    new_signals.instantiate();
     stat_signals.emplace(stat, new_signals);
     return Signal(new_signals.ptr(), signal_name);
 }
@@ -183,7 +184,8 @@ ActorSnapshot GameplayActor::capture_snapshot() const {
 }
 
 Ref<GameplayEffectSpec> GameplayActor::make_effect_spec(const Ref<GameplayEffect>& effect, const Dictionary& tag_magnitudes) {
-    Ref<GameplayEffectSpec> spec = memnew(GameplayEffectSpec);
+    Ref<GameplayEffectSpec> spec;
+    spec.instantiate();
     spec->set_effect(effect);
     spec->set_context(_make_effect_context());
     spec->add_tag_magnitudes(tag_magnitudes);
@@ -191,7 +193,8 @@ Ref<GameplayEffectSpec> GameplayActor::make_effect_spec(const Ref<GameplayEffect
 }
 
 Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {
-    Ref<GameplayEffectContext> effect_context = memnew(GameplayEffectContext);
+    Ref<GameplayEffectContext> effect_context;
+    effect_context.instantiate();
     effect_context->set_source_actor(this);
     effect_context->set_source_snapshot(capture_snapshot());
 
@@ -204,7 +207,8 @@ Ref<GameplayEffectContext> GameplayActor::_make_effect_context() {
 }
 
 Ref<EffectApplicationContext> GameplayActor::_make_application_context(const Ref<GameplayEffectSpec>& spec) {
-    Ref<EffectApplicationContext> application_context = memnew(EffectApplicationContext);
+    Ref<EffectApplicationContext> application_context;
+    application_context.instantiate();
     application_context->set_spec(spec);
     application_context->set_target_actor(this);
     application_context->set_target_snapshot(capture_snapshot());
@@ -257,7 +261,8 @@ Ref<ActiveEffectHandle> GameplayActor::apply_effect_spec(const Ref<GameplayEffec
 
     emit_signal("received_effect", spec);
 
-    Ref<ActiveEffectHandle> handle = memnew(ActiveEffectHandle);
+    Ref<ActiveEffectHandle> handle;
+    handle.instantiate();
     handle->set_active_effect(active_effect);
 
     if (lifetime.is_valid()) {
@@ -334,11 +339,13 @@ void GameplayActor::_execute_effect(const ActiveEffect& active_effect) {
     }
 
     TypedArray<EffectExecution> executions = effect->get_executions();
-    const Ref<EffectExecutionOutput> execution_output = memnew(EffectExecutionOutput);
+    Ref<EffectExecutionOutput> execution_output;
+    execution_output.instantiate();
 
     if (executions.size() > 0) {
         const std::unique_ptr<CapturedStatEvaluator> captured_stat_evaluator = std::make_unique<CapturedStatEvaluator>(application_context);
-        const Ref<StatEvaluator> stat_evaluator = memnew(StatEvaluator);
+        Ref<StatEvaluator> stat_evaluator;
+        stat_evaluator.instantiate();
         stat_evaluator->set_evaluator(captured_stat_evaluator.get());
         for (int i = 0; i < executions.size(); i++) {
             const Ref<EffectExecution> execution = executions[i];
