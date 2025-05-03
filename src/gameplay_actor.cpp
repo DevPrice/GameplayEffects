@@ -202,7 +202,7 @@ bool GameplayActor::can_apply_effect(const Ref<GameplayEffect>& effect, const Di
 }
 
 bool GameplayActor::can_apply_effect_spec(const Ref<GameplayEffectSpec>& spec) {
-    if (spec.is_null()) return nullptr;
+    if (spec.is_null()) return false;
 
     const Ref<GameplayEffect> effect = spec->get_effect();
     const Ref<EffectApplicationContext> application_context = _make_application_context(spec);
@@ -219,7 +219,7 @@ bool GameplayActor::can_afford_effect(const Ref<GameplayEffect>& effect, const D
 }
 
 bool GameplayActor::can_afford_effect_spec(const Ref<GameplayEffectSpec>& spec) {
-    if (spec.is_null()) return nullptr;
+    if (spec.is_null()) return true;
 
     const Ref<GameplayEffect> effect = spec->get_effect();
     const Ref<EffectApplicationContext> application_context = _make_application_context(spec);
