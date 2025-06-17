@@ -12,6 +12,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/engine.hpp>
+#include "godot_cpp/classes/resource_loader.hpp"
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <memory>
 
@@ -44,6 +45,7 @@ void GameplayActor::_bind_methods() {
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
     BIND_GET_SET_NODE(GameplayActor, avatar, Node)
     BIND_GET_SET(GameplayActor, replicated_tags, GDEXTENSION_VARIANT_TYPE_PACKED_STRING_ARRAY, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE)
+    BIND_GET_SET(GameplayActor, replicated_stats, GDEXTENSION_VARIANT_TYPE_DICTIONARY, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, get_loose_tags)
     BIND_METHOD(GameplayActor, get_granted_tags)
@@ -441,8 +443,8 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
         aggregator.add_modifiers(effect_modifiers);
         granted_tags += effect_state.granted_tags;
     }
-    for (auto& stat : stat_values) {
-        stat_value_t base_value = stat.value.base_value;
+    for (auto& [stat, stat_value] : stat_values) {
+        stat_value_t base_value = stat_value.base_value;
 
         for (auto& [active_effect, _] : active_effects) {
             Ref<EffectApplicationContext> application_context = active_effect.application_context;
@@ -453,20 +455,20 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent>& effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_base_value_changing(application_context, stat.key, base_value);
+                            effect_component->on_base_value_changing(application_context, stat, base_value);
                         }
                     }
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent>& effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_base_value_changed(application_context, stat.key, base_value);
+                            effect_component->on_base_value_changed(application_context, stat, base_value);
                         }
                     }
                 }
             }
         }
 
-        stat_value_t modified_value = aggregator.get_modified_value(stat.key, base_value);
+        stat_value_t modified_value = aggregator.get_modified_value(stat, base_value);
 
         for (const auto& [active_effect, _] : active_effects) {
             Ref<EffectApplicationContext> application_context = active_effect.application_context;
@@ -477,14 +479,16 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent>& effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_current_value_changing(application_context, stat.key, modified_value);
+                            effect_component->on_current_value_changing(application_context, stat, modified_value);
                         }
                     }
                 }
             }
         }
 
-        stat_values[stat.key] = StatSnapshot{base_value, modified_value};
+        if (is_multiplayer_authority()) {
+            stat_values[stat] = StatSnapshot{base_value, modified_value};
+        }
 
         for (const auto& [active_effect, _] : active_effects) {
             Ref<EffectApplicationContext> application_context = active_effect.application_context;
@@ -495,7 +499,7 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
                     for (int i = 0; i < effect_components.size(); ++i) {
                         const Ref<EffectComponent>& effect_component = effect_components[i];
                         if (effect_component.is_valid()) {
-                            effect_component->on_current_value_changed(application_context, stat.key, modified_value);
+                            effect_component->on_current_value_changed(application_context, stat, modified_value);
                         }
                     }
                 }
@@ -682,6 +686,41 @@ void GameplayActor::set_replicated_tags(PackedStringArray p_replicated_tags) {
             removed_tags.to_string_array(removed_array);
             emit_signal("tags_changed", added_array, removed_array);
         }
+    }
+}
+
+Dictionary GameplayActor::get_replicated_stats() const {
+    Dictionary replicated_stats;
+    for (auto [key, value] : stat_values) {
+        Dictionary replicated_stat_value;
+        replicated_stat_value.set("base", value.base_value);
+        replicated_stat_value.set("current", value.current_value);
+        replicated_stats.set(key->get_path(), replicated_stat_value);
+    }
+    return replicated_stats;
+}
+
+void GameplayActor::set_replicated_stats(Dictionary p_replicated_stats) {
+    if (!is_multiplayer_authority()) {
+        const HashMap<Ref<GameplayStat>, StatSnapshot> stat_snapshot = stat_values;
+        const Array keys = p_replicated_stats.keys();
+        for (size_t i = 0; i < keys.size(); i++) {
+            const String& key = keys[i];
+            Ref<Resource> stat = ResourceLoader::get_singleton()->load(key);
+            if (stat.is_valid() && stat_values.has(stat)) {
+                const Variant value = p_replicated_stats.get(key, nullptr);
+                if (value.get_type() != Variant::DICTIONARY) continue;
+                const Dictionary stat_value = value;
+                const StatSnapshot replicated_snapshot{
+                    stat_value.get("base", stat_values[stat].base_value),
+                    stat_value.get("current", stat_values[stat].current_value),
+                };
+                stat_values[stat] = replicated_snapshot;
+            } else {
+                UtilityFunctions::push_warning("Failed to replicated missing stat: ", key);
+            }
+        }
+        _recalculate_stats(stat_snapshot);
     }
 }
 

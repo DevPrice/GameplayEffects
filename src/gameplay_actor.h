@@ -97,6 +97,9 @@ public:
     PackedStringArray get_replicated_tags() const;
     void set_replicated_tags(PackedStringArray p_replicated_tags);
 
+    Dictionary get_replicated_stats() const;
+    void set_replicated_stats(Dictionary p_replicated_stats);
+
     bool has_tag(const String& tag) const;
     bool has_tag_exact(const String& tag) const;
 

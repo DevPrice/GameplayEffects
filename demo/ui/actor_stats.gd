@@ -28,7 +28,7 @@ func _ready() -> void:
 					_update_value_label()
 			)
 		actor.tags_changed.connect(
-			func (_added_tags: Array[String], _removed_tags: Array[String]):
+			func (_added_tags: PackedStringArray, _removed_tags: PackedStringArray):
 				_update_tags()
 		)
 	_update_tags()
