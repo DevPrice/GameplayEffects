@@ -36,6 +36,7 @@ class GameplayTagSet {
 public:
     GameplayTagSet() = default;
     explicit GameplayTagSet(const std::unordered_set<GameplayTag, GameplayTag::Hasher>& p_tags);
+    explicit GameplayTagSet(const PackedStringArray& p_tags);
 
     bool add_tag(const GameplayTag& tag);
     template<typename _InputIterator>

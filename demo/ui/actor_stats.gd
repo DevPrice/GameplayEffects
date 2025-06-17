@@ -43,5 +43,5 @@ func _update_tags() -> void:
 		tag_list.clear()
 		var tags := actor.get_granted_tags()
 		tags.append_array(actor.get_loose_tags().to_array())
-		for tag in tags:
+		for tag: String in tags:
 			tag_list.add_item(tag, null, false)

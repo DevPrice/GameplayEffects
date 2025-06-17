@@ -14,3 +14,11 @@ config/name="Gameplay Effects Demo"
 run/main_scene="res://actor_scene.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Net="*res://net.gd"
+
+[editor]
+
+run/main_run_args="-- --connect=localhost"

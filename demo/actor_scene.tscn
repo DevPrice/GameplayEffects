@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bev47rqqjl73e"]
+[gd_scene load_steps=25 format=3 uid="uid://bev47rqqjl73e"]
 
 [ext_resource type="GameplayStat" uid="uid://t62b8lw3n2xl" path="res://test_stat.tres" id="1_2cm7l"]
 [ext_resource type="Script" uid="uid://bs0fli7ey5ecv" path="res://actor_scene.gd" id="1_ns5m8"]
@@ -58,6 +58,11 @@ components = Array[EffectComponent]([SubResource("GrantTagsComponent_x168r")])
 lifetime = SubResource("EffectLifetime_cxyvi")
 resource_name = "Tag effect"
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3dsr0"]
+properties/0/path = NodePath(".:replicated_tags")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
 [node name="Root" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -72,10 +77,16 @@ stats = Array[GameplayStat]([ExtResource("7_wupqv"), ExtResource("1_2cm7l")])
 unique_name_in_owner = true
 script = ExtResource("4_3ndp2")
 
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Source"]
+replication_config = SubResource("SceneReplicationConfig_3dsr0")
+
 [node name="Target" type="GameplayActor" parent="."]
 stats = Array[GameplayStat]([ExtResource("7_wupqv"), ExtResource("1_2cm7l")])
 unique_name_in_owner = true
 script = ExtResource("4_3ndp2")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Target"]
+replication_config = SubResource("SceneReplicationConfig_3dsr0")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

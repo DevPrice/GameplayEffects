@@ -12,7 +12,6 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/engine.hpp>
-#include <godot_cpp/templates/vector.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <memory>
 
@@ -44,6 +43,7 @@ void GameplayActor::_bind_methods() {
     ADD_SIGNAL(MethodInfo("received_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     BIND_GET_SET_RESOURCE_ARRAY(GameplayActor, stats, GameplayStat)
     BIND_GET_SET_NODE(GameplayActor, avatar, Node)
+    BIND_GET_SET(GameplayActor, replicated_tags, GDEXTENSION_VARIANT_TYPE_PACKED_STRING_ARRAY, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE)
     BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, get_loose_tags)
     BIND_METHOD(GameplayActor, get_granted_tags)
@@ -98,14 +98,23 @@ Ref<GameplayTagContainer> GameplayActor::get_loose_tags() {
 PackedStringArray GameplayActor::get_granted_tags() const {
     PackedStringArray result;
     granted_tags.to_string_array(result);
+    if (!is_multiplayer_authority()) {
+        replicated_tags.to_string_array(result);
+    }
     return result;
 }
 
 bool GameplayActor::has_tag(const String& tag) const {
+    if (!is_multiplayer_authority()) {
+        return replicated_tags.has_tag(tag);
+    }
     return (loose_tags.is_valid() && loose_tags->has_tag(tag)) || granted_tags.has_tag(tag);
 }
 
 bool GameplayActor::has_tag_exact(const String& tag) const {
+    if (!is_multiplayer_authority()) {
+        return replicated_tags.has_tag_exact(tag);
+    }
     return (loose_tags.is_valid() && loose_tags->has_tag_exact(tag)) || granted_tags.has_tag_exact(tag);
 }
 
@@ -641,6 +650,39 @@ void GameplayActor::set_avatar(Node* p_avatar) {
         set_owning_actor(p_avatar, this);
     }
     emit_signal("avatar_changed", p_avatar);
+}
+
+PackedStringArray GameplayActor::get_replicated_tags() const {
+    if (is_multiplayer_authority()) {
+        PackedStringArray all_tags;
+        granted_tags.to_string_array(all_tags);
+        if (loose_tags.is_valid()) {
+            all_tags.append_array(loose_tags->to_array());
+        }
+        return all_tags;
+    }
+    PackedStringArray replicated_tag_array;
+    replicated_tags.to_string_array(replicated_tag_array);
+    return replicated_tag_array;
+}
+
+void GameplayActor::set_replicated_tags(PackedStringArray p_replicated_tags) {
+    if (is_multiplayer_authority()) {
+        replicated_tags = GameplayTagSet(p_replicated_tags);
+    } else{
+        const GameplayTagSet new_tag_set(p_replicated_tags);
+        const GameplayTagSet added_tags = new_tag_set - replicated_tags - granted_tags;
+        const GameplayTagSet removed_tags = replicated_tags - new_tag_set - granted_tags;
+        replicated_tags = new_tag_set;
+        if (!added_tags.is_empty() || !removed_tags.is_empty()) {
+            _recalculate_stats();
+            PackedStringArray added_array;
+            added_tags.to_string_array(added_array);
+            PackedStringArray removed_array;
+            removed_tags.to_string_array(removed_array);
+            emit_signal("tags_changed", added_array, removed_array);
+        }
+    }
 }
 
 std::vector<std::shared_ptr<EvaluatedModifier>> ActiveEffect::capture_modifier_snapshot() const {

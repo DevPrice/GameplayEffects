@@ -57,6 +57,12 @@ GameplayTagSet::GameplayTagSet(const std::unordered_set<GameplayTag, GameplayTag
     tags.insert(p_tags.begin(), p_tags.end());
 }
 
+GameplayTagSet::GameplayTagSet(const PackedStringArray& p_tags) {
+    for (int i = 0; i < p_tags.size(); i++) {
+        tags.insert(p_tags[i]);
+    }
+}
+
 bool GameplayTagSet::add_tag(const GameplayTag& tag) {
     auto [_, added] = tags.insert(tag);
     return added;

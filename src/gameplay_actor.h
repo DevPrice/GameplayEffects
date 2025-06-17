@@ -94,6 +94,9 @@ public:
     Ref<GameplayTagContainer> get_loose_tags();
     PackedStringArray get_granted_tags() const;
 
+    PackedStringArray get_replicated_tags() const;
+    void set_replicated_tags(PackedStringArray p_replicated_tags);
+
     bool has_tag(const String& tag) const;
     bool has_tag_exact(const String& tag) const;
 
@@ -128,6 +131,7 @@ private:
     std::unordered_map<ActiveEffect, ActiveEffectState, ActiveEffect::Hasher> active_effects;
     Ref<GameplayTagContainer> loose_tags;
     GameplayTagSet granted_tags;
+    GameplayTagSet replicated_tags;
 
     Signal _get_stat_signal(const Ref<GameplayStat>& stat, const StringName& signal_name);
     void _on_loose_tags_changed(const PackedStringArray& added_tags, const PackedStringArray& removed_tags);

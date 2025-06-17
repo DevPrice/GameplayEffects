@@ -22,8 +22,9 @@ func _ready():
 		func (added: PackedStringArray, removed: PackedStringArray):
 			print("[%s] Added=%s, Removed=%s" % [name, added, removed])
 	)
-	for effect in initial_effects:
-		apply_effect_to_self(effect)
+	if is_multiplayer_authority():
+		for effect in initial_effects:
+			apply_effect_to_self(effect)
 
 func _get_custom_context_data():
 	return 1337.0
