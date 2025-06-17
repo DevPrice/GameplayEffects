@@ -37,8 +37,8 @@ void GameplayActor::_bind_methods() {
         PropertyInfo(Variant::FLOAT, "new_value"),
         PropertyInfo(Variant::FLOAT, "old_value")));
     ADD_SIGNAL(MethodInfo("tags_changed",
-        PropertyInfo(Variant::ARRAY, "added_tags", PROPERTY_HINT_TYPE_STRING, String::num(Variant::STRING)),
-        PropertyInfo(Variant::ARRAY, "removed_tags", PROPERTY_HINT_TYPE_STRING, String::num(Variant::STRING))));
+        PropertyInfo(Variant::PACKED_STRING_ARRAY, "added_tags"),
+        PropertyInfo(Variant::PACKED_STRING_ARRAY, "removed_tags")));
     ADD_SIGNAL(MethodInfo("avatar_changed", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_NODE_TYPE, "Node")));
     ADD_SIGNAL(MethodInfo("receiving_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
     ADD_SIGNAL(MethodInfo("received_effect", PropertyInfo(Variant::OBJECT, "spec", PROPERTY_HINT_RESOURCE_TYPE, "GameplayEffectSpec")));
@@ -95,8 +95,8 @@ Ref<GameplayTagContainer> GameplayActor::get_loose_tags() {
     return loose_tags;
 }
 
-TypedArray<String> GameplayActor::get_granted_tags() const {
-    TypedArray<String> result;
+PackedStringArray GameplayActor::get_granted_tags() const {
+    PackedStringArray result;
     granted_tags.to_string_array(result);
     return result;
 }
@@ -153,9 +153,9 @@ Signal GameplayActor::_get_stat_signal(const Ref<GameplayStat>& stat, const Stri
     return Signal(new_signals.ptr(), signal_name);
 }
 
-void GameplayActor::_on_loose_tags_changed(const TypedArray<String>& added_tags, const TypedArray<String>& removed_tags) {
-    TypedArray<String> actual_added_tags;
-    TypedArray<String> actual_removed_tags;
+void GameplayActor::_on_loose_tags_changed(const PackedStringArray& added_tags, const PackedStringArray& removed_tags) {
+    PackedStringArray actual_added_tags;
+    PackedStringArray actual_removed_tags;
     for (size_t i = 0; i < added_tags.size(); ++i) {
         const String tag_string = added_tags[i];
         const GameplayTag tag(tag_string);
@@ -516,9 +516,9 @@ void GameplayActor::_recalculate_stats(const HashMap<Ref<GameplayStat>, StatSnap
     GameplayTagSet added = granted_tags - initial_granted_tags - loose_tag_set;
     GameplayTagSet removed = initial_granted_tags - granted_tags - loose_tag_set;
     if (!added.is_empty() || !removed.is_empty()) {
-        TypedArray<String> added_tags;
+        PackedStringArray added_tags;
         added.to_string_array(added_tags);
-        TypedArray<String> removed_tags;
+        PackedStringArray removed_tags;
         removed.to_string_array(removed_tags);
         emit_signal("tags_changed", added_tags, removed_tags);
     }
@@ -678,7 +678,7 @@ GameplayTagSet ActiveEffect::capture_granted_tags() const {
                     Ref<EffectComponent> component = components[i];
                     if (component.is_valid()) {
                         if (const GrantTagsComponent* grant_tags_component = Object::cast_to<GrantTagsComponent>(*component)) {
-                            TypedArray<String> captured_tags = grant_tags_component->get_granted_tags();
+                            PackedStringArray captured_tags = grant_tags_component->get_granted_tags();
                             for (size_t j = 0; j < captured_tags.size(); ++j) {
                                 const String tag = captured_tags[i];
                                 result.add_tag(tag);

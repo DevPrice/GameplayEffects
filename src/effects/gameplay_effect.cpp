@@ -20,8 +20,8 @@ bool GameplayEffect::is_instant() const {
     return lifetime == nullptr;
 }
 
-TypedArray<String> GameplayEffect::get_effect_tags() const {
-    TypedArray<String> tags;
+PackedStringArray GameplayEffect::get_effect_tags() const {
+    PackedStringArray tags;
     for (size_t i = 0; i < components.size(); i++) {
         if (const auto tags_component = cast_to<EffectTagsComponent>(components[i])) {
             tags.append_array(tags_component->get_effect_tags());

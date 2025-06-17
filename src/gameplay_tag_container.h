@@ -12,16 +12,16 @@ class GameplayTagContainer : public RefCounted {
 
 public:
     void add_tag(const String& tag);
-    void add_tags(const TypedArray<String>& p_tags);
+    void add_tags(const PackedStringArray& p_tags);
     void append(const GameplayTagContainer* other);
     bool remove_tag(const String& tag);
-    void remove_tags(const TypedArray<String>& p_tags);
+    void remove_tags(const PackedStringArray& p_tags);
     void clear();
 
     bool has_tag(const String& tag) const;
     bool has_tag_exact(const String& tag) const;
 
-    TypedArray<String> to_array() const;
+    PackedStringArray to_array() const;
     GameplayTagSet to_tag_set() const;
 
 private:

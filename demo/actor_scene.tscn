@@ -49,7 +49,7 @@ modifiers = Array[StatModifier]([SubResource("StatModifier_pcmm1")])
 resource_name = "Tag based effect"
 
 [sub_resource type="GrantTagsComponent" id="GrantTagsComponent_x168r"]
-granted_tags = Array[String](["granted.tag.fromeffect"])
+granted_tags = PackedStringArray("granted.tag.fromeffect")
 
 [sub_resource type="EffectLifetime" id="EffectLifetime_cxyvi"]
 

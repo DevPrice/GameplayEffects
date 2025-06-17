@@ -24,4 +24,4 @@ void GrantTagsComponent::on_application(const Ref<EffectApplicationContext>& con
     }
 }
 
-GET_SET_PROPERTY_IMPL(GrantTagsComponent, TypedArray<String>, granted_tags)
+GET_SET_PROPERTY_IMPL(GrantTagsComponent, PackedStringArray, granted_tags)

@@ -47,7 +47,7 @@ public:
     bool has_tag_exact(const GameplayTag& tag) const;
     bool is_empty() const;
 
-    void to_string_array(TypedArray<String>& out_array) const;
+    void to_string_array(PackedStringArray& out_array) const;
     void to_set(std::unordered_set<GameplayTag, GameplayTag::Hasher>& out_tags) const;
 
     GameplayTagSet operator+(const GameplayTagSet& other) const;

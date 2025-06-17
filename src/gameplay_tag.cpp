@@ -86,7 +86,7 @@ bool GameplayTagSet::is_empty() const {
     return tags.size() == 0;
 }
 
-void GameplayTagSet::to_string_array(TypedArray<String>& out_array) const {
+void GameplayTagSet::to_string_array(PackedStringArray& out_array) const {
     for (auto i = tags.begin(); i != tags.end(); ++i) {
         out_array.push_back(i->to_string());
     }

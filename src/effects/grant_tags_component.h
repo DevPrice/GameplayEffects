@@ -4,14 +4,13 @@
 #include "effects/effect_component.h"
 
 #include <godot_cpp/variant/string.hpp>
-#include <godot_cpp/variant/typed_array.hpp>
 
 using namespace godot;
 
 class GrantTagsComponent : public EffectComponent {
     GDCLASS(GrantTagsComponent, EffectComponent)
 
-    GET_SET_PROPERTY(TypedArray<String>, granted_tags)
+    GET_SET_PROPERTY(PackedStringArray, granted_tags)
 
 public:
     void on_application(const Ref<EffectApplicationContext>& context) override;

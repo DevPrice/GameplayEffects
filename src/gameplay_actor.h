@@ -92,7 +92,7 @@ public:
     void set_stats(TypedArray<GameplayStat> p_stats);
 
     Ref<GameplayTagContainer> get_loose_tags();
-    TypedArray<String> get_granted_tags() const;
+    PackedStringArray get_granted_tags() const;
 
     bool has_tag(const String& tag) const;
     bool has_tag_exact(const String& tag) const;
@@ -130,7 +130,7 @@ private:
     GameplayTagSet granted_tags;
 
     Signal _get_stat_signal(const Ref<GameplayStat>& stat, const StringName& signal_name);
-    void _on_loose_tags_changed(const TypedArray<String>& added_tags, const TypedArray<String>& removed_tags);
+    void _on_loose_tags_changed(const PackedStringArray& added_tags, const PackedStringArray& removed_tags);
     Ref<GameplayEffectContext> _make_effect_context();
     Ref<EffectApplicationContext> _make_application_context(const Ref<GameplayEffectSpec>& spec);
     void _execute_effect(const ActiveEffect& active_effect);

@@ -19,7 +19,7 @@ func _ready():
 			print("[%s] %s: %s -> %s" % [name, stat.resource_name, old_value, new_value])
 	)
 	tags_changed.connect(
-		func (added: Array[String], removed: Array[String]):
+		func (added: PackedStringArray, removed: PackedStringArray):
 			print("[%s] Added=%s, Removed=%s" % [name, added, removed])
 	)
 	for effect in initial_effects:
