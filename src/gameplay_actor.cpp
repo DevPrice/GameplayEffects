@@ -46,7 +46,6 @@ void GameplayActor::_bind_methods() {
     BIND_GET_SET_NODE(GameplayActor, avatar, Node)
     BIND_GET_SET(GameplayActor, replicated_tags, GDEXTENSION_VARIANT_TYPE_PACKED_STRING_ARRAY, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE)
     BIND_GET_SET(GameplayActor, replicated_stats, GDEXTENSION_VARIANT_TYPE_DICTIONARY, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE)
-    BIND_STATIC_METHOD(GameplayActor, find_actor_for_node, "node")
     BIND_METHOD(GameplayActor, get_loose_tags)
     BIND_METHOD(GameplayActor, get_granted_tags)
     BIND_METHOD(GameplayActor, has_tag, "tag")
@@ -69,6 +68,7 @@ void GameplayActor::_bind_methods() {
     ClassDB::bind_method(D_METHOD("make_effect_spec", "effect", "tag_magnitudes"), &GameplayActor::make_effect_spec, DEFVAL(default_tag_magnitudes));
     ClassDB::bind_method(D_METHOD("apply_effect_to_self", "effect", "tag_magnitudes"), &GameplayActor::apply_effect_to_self, DEFVAL(default_tag_magnitudes));
     ClassDB::bind_method(D_METHOD("apply_effect_to_target", "effect", "target", "tag_magnitudes"), &GameplayActor::apply_effect_to_target, DEFVAL(default_tag_magnitudes));
+    ClassDB::bind_static_method("GameplayActor", D_METHOD("find_actor_for_node","node", "search_ancestors"), &GameplayActor::find_actor_for_node, DEFVAL(true));
 }
 
 std::shared_ptr<ActiveEffect> ActiveEffectHandle::get_active_effect() const {
@@ -578,7 +578,7 @@ StringName& GameplayActor::get_actor_meta_name() {
     return actor_meta_name;
 }
 
-GameplayActor* GameplayActor::find_actor_for_node(Node* node) {
+GameplayActor* GameplayActor::find_actor_for_node(Node* node, const bool search_ancestors) {
     if (GameplayActor* as_actor = cast_to<GameplayActor>(node)) return as_actor;
 
     const StringName& actor_meta_name = get_actor_meta_name();
@@ -592,6 +592,11 @@ GameplayActor* GameplayActor::find_actor_for_node(Node* node) {
         if (node->has_method(get_gameplay_actor_method)) {
             if (GameplayActor* actor = cast_to<GameplayActor>(node->call(get_gameplay_actor_method))) {
                 return actor;
+            }
+        }
+        if (search_ancestors) {
+            if (Node* parent = node->get_parent()) {
+                return find_actor_for_node(parent);
             }
         }
     }

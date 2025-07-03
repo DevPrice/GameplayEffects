@@ -125,7 +125,7 @@ public:
     Ref<ActiveEffectHandle> apply_effect_spec(const Ref<GameplayEffectSpec>& spec);
     bool remove_effect(const Ref<ActiveEffectHandle>& handle);
 
-    static GameplayActor* find_actor_for_node(Node* node);
+    static GameplayActor* find_actor_for_node(Node* node, bool search_ancestors = true);
     static void set_owning_actor(Node* node, const GameplayActor* actor);
 
 private:
