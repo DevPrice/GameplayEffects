@@ -63,6 +63,8 @@ public:
     void set_active_effect(const ActiveEffect& p_active_effect);
 
     Ref<GameplayEffectSpec> get_spec() const;
+    GameplayActor* get_target_actor() const;
+    void destroy() const;
 
 protected:
     static void _bind_methods();
@@ -86,6 +88,8 @@ class GameplayActor : public Node {
     GDCLASS(GameplayActor, Node)
 
     GET_SET_OBJECT_PTR(Node, avatar)
+
+    friend class ActiveEffectHandle;
 
 public:
     TypedArray<GameplayStat> get_stats() const;

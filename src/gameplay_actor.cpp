@@ -20,6 +20,8 @@ using namespace godot;
 
 void ActiveEffectHandle::_bind_methods() {
     BIND_METHOD(ActiveEffectHandle, get_spec)
+    BIND_METHOD(ActiveEffectHandle, get_target_actor)
+    BIND_METHOD(ActiveEffectHandle, destroy)
 }
 
 void StatSignals::_bind_methods() {
@@ -87,6 +89,22 @@ Ref<GameplayEffectSpec> ActiveEffectHandle::get_spec() const {
         }
     }
     return nullptr;
+}
+
+GameplayActor* ActiveEffectHandle::get_target_actor() const {
+    if (active_effect) {
+        const Ref<EffectApplicationContext> application_context = active_effect->application_context;
+        if (application_context.is_valid()) {
+            return application_context->get_target_actor();
+        }
+    }
+    return nullptr;
+}
+
+void ActiveEffectHandle::destroy() const {
+    if (GameplayActor* target = get_target_actor()) {
+        target->_remove_effect(*active_effect);
+    }
 }
 
 Ref<GameplayTagContainer> GameplayActor::get_loose_tags() {
