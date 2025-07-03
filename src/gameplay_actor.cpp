@@ -241,7 +241,7 @@ bool GameplayActor::can_afford_effect_spec(const Ref<GameplayEffectSpec>& spec) 
 
     const ModifierAggregator aggregator(modifier_snapshot);
     for (auto [stat, stat_snapshot] : stat_values) {
-        const stat_value_t modified_value = aggregator.get_modified_value(stat, stat_snapshot.base_value);
+        const stat_value_t modified_value = aggregator.get_modified_value(stat, stat_snapshot.current_value);
         if (modified_value < stat_value_t{}) {
             return false;
         }
