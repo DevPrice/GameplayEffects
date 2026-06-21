@@ -2,6 +2,7 @@
 #include "modifiers/evaluated_modifier.h"
 
 #include <algorithm>
+#include <iterator>
 #include <numeric>
 
 ModifierAggregator::ModifierAggregator(const std::vector<std::shared_ptr<EvaluatedModifier>>& p_modifiers) {

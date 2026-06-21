@@ -1,8 +1,8 @@
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
 
-#include <godot_cpp/core/defs.hpp>
+#include "godot_cpp/core/math_defs.hpp"
 
-typedef real_t stat_value_t;
+typedef godot::real_t stat_value_t;
 
 #endif
